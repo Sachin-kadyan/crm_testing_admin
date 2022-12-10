@@ -9,3 +9,8 @@ export const createDepartment = async (name: string, parent?: string, tags?: str
   const { data } = await apiClient.post("/department", { name, parent, tags });
   return data;
 };
+
+export const getDepartmentTags = async () => {
+  const { data } = await apiClient.get("/department/tag");
+  return data;
+};

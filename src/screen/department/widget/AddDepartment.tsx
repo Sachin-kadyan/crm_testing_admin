@@ -1,5 +1,6 @@
 import { Button, Modal, TextField, Typography, Box, Select, MenuItem } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getDepartmentTagsHandler } from "../../../api/department/departmentHandler";
 import useServiceStore from "../../../store/serviceStore";
 import { iDepartment } from "../../../types/store/service";
 const style = {
@@ -14,7 +15,7 @@ const style = {
   p: 4,
 };
 const AddDepartment = () => {
-  const { departments } = useServiceStore();
+  const { departments, departmentTags } = useServiceStore();
   const [openModal, setOpenModal] = useState(false);
   const [newDept, setNewDept] = useState<iDepartment>({
     name: "",
@@ -24,6 +25,12 @@ const AddDepartment = () => {
   const handleDepartmentTagChange = (value: string[]) => {
     if (value) setNewDept({ ...newDept, tags: value });
   };
+
+  useEffect(() => {
+    (async function () {
+      await getDepartmentTagsHandler();
+    })();
+  }, []);
   return (
     <>
       <Button variant="contained" onClick={() => setOpenModal(true)}>
@@ -64,7 +71,7 @@ const AddDepartment = () => {
             label="Department Tags"
           >
             <MenuItem value={""}>None</MenuItem>
-            {departments.map((item) => {
+            {departmentTags.map((item) => {
               return (
                 <MenuItem key={item._id} value={item._id}>
                   {item.name}

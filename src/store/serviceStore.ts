@@ -7,6 +7,10 @@ const useServiceStore = create<iServiceStore>((set) => ({
   setDoctors: (doctors) => {
     set({ doctors });
   },
+  departmentTags: [],
+  setDepartmentTags: (departmentTags) => {
+    set({ departmentTags });
+  },
 }));
 
 export default useServiceStore;

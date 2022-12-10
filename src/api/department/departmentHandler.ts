@@ -1,5 +1,5 @@
 import useServiceStore from "../../store/serviceStore";
-import { createDepartment, getDepartments } from "./department";
+import { createDepartment, getDepartments, getDepartmentTags } from "./department";
 
 export const getDepartmentsHandler = async (parent?: boolean) => {
   const { setDepartments } = useServiceStore.getState();
@@ -10,4 +10,10 @@ export const getDepartmentsHandler = async (parent?: boolean) => {
 export const createDepartmentHandler = async (name: string, parent?: string, tags?: string[]) => {
   await createDepartment(name, parent, tags);
   await getDepartmentsHandler();
+};
+
+export const getDepartmentTagsHandler = async () => {
+  const { setDepartmentTags } = useServiceStore.getState();
+  const departmentTags = await getDepartmentTags();
+  setDepartmentTags(departmentTags);
 };
