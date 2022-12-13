@@ -1,17 +1,22 @@
-import { Grid } from "@mui/material";
-import { Outlet } from "react-router-dom";
-import MainMenu from "../menu/MainMenu";
+import { Grid, Stack } from '@mui/material';
+import { Box } from '@mui/system';
+import { Outlet } from 'react-router-dom';
+import MainMenu from '../menu/MainMenu';
+import Topbar from '../topbar/Topbar';
+
+const drawerWidth = 240;
 
 const Dashboard = () => {
   return (
-    <Grid container>
-      <Grid item xs={2}>
-        <MainMenu />
-      </Grid>
-      <Grid item xs={10}>
-        <Outlet />
-      </Grid>
-    </Grid>
+    <Stack direction="row" height="100vh">
+      <MainMenu />
+      <Box width="100%">
+        <Topbar drawerWidth={drawerWidth} />
+        <Box component="main" sx={{ background: '#EFFAF5', p: 4 }}>
+          <Outlet />
+        </Box>
+      </Box>
+    </Stack>
   );
 };
 
