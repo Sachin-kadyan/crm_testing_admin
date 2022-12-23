@@ -11,9 +11,16 @@ export interface iDoctor {
   _id: string;
 }
 
+export interface iDepartmentTag {
+  name: string;
+  _id: string;
+}
+
 export interface iServiceStore {
   departments: iDepartment[];
   setDepartments: (departments: iDepartment[]) => void;
+  departmentTags: iDepartmentTag[];
+  setDepartmentTags: (departmentTags: iDepartmentTag[]) => void;
   doctors: iDoctor[];
   setDoctors: (doctors: iDoctor[]) => void;
 }

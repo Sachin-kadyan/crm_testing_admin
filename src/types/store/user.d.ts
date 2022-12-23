@@ -5,7 +5,7 @@ export interface iUser {
   email: string;
   phone: string;
   uid: string;
-  role: REPRESENTATIVE_ROLES;
+  role: string;
   image: string;
   access: string;
   refresh: string;

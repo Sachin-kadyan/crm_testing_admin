@@ -7,12 +7,13 @@ import {
   Select,
   MenuItem,
   Stack,
-  IconButton,
-  InputLabel,
-  FormControl
+  FormControl,
+  InputLabel
 } from '@mui/material';
-import { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
+import { useEffect, useState } from 'react';
+import { getDepartmentTagsHandler } from '../../../api/department/departmentHandler';
+import { createDepartment } from '../../../api/department/department';
 import useServiceStore from '../../../store/serviceStore';
 import { iDepartment } from '../../../types/store/service';
 const style = {
@@ -24,19 +25,32 @@ const style = {
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
+  borderRadius: '1rem',
+  borderWidth: 0,
   p: 4
 };
 const AddDepartment = () => {
-  const { departments } = useServiceStore();
+  const { departments, departmentTags } = useServiceStore();
   const [openModal, setOpenModal] = useState(false);
   const [newDept, setNewDept] = useState<iDepartment>({
     name: '',
     parent: '',
     tags: []
   });
+
+  const addNewDepartment = async () => {
+    await createDepartment(newDept.name, newDept.parent, newDept.tags);
+  };
+
   const handleDepartmentTagChange = (value: string[]) => {
     if (value) setNewDept({ ...newDept, tags: value });
   };
+
+  useEffect(() => {
+    (async function () {
+      await getDepartmentTagsHandler();
+    })();
+  }, []);
   return (
     <>
       <Button
@@ -47,12 +61,8 @@ const AddDepartment = () => {
         <AddIcon />
         Add New
       </Button>
-      <Modal
-        sx={{ border: 0 }}
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-      >
-        <Stack padding={3} sx={style}>
+      <Modal open={openModal} onClose={() => setOpenModal(false)}>
+        <Stack padding={3} sx={style} spacing={3}>
           <Typography marginY={3} variant="h5" fontWeight={600}>
             Add New Department
           </Typography>
@@ -86,6 +96,7 @@ const AddDepartment = () => {
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Select Tags</InputLabel>
             <Select
+              multiple
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               label="Select Tags"
@@ -95,7 +106,7 @@ const AddDepartment = () => {
               }
             >
               <MenuItem value={''}>None</MenuItem>
-              {departments.map((item) => {
+              {departmentTags.map((item) => {
                 return (
                   <MenuItem key={item._id} value={item._id}>
                     {item.name}
@@ -104,26 +115,12 @@ const AddDepartment = () => {
               })}
             </Select>
           </FormControl>
-          <Select
-            multiple
-            value={newDept.tags}
-            onChange={(e) =>
-              handleDepartmentTagChange(e.target.value as string[])
-            }
+          <Button
+            onClick={addNewDepartment}
+            color="success"
             fullWidth
-            placeholder="Department Tags"
-            label="Department Tags"
+            variant="contained"
           >
-            <MenuItem value={''}>None</MenuItem>
-            {departments.map((item) => {
-              return (
-                <MenuItem key={item._id} value={item._id}>
-                  {item.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
-          <Button color="success" fullWidth variant="contained">
             Add
           </Button>
         </Stack>

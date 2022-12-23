@@ -21,29 +21,10 @@ interface Props {
   drawerWidth: number;
 }
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
 const Topbar = ({ drawerWidth }: Props) => {
-  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
   return (
     <Box>
-      <AppBar
+      {/* <AppBar
         position="sticky"
         sx={{
           background: 'white',
@@ -80,9 +61,9 @@ const Topbar = ({ drawerWidth }: Props) => {
               justifyContent="flex-end"
               alignItems="center"
             >
-              {/* <Box marginX={5}>
+              <Box marginX={5}>
                 <NotificationsNoneIcon color="success" fontSize="large" />
-              </Box> */}
+              </Box>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Akhil Bisht" src="/static/images/avatar/2.jpg" />
@@ -113,7 +94,7 @@ const Topbar = ({ drawerWidth }: Props) => {
             </Box>
           </Stack>
         </Toolbar>
-      </AppBar>
+      </AppBar> */}
     </Box>
   );
 };
