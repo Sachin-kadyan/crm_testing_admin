@@ -2,8 +2,6 @@ import { Delete } from '@mui/icons-material';
 import { Chip, Stack, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { useEffect } from 'react';
-import { getDepartmentsHandler } from '../../api/department/departmentHandler';
 import useServiceStore from '../../store/serviceStore';
 import AddDepartment from './widget/AddDepartment';
 
@@ -14,7 +12,7 @@ const Department = () => {
     {
       field: 'name',
       headerName: 'Name',
-      width: 300,
+      width: 500,
       renderCell: (params) => {
         return <Typography fontWeight="500">{params.row.name}</Typography>;
       }
@@ -22,28 +20,22 @@ const Department = () => {
     {
       field: 'parent',
       headerName: 'Parent',
-      width: 200,
-      editable: true
-    },
-    {
-      field: 'tags',
-      headerName: 'Tags',
-      width: 400,
+      width: 300,
       editable: true,
-      renderCell: (params) =>
-        params.row.tags.map((item: string) => {
-          return (
-            <Chip sx={{ marginRight: '0.8rem' }} label={item.toUpperCase()} />
-          );
-        })
+      renderCell: (params) => {
+        if (params.row.parent) {
+          return <Chip label={params.row.parent} />;
+        }
+      }
     },
+
     {
       field: 'actions',
       headerName: 'Action',
       width: 170,
       editable: false,
       sortable: false,
-      renderCell: (params) => (
+      renderCell: () => (
         <Box display="flex" justifyContent="space-around">
           <Delete color="action" />
         </Box>
@@ -59,20 +51,12 @@ const Department = () => {
             .find((dept) => dept._id === item.parent)
             ?.name.toUpperCase()
         : '',
-      id: index + 1,
-      tags: item.tags
+      id: index + 1
     };
   });
 
-  useEffect(() => {
-    (async function () {
-      await getDepartmentsHandler();
-    })();
-  }, []);
-
   return (
     <Stack height="85vh">
-      <Box></Box>
       <Box
         display="flex"
         justifyContent="space-between"
@@ -86,8 +70,8 @@ const Department = () => {
         checkboxSelection
         sx={{ background: 'white', p: 3 }}
         columns={columns}
-        pageSize={10}
-        rowsPerPageOptions={[10]}
+        pageSize={8}
+        rowsPerPageOptions={[8]}
         rows={rows}
       />
     </Stack>

@@ -14,25 +14,26 @@ import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { Collapse, Stack } from '@mui/material';
 import BackupTableIcon from '@mui/icons-material/BackupTable';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import DataObjectOutlinedIcon from '@mui/icons-material/DataObjectOutlined';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
   window?: () => Window;
 }
 
 interface SideBarItem {
   title: string;
   icon: any;
+  link: string;
   submenu: {
     title: string;
     icon: any;
+    link: string;
   }[];
 }
 
@@ -43,24 +44,29 @@ export default function ResponsiveDrawer(props: Props) {
     {
       title: 'Department',
       icon: <DomainAddIcon />,
+      link: '/department',
       submenu: [
         {
-          title: 'Doctor',
-          icon: <MedicalServicesIcon />
+          title: 'Doctors',
+          icon: <GroupsIcon />,
+          link: '/department/doctors'
         },
         {
-          title: 'Ward',
-          icon: <MedicalServicesIcon />
+          title: 'Wards',
+          icon: <LocalHospitalIcon />,
+          link: '/department/wards'
         }
       ]
     },
     {
       title: 'Services',
       icon: <BackupTableIcon />,
+      link: '/services',
       submenu: [
         {
-          title: 'Doctor',
-          icon: <MedicalServicesIcon />
+          title: 'Tags',
+          icon: <DataObjectOutlinedIcon />,
+          link: '/department'
         }
       ]
     }
@@ -173,24 +179,33 @@ export default function ResponsiveDrawer(props: Props) {
   );
 
   function SideBarItem({ item }: { item: SideBarItem }): JSX.Element {
-    const { icon, title, submenu } = item;
+    const { icon, title, submenu, link } = item;
     const [isOpen, setIsOpen] = React.useState(false);
+    const navigate = useNavigate();
+
     return (
       <Stack>
-        <ListItemButton onClick={() => setIsOpen(!isOpen)}>
+        <ListItemButton>
           <ListItemIcon>{icon}</ListItemIcon>
-          <ListItemText primary={title} />
-          {submenu?.length !== 0 && isOpen ? <ExpandLess /> : <ExpandMore />}
+          <ListItemText onClick={() => navigate(link)} primary={title} />
+
+          {submenu?.length !== 0 && isOpen ? (
+            <ExpandLess onClick={() => setIsOpen(!isOpen)} />
+          ) : (
+            <ExpandMore onClick={() => setIsOpen(!isOpen)} />
+          )}
         </ListItemButton>
         <Collapse in={isOpen} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {submenu &&
               submenu.map((menuItem, index: number) => {
                 return (
-                  <ListItemButton key={index} sx={{ pl: 4 }}>
-                    <ListItemIcon>{menuItem.icon}</ListItemIcon>
-                    <ListItemText primary={menuItem.title} />
-                  </ListItemButton>
+                  <Link to={menuItem.link}>
+                    <ListItemButton key={index} sx={{ pl: 4 }}>
+                      <ListItemIcon>{menuItem.icon}</ListItemIcon>
+                      <ListItemText primary={menuItem.title} />
+                    </ListItemButton>
+                  </Link>
                 );
               })}
           </List>

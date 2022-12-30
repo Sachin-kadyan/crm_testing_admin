@@ -1,24 +1,19 @@
 import { Delete } from '@mui/icons-material';
 import { Box, Chip, Stack, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React, { useEffect } from 'react';
-import { getDoctorsHandler } from '../../api/doctor/doctorHandler';
-import useServiceStore from '../../store/serviceStore';
-import AddDoctor from './widgets/AddDoctor';
+import React from 'react';
+import AddServiceManually from './widgets/AddServiceManually';
+import BulkServiceUpload from './widgets/BulkServiceUpload';
 
 type Props = {};
 
-const Doctor = (props: Props) => {
-  const { doctors, departments } = useServiceStore();
-  const departmentMap = new Map<string, string>(
-    departments.map((department) => [department._id!, department.name])
-  );
+const Services = (props: Props) => {
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 100 },
     {
       field: 'name',
       headerName: 'Name',
-      width: 400,
+      width: 300,
       renderCell: (params) => {
         return <Typography fontWeight="500">{params.row.name}</Typography>;
       }
@@ -30,11 +25,9 @@ const Doctor = (props: Props) => {
       editable: true,
       renderCell: (params) =>
         params.row.departments?.map((item: string) => {
+          console.log(item);
           return (
-            <Chip
-              sx={{ marginRight: '0.8rem', textTransform: 'uppercase' }}
-              label={item}
-            />
+            <Chip sx={{ marginRight: '0.8rem' }} label={item.toUpperCase()} />
           );
         })
     },
@@ -52,41 +45,40 @@ const Doctor = (props: Props) => {
       filterable: false
     }
   ];
-  const rows = doctors.map((item, index) => {
-    return {
-      name: item.name.toUpperCase(),
-      departments: item.departments.map((id) => departmentMap.get(id)),
-      id: index + 1
-    };
-  });
 
-  useEffect(() => {
-    (async function () {
-      await getDoctorsHandler();
-    })();
-  }, []);
+  //   const rows = doctors.map((item, index) => {
+  //     return {
+  //       name: item.name.toUpperCase(),
+  //       departments: item.departments.map((id) => departmentMap.get(id)),
+  //       id: index + 1
+  //     };
+  //   });
+
   return (
     <Stack height="85vh">
-      <Box></Box>
       <Box
         display="flex"
         justifyContent="space-between"
+        alignItems="center"
         marginY={3}
         sx={{ height: '5vh' }}
       >
-        <Typography variant="h4">Doctors</Typography>
-        <AddDoctor />
+        <Typography variant="h4">Services</Typography>
+        <Box display="flex" width={'40%'} justifyContent="space-around">
+          <AddServiceManually />
+          <BulkServiceUpload />
+        </Box>
       </Box>
-      <DataGrid
+      {/* <DataGrid
         checkboxSelection
         sx={{ background: 'white', p: 3 }}
         columns={columns}
         pageSize={10}
         rowsPerPageOptions={[10]}
-        rows={rows}
-      />
+        rows={}
+      /> */}
     </Stack>
   );
 };
 
-export default Doctor;
+export default Services;

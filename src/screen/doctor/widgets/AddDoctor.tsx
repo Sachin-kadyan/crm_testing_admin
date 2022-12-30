@@ -1,20 +1,20 @@
 import {
+  Alert,
   Button,
-  Modal,
-  TextField,
-  Typography,
-  Select,
-  MenuItem,
-  Stack,
   FormControl,
-  InputLabel
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+  Stack,
+  TextField,
+  Typography
 } from '@mui/material';
+import React, { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
-import { useEffect, useState } from 'react';
-import { getDepartmentTagsHandler } from '../../../api/department/departmentHandler';
-import { createDepartment } from '../../../api/department/department';
 import useServiceStore from '../../../store/serviceStore';
-import { iDepartment } from '../../../types/store/service';
+import { createNewDoctorHandler } from '../../../api/doctor/doctorHandler';
+
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
@@ -28,23 +28,33 @@ const style = {
   borderWidth: 0,
   p: 4
 };
-const AddDepartment = () => {
+
+interface DoctorType {
+  name: string;
+  department: string[];
+}
+
+const AddDoctor = () => {
   const { departments } = useServiceStore();
   const [openModal, setOpenModal] = useState(false);
-  const [newDept, setNewDept] = useState<iDepartment>({
+  const [message, setMessage] = useState('');
+  const [newDoctor, setNewDoctor] = useState<DoctorType>({
     name: '',
-    parent: ''
+    department: []
   });
 
-  const addNewDepartment = async () => {
-    await createDepartment(newDept.name, newDept.parent);
+  const addNewDoctor = async () => {
+    await createNewDoctorHandler(newDoctor);
+    setMessage('Doctor Added To System');
+    setTimeout(() => {
+      setMessage('');
+    }, 2000);
+    setNewDoctor({
+      name: '',
+      department: []
+    });
   };
 
-  useEffect(() => {
-    (async function () {
-      await getDepartmentTagsHandler();
-    })();
-  }, []);
   return (
     <>
       <Button
@@ -58,23 +68,31 @@ const AddDepartment = () => {
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <Stack padding={3} sx={style} spacing={3}>
           <Typography marginY={3} variant="h5" fontWeight={600}>
-            Add New Department
+            Add New Doctor
           </Typography>
           <TextField
-            value={newDept.name}
-            onChange={(e) => setNewDept({ ...newDept, name: e.target.value })}
+            value={newDoctor.name}
+            onChange={(e) =>
+              setNewDoctor({ ...newDoctor, name: e.target.value })
+            }
             fullWidth
-            label="Department Name"
+            label="Doctor Name"
           />
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Select Parent</InputLabel>
+            <InputLabel id="demo-simple-select-label">
+              Select Departments
+            </InputLabel>
             <Select
+              multiple
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              label="Select Parent"
-              value={newDept.parent}
+              label="Select Departments"
+              value={newDoctor.department}
               onChange={(e) =>
-                setNewDept({ ...newDept, parent: e.target.value })
+                setNewDoctor({
+                  ...newDoctor,
+                  department: e.target.value as string[]
+                })
               }
             >
               <MenuItem value={''}>None</MenuItem>
@@ -87,8 +105,9 @@ const AddDepartment = () => {
               })}
             </Select>
           </FormControl>
+          {message.length > 0 && <Alert>{message}</Alert>}
           <Button
-            onClick={addNewDepartment}
+            onClick={addNewDoctor}
             color="success"
             fullWidth
             variant="contained"
@@ -101,4 +120,4 @@ const AddDepartment = () => {
   );
 };
 
-export default AddDepartment;
+export default AddDoctor;
