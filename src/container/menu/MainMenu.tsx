@@ -20,12 +20,6 @@ interface Props {
 const drawerWidth = 240;
 
 const MainMenu = (props: Props) => {
-  const { window } = props;
-
-  const [open, setOpen] = useState(true);
-
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
 
   return (
     <Drawer

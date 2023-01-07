@@ -70,8 +70,8 @@ const Department = () => {
         checkboxSelection
         sx={{ background: 'white', p: 3 }}
         columns={columns}
-        pageSize={8}
-        rowsPerPageOptions={[8]}
+        pageSize={10}
+        rowsPerPageOptions={[10]}
         rows={rows}
       />
     </Stack>

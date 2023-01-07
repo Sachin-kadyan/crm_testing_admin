@@ -19,21 +19,31 @@ export interface iDoctor {
   _id: string;
 }
 
-export interface iDepartmentTag {
+export interface iServiceTag {
   name: string;
   _id: string;
 }
 
 export interface iService {
   name: string;
-  _id: string;
+  serviceId: string;
+  department: string;
+  departmentType: string;
+  tag: string;
+  opdCharge: number;
+  ipdCharge: number;
+  fourSharingRoomCharge: number;
+  twinSharingRoomCharge: number;
+  singleRoomCharge: number;
+  deluxeRoomCharge: number;
+  vipRoomCharge: number;
 }
 
 export interface iServiceStore {
   departments: iDepartment[];
   setDepartments: (departments: iDepartment[]) => void;
-  departmentTags: iDepartmentTag[];
-  setDepartmentTags: (departmentTags: iDepartmentTag[]) => void;
+  serviceTags: iServiceTag[{}];
+  setServiceTags: (tag: iServiceTag[]) => void;
   doctors: iDoctor[];
   setDoctors: (doctors: iDoctor[]) => void;
   services: iService[{}];

@@ -3,12 +3,13 @@ import { Route, Routes } from 'react-router-dom';
 import Dashboard from '../../screen/dashboard/Dashboard';
 import Department from '../../screen/department/Department';
 import Doctor from '../../screen/doctor/Doctor';
-import Ticket from '../../screen/ticket/Ticket';
-import DashboardLayout from '../layout/Layout';
+import DashboardLayout from '../layout/DashboardLayout';
 import DepartmentLayout from '../layout/DepartmentLayout';
-import TicketLayout from '../layout/Ticket';
+import TicketLayout from '../layout/TicketLayout';
 import Services from '../../screen/services/Services';
 import Wards from '../../screen/wards/Wards';
+import SingleTicketDetails from '../../screen/ticket/SingleTicketDetails';
+import Tags from '../../screen/tags/Tags';
 
 type Props = {};
 
@@ -23,9 +24,10 @@ const Authenticated = (props: Props) => {
           <Route path="wards" element={<Wards />} />
         </Route>
         <Route path="services" element={<Services />} />
-        <Route path="ticket" element={<TicketLayout />}>
-          <Route index element={<Ticket />} />
-        </Route>
+        <Route path="tags" element={<Tags />} />
+      </Route>
+      <Route path="ticket" element={<TicketLayout />}>
+        <Route path=":id" element={<SingleTicketDetails />} />
       </Route>
     </Routes>
   );

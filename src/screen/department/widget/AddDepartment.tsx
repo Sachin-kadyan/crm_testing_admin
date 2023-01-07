@@ -10,8 +10,7 @@ import {
   InputLabel
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { useEffect, useState } from 'react';
-import { getDepartmentTagsHandler } from '../../../api/department/departmentHandler';
+import { useState } from 'react';
 import { createDepartment } from '../../../api/department/department';
 import useServiceStore from '../../../store/serviceStore';
 import { iDepartment } from '../../../types/store/service';
@@ -40,11 +39,6 @@ const AddDepartment = () => {
     await createDepartment(newDept.name, newDept.parent);
   };
 
-  useEffect(() => {
-    (async function () {
-      await getDepartmentTagsHandler();
-    })();
-  }, []);
   return (
     <>
       <Button
@@ -77,8 +71,8 @@ const AddDepartment = () => {
                 setNewDept({ ...newDept, parent: e.target.value })
               }
             >
-              <MenuItem value={''}>None</MenuItem>
-              {departments.map((item) => {
+              <MenuItem value={""}>None</MenuItem>
+              {departments.map((item: iDepartment) => {
                 return (
                   <MenuItem key={item._id} value={item._id}>
                     {item.name}

@@ -1,58 +1,76 @@
 import { Delete } from '@mui/icons-material';
 import { Box, Chip, Stack, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { getAllServicesHandler } from '../../api/service/serviceHandler';
+import useServiceStore from '../../store/serviceStore';
 import AddServiceManually from './widgets/AddServiceManually';
 import BulkServiceUpload from './widgets/BulkServiceUpload';
 
 type Props = {};
 
 const Services = (props: Props) => {
+  const { services, departments } = useServiceStore();
+
+  const departmentNameReturner = (id: string) => {
+    const departmentName = departments.find((element) => element._id === id);
+    return departmentName!.name;
+  };
+
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 100 },
     {
       field: 'name',
       headerName: 'Name',
-      width: 300,
+      width: 400,
       renderCell: (params) => {
         return <Typography fontWeight="500">{params.row.name}</Typography>;
       }
     },
     {
       field: 'departments',
-      headerName: 'Departments',
-      width: 500,
+      headerName: 'Department',
+      width: 200,
       editable: true,
-      renderCell: (params) =>
-        params.row.departments?.map((item: string) => {
-          console.log(item);
-          return (
-            <Chip sx={{ marginRight: '0.8rem' }} label={item.toUpperCase()} />
-          );
-        })
+      renderCell: (params) => {
+        return (
+          <Typography fontWeight="400" textTransform="uppercase">
+            {params.row.departments}
+          </Typography>
+        );
+      }
     },
     {
-      field: 'actions',
-      headerName: 'Action',
+      field: 'departmentType',
+      headerName: 'Department Type',
+      width: 300
+    },
+    {
+      field: 'tag',
+      headerName: 'Tag',
       width: 170,
       editable: false,
       sortable: false,
-      renderCell: () => (
-        <Box display="flex" justifyContent="space-around">
-          <Delete color="action" />
-        </Box>
-      ),
+      renderCell: (params) => <Chip label={params.row.tag} />,
       filterable: false
     }
   ];
 
-  //   const rows = doctors.map((item, index) => {
-  //     return {
-  //       name: item.name.toUpperCase(),
-  //       departments: item.departments.map((id) => departmentMap.get(id)),
-  //       id: index + 1
-  //     };
-  //   });
+  const rows = services.map((item: any, index: number) => {
+    return {
+      name: item.name.toUpperCase(),
+      departments: departmentNameReturner(item.department),
+      departmentType: item.departmentType,
+      id: item.serviceId,
+      tag: item.tag
+    };
+  });
+
+  useEffect(() => {
+    (async function () {
+      await getAllServicesHandler();
+    })();
+  }, []);
 
   return (
     <Stack height="85vh">
@@ -69,14 +87,14 @@ const Services = (props: Props) => {
           <BulkServiceUpload />
         </Box>
       </Box>
-      {/* <DataGrid
+      <DataGrid
         checkboxSelection
         sx={{ background: 'white', p: 3 }}
         columns={columns}
         pageSize={10}
         rowsPerPageOptions={[10]}
-        rows={}
-      /> */}
+        rows={rows}
+      />
     </Stack>
   );
 };

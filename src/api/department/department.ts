@@ -17,7 +17,4 @@ export const createDepartment = async (
   return data;
 };
 
-export const getDepartmentTags = async () => {
-  const { data } = await apiClient.get('/department/tag');
-  return data;
-};
+

@@ -11,9 +11,9 @@ const useServiceStore = create<iServiceStore>((set, get) => ({
   setServices: (services) => {
     set({ services });
   },
-  departmentTags: [],
-  setDepartmentTags: (departmentTags) => {
-    set({ departmentTags });
+  serviceTags: [],
+  setServiceTags: (serviceTags) => {
+    set({ serviceTags });
   },
   wards: [],
   setWards: (wards) => {

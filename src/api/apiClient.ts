@@ -96,6 +96,7 @@ class ApiClient {
   }
 
   private errorSnackbarHandler(data: any) {
+    console.log(data);
     data.messages.map((item: any) => {
       useEventStore.setState({
         snacks: [
