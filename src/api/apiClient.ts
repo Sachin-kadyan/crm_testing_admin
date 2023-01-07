@@ -9,8 +9,7 @@ enum StatusCode {
   InternalServerError = 500
 }
 
-export const SERVER_URL =
-  'http://ec2-3-111-196-16.ap-south-1.compute.amazonaws.com:9000/api/v1';
+export const SERVER_URL = 'https://backend.aretehealth.tech/prod/api/v1/';
 
 const headers: Readonly<Record<string, string | boolean>> = {
   Accept: 'application/json',
