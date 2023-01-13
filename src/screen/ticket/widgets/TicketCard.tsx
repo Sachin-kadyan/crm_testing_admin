@@ -4,10 +4,9 @@ import { iTicket } from '../../../types/store/ticket';
 import useServiceStore from '../../../store/serviceStore';
 import FemaleIcon from '@mui/icons-material/Female';
 import TransgenderIcon from '@mui/icons-material/Transgender';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
 
-dayjs.extend(relativeTime);
+import { useNavigate } from 'react-router-dom';
+import { ageSetter } from '../../../utils/ageReturn';
 
 type Props = {
   patientData: iTicket;
@@ -24,9 +23,7 @@ const TicketCard = (props: Props) => {
     return departments.find((element) => element._id === id)?.name;
   };
 
-  const ageSetter = (age: string) => {
-    return dayjs().from(dayjs(age), true);
-  };
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -39,6 +36,9 @@ const TicketCard = (props: Props) => {
         '&:hover': {
           bgcolor: '#E2ECFB'
         }
+      }}
+      onClick={() => {
+        navigate(`/ticket/${props.patientData._id}`);
       }}
     >
       <Box

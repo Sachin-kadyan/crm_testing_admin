@@ -21,6 +21,9 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import DataObjectOutlinedIcon from '@mui/icons-material/DataObjectOutlined';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import GroupsIcon from '@mui/icons-material/Groups';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import Logout from '../../screen/login/Logout';
+import useUserStore from '../../store/userStore';
 
 interface Props {
   window?: () => Window;
@@ -30,7 +33,7 @@ interface SideBarItem {
   title: string;
   icon: any;
   link: string;
-  submenu: {
+  submenu?: {
     title: string;
     icon: any;
     link: string;
@@ -66,9 +69,14 @@ export default function ResponsiveDrawer(props: Props) {
         {
           title: 'Tags',
           icon: <DataObjectOutlinedIcon />,
-          link: '/department'
+          link: '/tags'
         }
       ]
+    },
+    {
+      title: 'Stages',
+      icon: <AccountTreeIcon />,
+      link: '/stages'
     }
   ];
   const { window } = props;
@@ -76,6 +84,8 @@ export default function ResponsiveDrawer(props: Props) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  const { user } = useUserStore();
 
   const drawer = (
     <div>
@@ -110,19 +120,18 @@ export default function ResponsiveDrawer(props: Props) {
           ml: { sm: `${drawerWidth}px` }
         }}
       >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography
+            color="black"
+            textTransform="capitalize"
+            variant="h6"
+            noWrap
+            component="div"
           >
-            <MenuIcon />
-          </IconButton>
-          <Typography color="black" variant="h6" noWrap component="div">
-            Welcome Akhil Bisht
+            Welcome
+            {' ' + user?.firstName + ' ' + user?.lastName}
           </Typography>
+          <Logout />
         </Toolbar>
       </AppBar>
       <Box
@@ -189,10 +198,20 @@ export default function ResponsiveDrawer(props: Props) {
           <ListItemIcon>{icon}</ListItemIcon>
           <ListItemText onClick={() => navigate(link)} primary={title} />
 
-          {submenu?.length !== 0 && isOpen ? (
-            <ExpandLess onClick={() => setIsOpen(!isOpen)} />
-          ) : (
-            <ExpandMore onClick={() => setIsOpen(!isOpen)} />
+          {submenu !== undefined && (
+            <>
+              {isOpen ? (
+                <ExpandLess
+                  sx={{ display: submenu.length > 0 ? '' : 'none' }}
+                  onClick={() => setIsOpen(!isOpen)}
+                />
+              ) : (
+                <ExpandMore
+                  sx={{ display: submenu.length > 0 ? '' : 'none' }}
+                  onClick={() => setIsOpen(!isOpen)}
+                />
+              )}
+            </>
           )}
         </ListItemButton>
         <Collapse in={isOpen} timeout="auto" unmountOnExit>

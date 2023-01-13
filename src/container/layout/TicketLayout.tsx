@@ -8,10 +8,18 @@ import TicketCard from '../../screen/ticket/widgets/TicketCard';
 import { iTicket } from '../../types/store/ticket';
 import { getDoctorsHandler } from '../../api/doctor/doctorHandler';
 import { getDepartmentsHandler } from '../../api/department/departmentHandler';
-import { Outlet } from 'react-router-dom';
+import { Outlet, redirect, useNavigate } from 'react-router-dom';
 
 const Ticket = () => {
   const { tickets } = useTicketStore();
+
+  const navigate = useNavigate();
+
+  const redirectTicket = () => {
+    navigate('/ticket');
+  };
+  window.onload = redirectTicket;
+
   useEffect(() => {
     (async function () {
       await getTicketHandler();
@@ -53,7 +61,7 @@ const Ticket = () => {
           })}
         </Box>
       </Box>
-      <Box width="50%">
+      <Box width="75%">
         <Outlet />
       </Box>
     </Box>

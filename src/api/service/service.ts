@@ -1,6 +1,7 @@
+import { createTag, iService, iServiceTag } from '../../types/store/service';
 import { apiClient } from '../apiClient';
 
-export const uploadServiceMaster = async (parsedData: object[]) => {
+export const uploadServiceMaster = async (parsedData: iService[]) => {
   const { data } = await apiClient.post('/service', parsedData);
   return data;
 };
@@ -15,7 +16,7 @@ export const getAllServices = async () => {
   return data;
 };
 
-export const createServiceTag = async (tag: object) => {
+export const createServiceTag = async (tag: createTag) => {
   const { data } = await apiClient.post('/department/tag', tag);
   return data;
 };

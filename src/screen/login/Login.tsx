@@ -13,6 +13,8 @@ import { useState } from 'react';
 import loginBg from '../../assets/images/login-bg.png';
 import { loginHandler } from '../../api/auth/authHandler';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import Loader from '../../components/Loader';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -20,6 +22,15 @@ const Login = () => {
     secret: '',
     show: false
   });
+
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    <Loader isOpen={true} />;
+    loginHandler(email, password.secret);
+    navigate('/');
+    <Loader isOpen={false} />;
+  };
 
   const handleClickShowPassword = () => {
     setPassword({ ...password, show: !password.show });
@@ -114,7 +125,7 @@ const Login = () => {
             }}
             variant="contained"
             color="success"
-            onClick={() => loginHandler(email, password.secret)}
+            onClick={handleLogin}
           >
             Login
           </Button>

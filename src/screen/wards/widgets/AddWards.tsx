@@ -13,6 +13,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import { useState } from 'react';
 import { IWard } from '../../../types/store/service';
+import { createWardHandler } from '../../../api/ward/wardHandler';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -30,7 +31,7 @@ const AddWards = () => {
   const [openModal, setOpenModal] = useState(false);
   const [ward, setWard] = useState<IWard>({
     name: '',
-    type: '',
+    type: 0,
     code: '',
     roomRent: '',
     consultation: '',
@@ -38,7 +39,7 @@ const AddWards = () => {
   });
 
   const addNewWard = async () => {
-    
+    await createWardHandler(ward);
   };
 
   return (
@@ -62,7 +63,7 @@ const AddWards = () => {
                 sx={{ m: 1, width: '25ch' }}
                 value={ward.name}
                 onChange={(e) => setWard({ ...ward, name: e.target.value })}
-                label="Department Name"
+                label="Ward Name"
               />
               <FormControl sx={{ m: 1, width: '25ch' }}>
                 <InputLabel id="demo-simple-select-label">
@@ -73,7 +74,7 @@ const AddWards = () => {
                   id="demo-simple-select"
                   label="Select Type"
                   value={ward.type}
-                  onChange={(e) => setWard({ ...ward, type: e.target.value })}
+                  onChange={(e) => setWard({ ...ward, type: +e.target.value })}
                 >
                   <MenuItem value={0}>General Ward</MenuItem>
                   <MenuItem value={1}>ICU</MenuItem>

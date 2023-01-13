@@ -1,4 +1,5 @@
 import useServiceStore from '../../store/serviceStore';
+import { createTag, iService, iServiceTag } from '../../types/store/service';
 import {
   getServiceTags,
   getAllServices,
@@ -6,11 +7,11 @@ import {
   createServiceTag
 } from './service';
 
-export const createServiceHandler = async (parsedData: object[]) => {
+export const createServiceHandler = async (parsedData: iService[]) => {
   const { services, setServices } = useServiceStore.getState();
   const servicesAdded = await uploadServiceMaster(parsedData);
 
-  setServices([...services, servicesAdded]);
+  setServices([...services, ...servicesAdded]);
 };
 
 export const getAllServicesHandler = async () => {
@@ -25,8 +26,8 @@ export const getServiceTagsHandler = async () => {
   setServiceTags(serviceTags);
 };
 
-export const createServiceTagsHandler = async (tag: object) => {
+export const createServiceTagsHandler = async (tag: createTag) => {
   const { serviceTags, setServiceTags } = useServiceStore.getState();
-  const serviceTagAdded = await createServiceTag(tag);
+  const serviceTagAdded = (await createServiceTag(tag)) as iServiceTag;
   setServiceTags([...serviceTags, serviceTagAdded]);
 };

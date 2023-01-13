@@ -18,6 +18,10 @@ const useServiceStore = create<iServiceStore>((set, get) => ({
   wards: [],
   setWards: (wards) => {
     set({ wards });
+  },
+  stages: [],
+  setStages: (stages) => {
+    set({ stages });
   }
 }));
 

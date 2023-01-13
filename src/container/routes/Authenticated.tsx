@@ -10,6 +10,7 @@ import Services from '../../screen/services/Services';
 import Wards from '../../screen/wards/Wards';
 import SingleTicketDetails from '../../screen/ticket/SingleTicketDetails';
 import Tags from '../../screen/tags/Tags';
+import Stage from '../../screen/stage/Stage';
 
 type Props = {};
 
@@ -25,9 +26,10 @@ const Authenticated = (props: Props) => {
         </Route>
         <Route path="services" element={<Services />} />
         <Route path="tags" element={<Tags />} />
+        <Route path="stages" element={<Stage />} />
       </Route>
       <Route path="ticket" element={<TicketLayout />}>
-        <Route path=":id" element={<SingleTicketDetails />} />
+        <Route path=":ticketID" element={<SingleTicketDetails />} />
       </Route>
     </Routes>
   );

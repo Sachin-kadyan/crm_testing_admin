@@ -1,16 +1,15 @@
-import { Delete } from '@mui/icons-material';
 import { Box, Chip, Stack, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { getWardsHandler } from '../../api/ward/wardHandler';
 import useServiceStore from '../../store/serviceStore';
+import { IWard } from '../../types/store/service';
 import AddWards from './widgets/AddWards';
 
 type Props = {};
 
 const Wards = (props: Props) => {
-  const { wards } = useServiceStore.getState();
-
+  const { wards } = useServiceStore();
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 100 },
     {
@@ -84,7 +83,14 @@ const Wards = (props: Props) => {
       }
     }
   ];
-  const rows = wards.map((item, index) => {
+
+  useEffect(() => {
+    (async function () {
+      await getWardsHandler();
+    })();
+  }, []);
+
+  const rows = wards.map((item: IWard, index: number) => {
     return {
       name: item.name.toUpperCase(),
       code: item.code,
@@ -95,12 +101,6 @@ const Wards = (props: Props) => {
       id: index + 1
     };
   });
-
-  useEffect(() => {
-    (async function () {
-      await getWardsHandler();
-    })();
-  }, []);
 
   return (
     <Stack height="85vh">
