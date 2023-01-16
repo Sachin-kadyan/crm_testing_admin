@@ -72,8 +72,6 @@ const Logout = (props: Props) => {
     navigate('/login');
   };
 
-  console.log(user);
-
   const handleClose = () => {
     setAnchorEl(null);
   };

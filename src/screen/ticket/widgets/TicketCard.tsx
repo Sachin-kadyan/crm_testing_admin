@@ -13,7 +13,7 @@ type Props = {
 };
 
 const TicketCard = (props: Props) => {
-  const { doctors, departments } = useServiceStore();
+  const { doctors, departments, services } = useServiceStore();
 
   const doctorSetter = (id: string) => {
     return doctors.find((element) => element._id === id)?.name;
@@ -24,6 +24,9 @@ const TicketCard = (props: Props) => {
   };
 
   const navigate = useNavigate();
+  const serviceSetter = (id: string) => {
+    return services.find((element) => element._id === id)?.name;
+  };
 
   return (
     <Box
@@ -80,7 +83,7 @@ const TicketCard = (props: Props) => {
         {departmentSetter(props.patientData.prescription[0].departments[0])})
       </Typography>
       <Typography variant="inherit" textTransform="capitalize">
-        {props.patientData.prescription[0].symptoms}
+        {serviceSetter(props.patientData.estimate[0].service[0].id!)}
       </Typography>
       <Box
         sx={{
@@ -90,9 +93,28 @@ const TicketCard = (props: Props) => {
           placeContent: 'start'
         }}
       >
-        <Typography fontWeight={500}>$5,000</Typography>
-        <Chip label="Insurance" />
-        <Chip label="High" color="secondary" />
+        <Typography fontWeight={500}>₹5,000</Typography>
+        <Chip
+          label={
+            props.patientData.estimate[0].paymentType === 0
+              ? 'Cash'
+              : props.patientData.estimate[0].paymentType === 1
+              ? 'Insurance'
+              : 'CGHS/ECHS'
+          }
+        />
+        <Chip
+          label={
+            220 > 15000 ? 'High' : 220 < 4500 && 450 < 2220 ? 'Medium' : 'Low'
+          }
+          color={
+            222 > 15000
+              ? 'info'
+              : 1500 < 4500 && 4500 < 22200
+              ? 'warning'
+              : 'secondary'
+          }
+        />
       </Box>
       <Typography variant="caption" color="blue">
         4 Task Pending

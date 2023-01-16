@@ -8,12 +8,17 @@ import TicketCard from '../../screen/ticket/widgets/TicketCard';
 import { iTicket } from '../../types/store/ticket';
 import { getDoctorsHandler } from '../../api/doctor/doctorHandler';
 import { getDepartmentsHandler } from '../../api/department/departmentHandler';
-import { Outlet, redirect, useNavigate } from 'react-router-dom';
+import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
+import DefaultScreen from '../../components/DefaultScreen';
 
 const Ticket = () => {
   const { tickets } = useTicketStore();
 
   const navigate = useNavigate();
+
+  const currentRoute = useMatch('/ticket');
+
+  console.log(currentRoute);
 
   const redirectTicket = () => {
     navigate('/ticket');
@@ -61,8 +66,8 @@ const Ticket = () => {
           })}
         </Box>
       </Box>
-      <Box width="75%">
-        <Outlet />
+      <Box bgcolor="#E2ECFB" width="75%">
+        {currentRoute ? <DefaultScreen /> : <Outlet />}
       </Box>
     </Box>
   );

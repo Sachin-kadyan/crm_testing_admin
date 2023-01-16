@@ -11,6 +11,7 @@ import Wards from '../../screen/wards/Wards';
 import SingleTicketDetails from '../../screen/ticket/SingleTicketDetails';
 import Tags from '../../screen/tags/Tags';
 import Stage from '../../screen/stage/Stage';
+import Script from '../../screen/script/Script';
 
 type Props = {};
 
@@ -25,6 +26,7 @@ const Authenticated = (props: Props) => {
           <Route path="wards" element={<Wards />} />
         </Route>
         <Route path="services" element={<Services />} />
+        <Route path="scripts" element={<Script />} />
         <Route path="tags" element={<Tags />} />
         <Route path="stages" element={<Stage />} />
       </Route>

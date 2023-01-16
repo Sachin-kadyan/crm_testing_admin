@@ -1,4 +1,4 @@
-import { createTag, iService, iServiceTag } from '../../types/store/service';
+import { createTag, iService } from '../../types/store/service';
 import { apiClient } from '../apiClient';
 
 export const uploadServiceMaster = async (parsedData: iService[]) => {

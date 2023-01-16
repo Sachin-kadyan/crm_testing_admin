@@ -3,15 +3,12 @@ import Authenticated from './routes/Authenticated';
 import UnAuthenticated from './routes/UnAuthenticated';
 import cookie from 'js-cookie';
 import { useEffect } from 'react';
-import { useStore } from 'zustand';
 import jwtDecode from 'jwt-decode';
 
 const AppContainer = () => {
   const { user, setUser } = useUserStore();
   useEffect(() => {
-    // cookie.remove('user');
     const userString = cookie.get('user');
-    // console.log(userString);
 
     if (userString) {
       const parsedUserString = JSON.parse(userString!);

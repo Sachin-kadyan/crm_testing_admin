@@ -2,15 +2,20 @@ import { Delete } from '@mui/icons-material';
 import { Box, Chip, Stack, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect } from 'react';
+import { getAllServicesHandler } from '../../api/service/serviceHandler';
 import { getStagesHandler } from '../../api/stages/stagesHandler';
-import useServiceStore from '../../store/serviceStore';
-import { iStage } from '../../types/store/service';
-import AddStage from './widgets/AddStage';
+import AddScript from './widgets/AddScript';
 
 type Props = {};
 
-const Stage = (props: Props) => {
-  const { stages } = useServiceStore();
+const Script = (props: Props) => {
+  useEffect(() => {
+    (async function () {
+      await getAllServicesHandler();
+      await getStagesHandler();
+    })();
+  }, []);
+
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 100 },
     {
@@ -73,47 +78,41 @@ const Stage = (props: Props) => {
     }
   ];
 
-  const returnParentName = (id: string | null) => {
-    return stages.find((element) => element._id === id)?.name;
-  };
+  //   const returnParentName = (id: string | null) => {
+  //     return stages.find((element) => element._id === id)?.name;
+  //   };
 
-  const rows = stages.map((item: iStage, index: number) => {
-    return {
-      name: item.name.toUpperCase(),
-      parent: returnParentName(item.parent),
-      code: item.code,
-      description: item.description,
-      id: index + 1
-    };
-  });
+  //   const rows = stages.map((item: iStage, index: number) => {
+  //     return {
+  //       name: item.name.toUpperCase(),
+  //       parent: returnParentName(item.parent),
+  //       code: item.code,
+  //       description: item.description,
+  //       id: index + 1
+  //     };
+  //   });
 
-  useEffect(() => {
-    (async function () {
-      await getStagesHandler();
-    })();
-  }, []);
   return (
     <Stack height="85vh">
-      <Box></Box>
       <Box
         display="flex"
         justifyContent="space-between"
         marginY={3}
         sx={{ height: '5vh' }}
       >
-        <Typography variant="h4">Stages</Typography>
-        <AddStage />
+        <Typography variant="h4">Scripts</Typography>
+        <AddScript />
       </Box>
-      <DataGrid
+      {/* <DataGrid
         checkboxSelection
         sx={{ background: 'white', p: 3 }}
         columns={columns}
         pageSize={10}
         rowsPerPageOptions={[10]}
         rows={rows}
-      />
+      /> */}
     </Stack>
   );
 };
 
-export default Stage;
+export default Script;

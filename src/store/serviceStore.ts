@@ -22,6 +22,10 @@ const useServiceStore = create<iServiceStore>((set, get) => ({
   stages: [],
   setStages: (stages) => {
     set({ stages });
+  },
+  scripts: [],
+  setScripts: (scripts) => {
+    set({ scripts });
   }
 }));
 

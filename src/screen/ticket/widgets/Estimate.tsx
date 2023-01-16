@@ -1,5 +1,14 @@
-import { Add, AddCircle, Label, Search } from '@mui/icons-material';
 import {
+  Add,
+  AddCircle,
+  ArrowBack,
+  FilePresentOutlined,
+  PictureAsPdf,
+  RemoveRedEye,
+  SendOutlined
+} from '@mui/icons-material';
+import {
+  Alert,
   Autocomplete,
   Box,
   Button,
@@ -18,22 +27,23 @@ import {
   Typography
 } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { createEstimateHandler } from '../../../api/estimate/estimateHandler';
 import { getAllServicesHandler } from '../../../api/service/serviceHandler';
 import { getWardsHandler } from '../../../api/ward/wardHandler';
-import { useServiceGetter } from '../../../hooks/useServiceGetter';
 import useServiceStore from '../../../store/serviceStore';
-import {
-  iEstimate,
-  iService,
-  IWard,
-  serviceAdded
-} from '../../../types/store/service';
+import useTicketStore from '../../../store/ticketStore';
+import { iEstimate, IWard, serviceAdded } from '../../../types/store/service';
 
 type Props = {};
 
 const drawerWidth = 1200;
 
 const Estimate = (props: Props) => {
+  const { tickets } = useTicketStore();
+  const { ticketID } = useParams();
+  const ticket = tickets.find((element) => element._id === ticketID);
+
   useEffect(() => {
     (async function () {
       await getAllServicesHandler();
@@ -52,28 +62,51 @@ const Estimate = (props: Props) => {
     insurancePolicyNumber: '',
     insurancePolicyAmount: 0,
     service: [],
+    investigation: [],
+    procedure: [],
     investigationAmount: 0,
     procedureAmount: 0,
     medicineAmount: 0,
     equipmentAmount: 0,
     bloodAmount: 0,
     additionalAmount: 0,
-    prescription: '',
-    ticket: ''
+    prescription: ticket?.prescription[0]._id!,
+    ticket: ticketID!
   });
+
+  type AlertType = {
+    services: string;
+    procedure: string;
+    investigation: string;
+  };
 
   const [serviceObject, setServiceObject] = useState<serviceAdded>({
     id: '',
     isSameSite: false
   });
-
+  const [isEstimateOpen, setIsEstimateOpen] = useState(false);
+  const [procedure, setProcedure] = useState<string>();
+  const [investigation, setInvestigation] = useState('');
   const [clickedIndex, setClickedIndex] = useState<number | undefined>();
+  const [isPreview, setIsPreview] = useState<boolean>(false);
+  const { services, wards, doctors } = useServiceStore();
 
-  const { services, wards } = useServiceStore();
+  const [alert, setAlert] = useState<AlertType>({
+    investigation: '',
+    procedure: '',
+    services: ''
+  });
 
-  const serviceProps = {
-    options: services,
-    getOptionLabel: (option: iService) => option.name
+  const wardICUSetter = (id: string) => {
+    return wards.find((element) => element._id === id)?.name;
+  };
+
+  const doctorSetter = (id: string) => {
+    return doctors.find((element) => element._id === id)?.name;
+  };
+
+  const handlePreview = () => {
+    setIsPreview(!isPreview);
   };
 
   const handleServiceType = (e: number) => {
@@ -81,30 +114,97 @@ const Estimate = (props: Props) => {
     setEstimateFields({ ...estimateFileds, type: e });
   };
 
+  const addInvestigation = () => {
+    if (investigation) {
+      setAlert({ ...alert, investigation: '' });
+      setEstimateFields({
+        ...estimateFileds,
+        investigation: [...estimateFileds.investigation, investigation]
+      });
+      setInvestigation('');
+    } else {
+      setAlert({
+        ...alert,
+        investigation: 'Please Select a Valid Investigation'
+      });
+    }
+  };
+
+  const addProcedure = () => {
+    if (procedure) {
+      setAlert({ ...alert, procedure: '' });
+      setEstimateFields({
+        ...estimateFileds,
+        procedure: [...estimateFileds.procedure, procedure]
+      });
+      setProcedure('');
+    } else {
+      setAlert({
+        ...alert,
+        procedure: 'Please Select a Valid Procedure'
+      });
+    }
+  };
+
   const addServiceToArray = () => {
-    setEstimateFields({
-      ...estimateFileds,
-      service: [...estimateFileds.service, serviceObject]
-    });
-    setServiceObject({
-      id: '',
-      isSameSite: false
-    });
+    if (serviceObject.id) {
+      setAlert({
+        ...alert,
+        services: ''
+      });
+      setEstimateFields({
+        ...estimateFileds,
+        service: [...estimateFileds.service, serviceObject]
+      });
+      setServiceObject({
+        id: '',
+        isSameSite: false
+      });
+    } else {
+      setAlert({
+        ...alert,
+        services: 'Please Select a Valid Services'
+      });
+    }
   };
 
   const deleteService = (index: number) => {
-    const updatedServices = estimateFileds.service.splice(index, 0);
-    console.log(updatedServices);
-    setEstimateFields({ ...estimateFileds, service: updatedServices });
+    estimateFileds.service.splice(index, 1);
+
+    setEstimateFields({ ...estimateFileds, service: estimateFileds.service });
+  };
+
+  const deleteProcedure = (index: number) => {
+    estimateFileds.procedure.splice(index, 1);
+    setEstimateFields({
+      ...estimateFileds,
+      procedure: estimateFileds.procedure
+    });
+  };
+
+  const deleteInvestigation = (index: number) => {
+    estimateFileds.investigation.splice(index, 1);
+    setEstimateFields({
+      ...estimateFileds,
+      investigation: estimateFileds.investigation
+    });
   };
 
   const serviceGetter = (id: string | undefined) => {
     return services.find((element) => element._id === id)?.name;
   };
 
+  const handleCreateEstimate = () => {
+    createEstimateHandler(estimateFileds);
+  };
+
   return (
     <div>
-      <Button variant="contained" endIcon={<Add />}>
+      <Button
+        onClick={() => setIsEstimateOpen(true)}
+        variant="contained"
+        endIcon={<Add />}
+      >
         Create Estimate
       </Button>
       <Drawer
@@ -116,7 +216,8 @@ const Estimate = (props: Props) => {
           }
         }}
         anchor="right"
-        open
+        open={isEstimateOpen}
+        onClose={() => setIsEstimateOpen(false)}
       >
         <Box
           height="10vh"
@@ -128,27 +229,36 @@ const Estimate = (props: Props) => {
           display="flex"
           alignItems="center"
           position={'sticky'}
+          justifyContent="space-between"
           top={0}
           zIndex={2}
         >
           <Typography variant="h5" fontWeight="bold">
             Create Estimate
           </Typography>
+          <Button
+            variant="contained"
+            endIcon={!isPreview ? <RemoveRedEye /> : <ArrowBack />}
+            onClick={handlePreview}
+          >
+            {!isPreview ? 'Preview Estimate' : 'Back To Editor'}
+          </Button>
         </Box>
         <Stack direction="row" height={'100vh'} overflow="hidden">
           <Box width="30%" position="static" sx={{ offsetDistance: '10vh' }}>
             <img
-              src="https://images.ctfassets.net/aj9z008chlq0/7l0trYEJH9HyxUj8qYjuAm/09ebc15ce9b94db1b349aa4dfbfbc8cf/elasticTemplateExample.png?w=495&h=1049&q=50&fm=png"
+              src={ticket?.prescription[0].image}
               style={{ maxHeight: '95vh' }}
               alt="prescription"
             />
           </Box>
           <Box
+            display={!isPreview ? 'block' : 'none'}
             bgcolor="#f1f5f7"
             width="70%"
             p={1}
             height="90vh"
-            overflow="scroll"
+            sx={{ overflowY: 'scroll' }}
           >
             <Box my={1} bgcolor="white" borderRadius={3} p={1}>
               <Typography fontWeight={500} my={1}>
@@ -173,64 +283,67 @@ const Estimate = (props: Props) => {
                 })}
               </Stack>
             </Box>
-            <Box my={1} bgcolor="white" borderRadius={3} p={1}>
-              <Typography fontWeight={500} my={1}>
-                Ward Details
-              </Typography>
-              <Stack direction="row" spacing={2}>
-                <FormControl fullWidth size="small">
-                  <InputLabel id="demo-simple-select-label">
-                    ICU Type
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="ICU Type"
-                    value={estimateFileds.icuType}
+            {estimateFileds.type === 1 && (
+              <Box my={1} bgcolor="white" borderRadius={3} p={1}>
+                <Typography fontWeight={500} my={1}>
+                  Ward Details
+                </Typography>
+                <Stack direction="row" spacing={2}>
+                  <FormControl fullWidth size="small">
+                    <InputLabel id="demo-simple-select-label">
+                      ICU Type
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      label="ICU Type"
+                      value={estimateFileds.icuType}
+                      onChange={(e) => {
+                        setEstimateFields({
+                          ...estimateFileds,
+                          icuType: e.target.value
+                        });
+                      }}
+                    >
+                      {wards
+                        .filter((ward) => ward.type === 1)
+                        .map((item: IWard, index: number) => {
+                          return (
+                            <MenuItem value={item._id}>{item.name}</MenuItem>
+                          );
+                        })}
+                    </Select>
+                  </FormControl>
+                  <TextField
+                    label="Ward Days"
+                    required
+                    size="small"
                     onChange={(e) => {
                       setEstimateFields({
                         ...estimateFileds,
-                        icuType: e.target.value
+                        wardDays: +e.target.value
                       });
                     }}
-                  >
-                    {wards
-                      .filter((ward) => ward.type === 1)
-                      .map((item: IWard, index: number) => {
-                        return (
-                          <MenuItem value={item._id}>{item.name}</MenuItem>
-                        );
-                      })}
-                  </Select>
-                </FormControl>
-                <TextField
-                  label="Ward Days"
-                  required
-                  size="small"
-                  onChange={(e) => {
-                    setEstimateFields({
-                      ...estimateFileds,
-                      wardDays: +e.target.value
-                    });
-                  }}
-                  placeholder="5"
-                  sx={{ borderRadius: 40 }}
-                />
-                <TextField
-                  onChange={(e) => {
-                    setEstimateFields({
-                      ...estimateFileds,
-                      icuDays: +e.target.value
-                    });
-                  }}
-                  label="ICU Days"
-                  required
-                  size="small"
-                  placeholder="5"
-                  sx={{ borderRadius: 40 }}
-                />
-              </Stack>
-            </Box>
+                    placeholder="5"
+                    sx={{ borderRadius: 40 }}
+                  />
+                  <TextField
+                    onChange={(e) => {
+                      setEstimateFields({
+                        ...estimateFileds,
+                        icuDays: +e.target.value
+                      });
+                    }}
+                    label="ICU Days"
+                    required
+                    size="small"
+                    placeholder="5"
+                    sx={{ borderRadius: 40 }}
+                  />
+                </Stack>
+              </Box>
+            )}
+
             <Box my={1} bgcolor="white" borderRadius={3} p={1}>
               <Typography fontWeight={500} my={1}>
                 Emergency Details
@@ -351,13 +464,14 @@ const Estimate = (props: Props) => {
               </Typography>
               <Stack direction="row" spacing={2}>
                 <Autocomplete
+                  aria-required={true}
                   options={services}
                   onChange={(event, value) =>
                     setServiceObject({ ...serviceObject, id: value?._id })
                   }
                   id="combo-box-demo"
                   getOptionLabel={(option) => option.name}
-                  sx={{ width: 500, textTransform: 'capitalize' }}
+                  sx={{ width: 400, textTransform: 'capitalize' }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -399,7 +513,7 @@ const Estimate = (props: Props) => {
                 <Stack
                   my={1}
                   display="grid "
-                  gridTemplateColumns="repeat(4,1fr)"
+                  gridTemplateColumns="repeat(3,1fr)"
                   gap={1}
                 >
                   {estimateFileds.service.map((item, index: number) => (
@@ -409,9 +523,17 @@ const Estimate = (props: Props) => {
                         item.isSameSite ? 'Same Site' : 'Different Site'
                       }`}
                       variant="outlined"
+                      sx={{ textTransform: 'capitalize' }}
                       onDelete={() => deleteService(index)}
                     />
                   ))}
+                </Stack>
+              )}
+              {alert?.services.length > 0 && (
+                <Stack my={1} width="50%">
+                  <Alert variant="outlined" severity="warning">
+                    {alert?.services}
+                  </Alert>
                 </Stack>
               )}
             </Box>
@@ -421,9 +543,12 @@ const Estimate = (props: Props) => {
               </Typography>
               <Stack direction="row" spacing={2}>
                 <Autocomplete
-                  {...serviceProps}
+                  aria-required={true}
+                  options={services}
+                  onChange={(event, value) => setInvestigation(value?._id!)}
                   id="combo-box-demo"
-                  sx={{ width: 500 }}
+                  getOptionLabel={(option) => option.name}
+                  sx={{ width: 400, textTransform: 'capitalize' }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -432,16 +557,36 @@ const Estimate = (props: Props) => {
                     />
                   )}
                 />
-                <Button endIcon={<AddCircle />}>Add Investigation</Button>
+                <Button endIcon={<AddCircle />} onClick={addInvestigation}>
+                  Add Investigation
+                </Button>
               </Stack>
-              <Stack my={1} direction="row" spacing={2}>
-                <Chip
-                  color="primary"
-                  label="Investigation Name"
-                  variant="outlined"
-                  onDelete={() => console.log('Deleted')}
-                />
-              </Stack>
+              {alert?.investigation.length > 0 && (
+                <Stack my={1} width="50%">
+                  <Alert variant="outlined" severity="warning">
+                    {alert?.investigation}
+                  </Alert>
+                </Stack>
+              )}
+              {estimateFileds.investigation?.length > 0 && (
+                <Stack
+                  my={1}
+                  display="grid "
+                  gridTemplateColumns="repeat(3,1fr)"
+                  gap={1}
+                >
+                  {estimateFileds.investigation.map((item, index: number) => (
+                    <Chip
+                      color="primary"
+                      label={`${serviceGetter(item)}`}
+                      variant="outlined"
+                      onDelete={() => deleteInvestigation(index)}
+                      sx={{ textTransform: 'capitalize' }}
+                    />
+                  ))}
+                </Stack>
+              )}
+
               <Stack my={1} direction="row" spacing={2}>
                 <TextField
                   label="Investigation Charges"
@@ -462,9 +607,12 @@ const Estimate = (props: Props) => {
               </Typography>
               <Stack direction="row" spacing={2}>
                 <Autocomplete
-                  {...serviceProps}
+                  aria-required={true}
+                  options={services}
+                  onChange={(event, value) => setProcedure(value?._id!)}
                   id="combo-box-demo"
-                  sx={{ width: 500 }}
+                  getOptionLabel={(option) => option.name}
+                  sx={{ width: 400, textTransform: 'capitalize' }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -473,16 +621,36 @@ const Estimate = (props: Props) => {
                     />
                   )}
                 />
-                <Button endIcon={<AddCircle />}>Add Procedure</Button>
+                <Button onClick={addProcedure} endIcon={<AddCircle />}>
+                  Add Procedure
+                </Button>
               </Stack>
-              <Stack my={1} direction="row" spacing={2}>
-                <Chip
-                  color="primary"
-                  label="Procedure Name"
-                  variant="outlined"
-                  onDelete={() => console.log('Deleted')}
-                />
-              </Stack>
+              {estimateFileds.procedure.length > 0 && (
+                <Stack
+                  my={1}
+                  display="grid "
+                  gridTemplateColumns="repeat(3,1fr)"
+                  gap={1}
+                >
+                  {estimateFileds.procedure.map((item, index: number) => (
+                    <Chip
+                      color="primary"
+                      label={`${serviceGetter(item)}`}
+                      variant="outlined"
+                      onDelete={() => deleteProcedure(index)}
+                      sx={{ textTransform: 'capitalize' }}
+                    />
+                  ))}
+                </Stack>
+              )}
+              {alert.procedure.length > 0 && (
+                <Stack my={1} width="50%">
+                  <Alert variant="outlined" severity="warning">
+                    {alert.procedure}
+                  </Alert>
+                </Stack>
+              )}
+
               <Stack my={1} direction="row" spacing={2}>
                 <TextField
                   label="Procedure Charges"
@@ -554,6 +722,241 @@ const Estimate = (props: Props) => {
                 />
               </Stack>
             </Box>
+          </Box>
+
+          {/* Preview Component  */}
+
+          <Box
+            bgcolor="#f1f5f7"
+            width="70%"
+            p={1}
+            height="90vh"
+            sx={{ overflowY: 'scroll' }}
+            display={isPreview ? 'block' : 'none'}
+          >
+            <Stack my={1} bgcolor="white" p={1} borderRadius={2}>
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="subtitle1">
+                  <PictureAsPdf />
+                  Preview Estimate
+                </Typography>
+
+                <Button
+                  onClick={handleCreateEstimate}
+                  endIcon={<SendOutlined />}
+                >
+                  Send Estimate
+                </Button>
+              </Box>
+
+              <Stack
+                direction="row"
+                spacing={4}
+                my={1}
+                p={1}
+                borderRadius={2}
+                bgcolor="#f1f1f1"
+              >
+                <Box>
+                  <Typography
+                    textTransform="capitalize"
+                    variant="body1"
+                    fontWeight={500}
+                  >
+                    {ticket?.consumer[0].firstName +
+                      ' ' +
+                      ticket?.consumer[0].lastName}
+                  </Typography>
+                  <Typography>#{ticket?.consumer[0].uid}</Typography>
+                  <Typography textTransform="capitalize">
+                    Dr. {doctorSetter(ticket?.prescription[0].doctor!)}
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography>
+                    <FilePresentOutlined />
+                    {ticket?.prescription[0].symptoms}
+                  </Typography>
+                </Box>
+              </Stack>
+            </Stack>
+            <Stack my={1} bgcolor="white" p={1} borderRadius={2}>
+              <Stack
+                direction="row"
+                spacing={4}
+                my={1}
+                p={1}
+                borderRadius={2}
+                bgcolor="#f1f1f1"
+              >
+                <Box>
+                  <Typography variant="caption" fontWeight={500}>
+                    Package Type{' '}
+                    <Chip
+                      size="small"
+                      variant="outlined"
+                      color="primary"
+                      label={
+                        estimateFileds.type === 0 ? 'Packaged' : 'Non Pacakage'
+                      }
+                    />
+                  </Typography>
+                  {estimateFileds.type === 1 && (
+                    <Stack my={1}>
+                      <Typography variant="caption" fontWeight={500}>
+                        Ward Details
+                      </Typography>
+                      <Typography variant="caption">
+                        ICU Type: {wardICUSetter(estimateFileds.icuType)}
+                      </Typography>
+                      <Typography variant="caption">
+                        ICU Days: {estimateFileds.icuDays}
+                      </Typography>
+                      <Typography variant="caption">
+                        Ward Days: {estimateFileds.icuDays}
+                      </Typography>
+                    </Stack>
+                  )}
+                </Box>
+                <Box>
+                  <Typography variant="caption" fontWeight={500}>
+                    Payment Type :{' '}
+                    {estimateFileds.paymentType === 0
+                      ? 'Cash'
+                      : estimateFileds.paymentType === 1
+                      ? 'Insurance'
+                      : 'CGHS | ECHS'}
+                  </Typography>
+
+                  {estimateFileds.paymentType === 1 && (
+                    <Stack my={1}>
+                      <Typography variant="caption" fontWeight={500}>
+                        Insurance Details
+                      </Typography>
+                      <Typography variant="caption">
+                        Insurance Comapny: {estimateFileds.insuranceCompany}
+                      </Typography>
+                      <Typography variant="caption">
+                        Policy Number: {estimateFileds.insurancePolicyNumber}
+                      </Typography>
+                      <Typography variant="caption">
+                        Policy Amount: {estimateFileds.insurancePolicyAmount}
+                      </Typography>
+                    </Stack>
+                  )}
+                </Box>
+                <Box>
+                  <Typography variant="caption" fontWeight={500}>
+                    Emergency Details{' '}
+                    <Chip
+                      color="primary"
+                      size="small"
+                      variant="outlined"
+                      label={
+                        estimateFileds.isEmergency === true
+                          ? 'Emergency Case'
+                          : 'Not Emergency'
+                      }
+                    />
+                  </Typography>
+                </Box>
+              </Stack>
+              <Stack my={1} p={1} borderRadius={2} bgcolor="#f1f1f1">
+                <Typography variant="body2" fontWeight={500}>
+                  Services Details
+                </Typography>
+                <Box my={1}>
+                  {estimateFileds.service.length > 0 ? (
+                    estimateFileds.service.map((item, index: number) => (
+                      <Chip
+                        size="small"
+                        color="primary"
+                        label={`${serviceGetter(item.id)}/ ${
+                          item.isSameSite ? 'Same Site' : 'Different Site'
+                        }`}
+                        variant="outlined"
+                        sx={{ textTransform: 'capitalize', mx: 1 }}
+                      />
+                    ))
+                  ) : (
+                    <Alert severity="warning" sx={{ width: '50%' }}>
+                      {' '}
+                      Required Field Please Select a Service
+                    </Alert>
+                  )}
+                </Box>
+                <Typography variant="body2" fontWeight={500}>
+                  Investigation Details
+                </Typography>
+                <Box my={1}>
+                  {estimateFileds.investigation.length > 0 ? (
+                    estimateFileds.investigation.map((item, index: number) => (
+                      <Chip
+                        size="small"
+                        color="primary"
+                        label={`${serviceGetter(item)}`}
+                        variant="outlined"
+                        sx={{ textTransform: 'capitalize', mx: 1 }}
+                      />
+                    ))
+                  ) : (
+                    <Typography variant="caption">
+                      No Investigation Selected
+                    </Typography>
+                  )}
+                  <Stack my-={1}>
+                    <Typography fontWeight={500} variant="caption">
+                      Investigation Amount :{' '}
+                      {estimateFileds.investigationAmount}
+                    </Typography>
+                  </Stack>
+                </Box>
+                <Typography variant="body2" fontWeight={500}>
+                  Procedure Details
+                </Typography>
+                <Box my={1}>
+                  {estimateFileds.procedure.length > 0 ? (
+                    estimateFileds.procedure.map((item, index: number) => (
+                      <Chip
+                        size="small"
+                        color="primary"
+                        label={`${serviceGetter(item)}`}
+                        variant="outlined"
+                        sx={{ textTransform: 'capitalize', mx: 1 }}
+                      />
+                    ))
+                  ) : (
+                    <Typography variant="caption">
+                      No Procedure Selected
+                    </Typography>
+                  )}
+                  <Stack my-={1}>
+                    <Typography fontWeight={500} variant="caption">
+                      Procedure Amount : {estimateFileds.procedureAmount}
+                    </Typography>
+                  </Stack>
+                </Box>
+              </Stack>
+              <Stack my={1} p={1} borderRadius={2} bgcolor="#f1f1f1">
+                <Typography variant="body2" fontWeight={500}>
+                  Other Charges
+                </Typography>
+                <Stack direction="row" spacing={3}>
+                  <Typography variant="caption" fontWeight={500}>
+                    Medicine Amount : {estimateFileds.medicineAmount}
+                  </Typography>
+                  <Typography variant="caption" fontWeight={500}>
+                    Equipment Amount : {estimateFileds.equipmentAmount}
+                  </Typography>
+                  <Typography variant="caption" fontWeight={500}>
+                    Blood Amount : {estimateFileds.bloodAmount}
+                  </Typography>
+                  <Typography variant="caption" fontWeight={500}>
+                    Miscellenous Amount : {estimateFileds.additionalAmount}
+                  </Typography>
+                </Stack>
+              </Stack>
+            </Stack>
           </Box>
         </Stack>
       </Drawer>

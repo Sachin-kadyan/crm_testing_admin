@@ -17,7 +17,13 @@ import Typography from '@mui/material/Typography';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { Collapse, Stack } from '@mui/material';
 import BackupTableIcon from '@mui/icons-material/BackupTable';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import {
+  AccountTreeOutlined,
+  ConfirmationNumberOutlined,
+  DocumentScannerOutlined,
+  ExpandLess,
+  ExpandMore
+} from '@mui/icons-material';
 import DataObjectOutlinedIcon from '@mui/icons-material/DataObjectOutlined';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -70,13 +76,23 @@ export default function ResponsiveDrawer(props: Props) {
           title: 'Tags',
           icon: <DataObjectOutlinedIcon />,
           link: '/tags'
+        },
+        {
+          title: 'Scripts',
+          icon: <DocumentScannerOutlined />,
+          link: '/scripts'
         }
       ]
     },
     {
       title: 'Stages',
-      icon: <AccountTreeIcon />,
+      icon: <AccountTreeOutlined />,
       link: '/stages'
+    },
+    {
+      title: 'Tickets',
+      icon: <ConfirmationNumberOutlined />,
+      link: '/ticket'
     }
   ];
   const { window } = props;

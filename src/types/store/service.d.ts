@@ -37,6 +37,8 @@ export interface iEstimate {
   insurancePolicyNumber: string;
   insurancePolicyAmount: number;
   service: serviceAdded[];
+  investigation: string[];
+  procedure: string[];
   investigationAmount: number;
   procedureAmount: number;
   medicineAmount: number;
@@ -76,6 +78,12 @@ export interface iStage {
   parent: null | string;
 }
 
+export interface iScript {
+  text: string;
+  service: string;
+  stage: string;
+}
+
 export interface iServiceStore {
   departments: iDepartment[];
   setDepartments: (departments: iDepartment[]) => void;
@@ -89,4 +97,6 @@ export interface iServiceStore {
   setWards: (wards: IWard[]) => void;
   stages: iStage[];
   setStages: (stages: iStage[]) => void;
+  scripts: iScript[];
+  setScripts: (scripts: iScript[]) => void;
 }

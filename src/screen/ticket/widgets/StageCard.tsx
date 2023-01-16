@@ -1,18 +1,23 @@
 import { Box, Step, StepLabel, Stepper } from '@mui/material';
+import useServiceStore from '../../../store/serviceStore';
+import { iStage } from '../../../types/store/service';
 
 type Props = {};
 
-const steps = ['Stage 1', 'Stage 2', 'Stage 3', 'Stage 4', 'Stage 5'];
-
 const StageCard = (props: Props) => {
+  const { stages } = useServiceStore();
+
   return (
     <Box>
       <Stepper activeStep={0} alternativeLabel>
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
+        {stages.map(
+          (label: iStage, index) =>
+            label.parent === null && (
+              <Step key={index}>
+                <StepLabel>{label.name}</StepLabel>
+              </Step>
+            )
+        )}
       </Stepper>
     </Box>
   );

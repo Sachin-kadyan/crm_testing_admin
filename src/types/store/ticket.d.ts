@@ -1,3 +1,5 @@
+import { iEstimate } from './service';
+
 export interface iConsumer {
   _id: string;
   firstName: string;
@@ -34,6 +36,7 @@ export interface iTicket {
   _id: string;
   consumer: iConsumer[];
   prescription: iPrescrition[];
+  estimate: iEstimate[];
   creator: string;
   assigned: string;
   stage: string;
