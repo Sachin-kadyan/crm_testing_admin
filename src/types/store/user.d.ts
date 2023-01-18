@@ -1,3 +1,5 @@
+import { Roles } from "../../constants/types";
+
 export interface iUser {
   _id: ObjectId;
   firstName: string;
@@ -5,7 +7,7 @@ export interface iUser {
   email: string;
   phone: string;
   uid: string;
-  role: string;
+  role: Roles;
   image: string;
   access: string;
   refresh: string;

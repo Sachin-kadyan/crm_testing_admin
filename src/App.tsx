@@ -1,14 +1,32 @@
-import React from "react";
-import { BrowserRouter } from "react-router-dom";
-import Toast from "./components/Toast";
-import AppContainer from "./container/AppContainer";
+import { createTheme, PaletteMode, ThemeProvider } from '@mui/material';
+import React, { createContext, useMemo, useState } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import Toast from './components/Toast';
+import AppContainer from './container/AppContainer';
+import { getDesignTokens } from './styles/theme';
+
+export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 function App() {
+  const [mode, setMode] = useState<PaletteMode>('light');
+  const colorMode = useMemo(
+    () => ({
+      toggleColorMode: () => {
+        setMode((prev) => (prev === 'light' ? 'dark' : 'light'));
+      }
+    }),
+    []
+  );
+  const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
   return (
-    <BrowserRouter>
-      <AppContainer />
-      <Toast />
-    </BrowserRouter>
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <AppContainer />
+          <Toast />
+        </BrowserRouter>
+      </ThemeProvider>
+    </ColorModeContext.Provider>
   );
 }
 
