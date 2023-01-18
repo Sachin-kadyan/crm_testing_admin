@@ -4,6 +4,8 @@ import UnAuthenticated from './routes/UnAuthenticated';
 import cookie from 'js-cookie';
 import { useEffect } from 'react';
 import jwtDecode from 'jwt-decode';
+import { Roles } from '../constants/types';
+import Support from './routes/Support';
 
 const AppContainer = () => {
   const { user, setUser } = useUserStore();
@@ -24,8 +26,16 @@ const AppContainer = () => {
       setUser(null);
     }
   }, [setUser]);
-
-  return user !== null ? <Authenticated /> : <UnAuthenticated />;
+  if (
+    user !== null &&
+    (user.role === Roles.ADMIN || user.role === Roles.REPRESENTATIVE)
+  ) {
+    return <Authenticated />;
+  } else if (user !== null && user.role === Roles.SUPPORT) {
+    return <Support />;
+  } else {
+    return <UnAuthenticated />;
+  }
 };
 
 export default AppContainer;
