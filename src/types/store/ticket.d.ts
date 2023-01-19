@@ -18,7 +18,7 @@ export interface iConsumer {
   uhid: string;
 }
 
-export interface iPrescrition {
+export interface iPrescription {
   _id: string;
   admission: null;
   condition: string;
@@ -35,7 +35,7 @@ export interface iPrescrition {
 export interface iTicket {
   _id: string;
   consumer: iConsumer[];
-  prescription: iPrescrition[];
+  prescription: iPrescription[];
   estimate: iEstimate[];
   creator: string;
   assigned: string;

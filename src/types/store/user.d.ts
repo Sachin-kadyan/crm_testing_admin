@@ -1,4 +1,4 @@
-import { Roles } from "../../constants/types";
+import { Roles } from '../../constants/types';
 
 export interface iUser {
   _id: ObjectId;
@@ -16,4 +16,5 @@ export interface iUser {
 export interface iUserStore {
   user: null | iUser;
   setUser: (user: iUser | null) => void;
+  
 }

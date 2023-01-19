@@ -1,5 +1,5 @@
 import { PaletteMode } from '@mui/material';
-import { deepPurple, indigo, lightGreen } from '@mui/material/colors';
+import { deepPurple, indigo } from '@mui/material/colors';
 
 export const getDesignTokens = (mode: PaletteMode) => ({
   palette: {
@@ -7,7 +7,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
     primary: {
       dark: indigo[900],
       main: indigo[600],
-      light: indigo[400]
+      light: indigo[200]
     },
     secondary: {
       dark: deepPurple[800],
