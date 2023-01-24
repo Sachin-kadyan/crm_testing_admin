@@ -18,6 +18,7 @@ export type iCreateTicket = {
   followUp: Date | number;
   image: string | null;
   consumer: string;
+  service?: { _id: string; label: string };
 };
 
 export const createTicketHandler = async (prescription: iCreateTicket) => {
@@ -34,6 +35,9 @@ export const createTicketHandler = async (prescription: iCreateTicket) => {
     prescriptionData.append('condition', prescription.condition);
   prescriptionData.append('medicines', JSON.stringify(prescription.medicines));
   prescriptionData.append('followUp', JSON.stringify(prescription.followUp));
+  prescription.service &&
+    prescriptionData.append('service', prescription.service._id);
+
   /* @ts-ignore */
   const blob = await (await fetch(prescription.image)).blob();
   prescriptionData.append('image', blob);
