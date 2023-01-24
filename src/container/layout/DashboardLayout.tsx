@@ -112,7 +112,7 @@ export default function ResponsiveDrawer(props: Props) {
         {
           title: 'Node Connector',
           icon: <CloudSyncOutlined />,
-          link: '/flow/node-lists'
+          link: '/flow/connector'
         }
       ]
     }
