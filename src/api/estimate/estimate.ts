@@ -1,4 +1,4 @@
-import { iEstimate } from '../../types/store/service';
+import { iEstimate } from '../../types/store/ticket';
 import { apiClient } from '../apiClient';
 
 export const createEstimate = async (estimate: iEstimate) => {

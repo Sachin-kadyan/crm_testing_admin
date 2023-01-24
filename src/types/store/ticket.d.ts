@@ -1,5 +1,3 @@
-import { iEstimate } from './service';
-
 export interface iConsumer {
   _id: string;
   firstName: string;
@@ -16,6 +14,32 @@ export interface iConsumer {
     postalCode: string;
   };
   uhid: string;
+}
+
+export interface iEstimate {
+  type: number;
+  isEmergency: boolean;
+  wardDays: number;
+  icuDays: number;
+  icuType: string;
+  paymentType: number;
+  insuranceCompany: string;
+  insurancePolicyNumber: string;
+  insurancePolicyAmount: number;
+  service: serviceAdded[];
+  investigation: string[];
+  procedure: string[];
+  investigationAmount: number;
+  procedureAmount: number;
+  medicineAmount: number;
+  equipmentAmount: number;
+  bloodAmount: number;
+  additionalAmount: number;
+  prescription: string;
+  ticket: string;
+  creator?: string;
+  total?: number;
+  createdAt?: Date;
 }
 
 export interface iPrescrition {
@@ -46,3 +70,4 @@ export interface iTicketStore {
   tickets: iTicket[];
   setTickets: (tickets: iTicket[]) => void;
 }
+

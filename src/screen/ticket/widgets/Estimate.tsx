@@ -33,20 +33,22 @@ import { getAllServicesHandler } from '../../../api/service/serviceHandler';
 import { getWardsHandler } from '../../../api/ward/wardHandler';
 import useServiceStore from '../../../store/serviceStore';
 import useTicketStore from '../../../store/ticketStore';
-import { iEstimate, IWard, serviceAdded } from '../../../types/store/service';
+import { IWard, serviceAdded } from '../../../types/store/service';
+import { iEstimate } from '../../../types/store/ticket';
 
 type Props = {};
 
 const drawerWidth = 1200;
 
 const Estimate = (props: Props) => {
+  const [pageNumber, setPageNumber] = useState<number>(0);
   const { tickets } = useTicketStore();
   const { ticketID } = useParams();
   const ticket = tickets.find((element) => element._id === ticketID);
 
   useEffect(() => {
     (async function () {
-      await getAllServicesHandler();
+      await getAllServicesHandler(pageNumber);
       await getWardsHandler();
     })();
   }, []);
@@ -89,7 +91,7 @@ const Estimate = (props: Props) => {
   const [investigation, setInvestigation] = useState('');
   const [clickedIndex, setClickedIndex] = useState<number | undefined>();
   const [isPreview, setIsPreview] = useState<boolean>(false);
-  const { services, wards, doctors } = useServiceStore();
+  const { allServices, wards, doctors } = useServiceStore();
 
   const [alert, setAlert] = useState<AlertType>({
     investigation: '',
@@ -191,7 +193,7 @@ const Estimate = (props: Props) => {
   };
 
   const serviceGetter = (id: string | undefined) => {
-    return services.find((element) => element._id === id)?.name;
+    return allServices.services.find((element) => element._id === id)?.name;
   };
 
   const handleCreateEstimate = () => {
@@ -465,7 +467,7 @@ const Estimate = (props: Props) => {
               <Stack direction="row" spacing={2}>
                 <Autocomplete
                   aria-required={true}
-                  options={services}
+                  options={allServices.services}
                   onChange={(event, value) =>
                     setServiceObject({ ...serviceObject, id: value?._id })
                   }
@@ -544,7 +546,7 @@ const Estimate = (props: Props) => {
               <Stack direction="row" spacing={2}>
                 <Autocomplete
                   aria-required={true}
-                  options={services}
+                  options={allServices.services}
                   onChange={(event, value) => setInvestigation(value?._id!)}
                   id="combo-box-demo"
                   getOptionLabel={(option) => option.name}
@@ -608,7 +610,7 @@ const Estimate = (props: Props) => {
               <Stack direction="row" spacing={2}>
                 <Autocomplete
                   aria-required={true}
-                  options={services}
+                  options={allServices.services}
                   onChange={(event, value) => setProcedure(value?._id!)}
                   id="combo-box-demo"
                   getOptionLabel={(option) => option.name}

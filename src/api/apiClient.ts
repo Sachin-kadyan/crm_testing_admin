@@ -95,18 +95,29 @@ class ApiClient {
   }
 
   private errorSnackbarHandler(data: any) {
-    console.log(data);
-    data.messages.map((item: any) => {
-      useEventStore.setState({
-        snacks: [
-          ...useEventStore.getState().snacks,
-          {
-            message: item.error,
-            type: 'error',
-            id: useEventStore.getState().snacks.length
-          }
-        ]
-      });
+    // data.messages.map((item: any) => {
+    //   console.log(item);
+    //   useEventStore.setState({
+    //     snacks: [
+    //       ...useEventStore.getState().snacks,
+    //       {
+    //         message: item.message,
+    //         type: 'error',
+    //         id: useEventStore.getState().snacks.length
+    //       }
+    //     ]
+    //   });
+    // });
+
+    useEventStore.setState({
+      snacks: [
+        ...useEventStore.getState().snacks,
+        {
+          message: data.message,
+          type: 'error',
+          id: useEventStore.getState().snacks.length
+        }
+      ]
     });
   }
 
@@ -114,7 +125,6 @@ class ApiClient {
   // We can handle generic app errors depending on the status code
   private handleError(error: any) {
     const { status, data } = error;
-    console.log(data, status);
     this.errorSnackbarHandler(data);
     switch (status) {
       case StatusCode.InternalServerError: {

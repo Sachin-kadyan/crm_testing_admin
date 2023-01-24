@@ -13,7 +13,7 @@ type Props = {
 };
 
 const TicketCard = (props: Props) => {
-  const { doctors, departments, services } = useServiceStore();
+  const { doctors, departments, allServices } = useServiceStore();
 
   const doctorSetter = (id: string) => {
     return doctors.find((element) => element._id === id)?.name;
@@ -24,9 +24,6 @@ const TicketCard = (props: Props) => {
   };
 
   const navigate = useNavigate();
-  const serviceSetter = (id: string) => {
-    return services.find((element) => element._id === id)?.name;
-  };
 
   return (
     <Box
@@ -83,7 +80,7 @@ const TicketCard = (props: Props) => {
         {departmentSetter(props.patientData.prescription[0].departments[0])})
       </Typography>
       <Typography variant="inherit" textTransform="capitalize">
-        {serviceSetter(props.patientData.estimate[0].service[0].id!)}
+        {props.patientData.estimate[0]?.service[0]?.name}
       </Typography>
       <Box
         sx={{
@@ -96,9 +93,9 @@ const TicketCard = (props: Props) => {
         <Typography fontWeight={500}>₹5,000</Typography>
         <Chip
           label={
-            props.patientData.estimate[0].paymentType === 0
+            props.patientData.estimate[0]?.paymentType === 0
               ? 'Cash'
-              : props.patientData.estimate[0].paymentType === 1
+              : props.patientData.estimate[0]?.paymentType === 1
               ? 'Insurance'
               : 'CGHS/ECHS'
           }

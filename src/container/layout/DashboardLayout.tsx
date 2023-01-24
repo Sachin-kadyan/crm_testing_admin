@@ -4,14 +4,11 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DomainAddIcon from '@mui/icons-material/DomainAdd';
-import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
-import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
@@ -19,15 +16,18 @@ import { Collapse, Stack } from '@mui/material';
 import BackupTableIcon from '@mui/icons-material/BackupTable';
 import {
   AccountTreeOutlined,
+  CloudSyncOutlined,
   ConfirmationNumberOutlined,
   DocumentScannerOutlined,
   ExpandLess,
-  ExpandMore
+  ExpandMore,
+  FormatListNumberedOutlined,
+  QuickreplyOutlined,
+  SchemaOutlined
 } from '@mui/icons-material';
 import DataObjectOutlinedIcon from '@mui/icons-material/DataObjectOutlined';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import GroupsIcon from '@mui/icons-material/Groups';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import Logout from '../../screen/login/Logout';
 import useUserStore from '../../store/userStore';
 
@@ -93,6 +93,28 @@ export default function ResponsiveDrawer(props: Props) {
       title: 'Tickets',
       icon: <ConfirmationNumberOutlined />,
       link: '/ticket'
+    },
+    {
+      title: 'WhatsappFlow',
+      icon: <SchemaOutlined />,
+      link: '/flow',
+      submenu: [
+        {
+          title: 'Add Node Replies',
+          icon: <QuickreplyOutlined />,
+          link: '/flow/node-replies'
+        },
+        {
+          title: 'Add Node Lists',
+          icon: <FormatListNumberedOutlined />,
+          link: '/flow/node-lists'
+        },
+        {
+          title: 'Node Connector',
+          icon: <CloudSyncOutlined />,
+          link: '/flow/node-lists'
+        }
+      ]
     }
   ];
   const { window } = props;
@@ -235,8 +257,8 @@ export default function ResponsiveDrawer(props: Props) {
             {submenu &&
               submenu.map((menuItem, index: number) => {
                 return (
-                  <Link to={menuItem.link}>
-                    <ListItemButton key={index} sx={{ pl: 4 }}>
+                  <Link key={index} to={menuItem.link}>
+                    <ListItemButton sx={{ pl: 4 }}>
                       <ListItemIcon>{menuItem.icon}</ListItemIcon>
                       <ListItemText primary={menuItem.title} />
                     </ListItemButton>

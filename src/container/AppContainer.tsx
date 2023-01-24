@@ -4,6 +4,7 @@ import UnAuthenticated from './routes/UnAuthenticated';
 import cookie from 'js-cookie';
 import { useEffect } from 'react';
 import jwtDecode from 'jwt-decode';
+;
 
 const AppContainer = () => {
   const { user, setUser } = useUserStore();
@@ -24,6 +25,8 @@ const AppContainer = () => {
       setUser(null);
     }
   }, [setUser]);
+
+
 
   return user !== null ? <Authenticated /> : <UnAuthenticated />;
 };

@@ -36,15 +36,18 @@ const AddStage = (props: Props) => {
   const { stages } = useServiceStore();
   const [openModal, setOpenModal] = useState(false);
   const [message, setMessage] = useState('');
-  const [stage, setStage] = useState({
+  const [stage, setStage] = useState<Stage>({
     name: '',
     code: 0,
     description: '',
     parent: ''
   });
 
+  type Stage = Omit<iStage, '_id'>;
+
   const handleAddStage = async () => {
-    await createStageHandler(stage as iStage);
+    await createStageHandler(stage);
+    console.log(stage);
     setMessage('Stage Added');
   };
 
@@ -88,9 +91,13 @@ const AddStage = (props: Props) => {
               id="demo-simple-select"
               label="Select Parent"
               value={stage.parent}
-              onChange={(e) => setStage({ ...stage, parent: e.target.value })}
+              onChange={(e) => {
+                e.target.value !== 'null'
+                  ? setStage({ ...stage, parent: e.target.value })
+                  : setStage({ ...stage, parent: null });
+              }}
             >
-              <MenuItem value="">None</MenuItem>
+              <MenuItem value="null">None</MenuItem>
               {stages.map(
                 (item) =>
                   item.parent === null && (

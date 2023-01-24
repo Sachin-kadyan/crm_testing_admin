@@ -26,33 +26,15 @@ export interface iServiceTag {
   _id: string;
 }
 
-export interface iEstimate {
-  type: number;
-  isEmergency: boolean;
-  wardDays: number;
-  icuDays: number;
-  icuType: string;
-  paymentType: number;
-  insuranceCompany: string;
-  insurancePolicyNumber: string;
-  insurancePolicyAmount: number;
-  service: serviceAdded[];
-  investigation: string[];
-  procedure: string[];
-  investigationAmount: number;
-  procedureAmount: number;
-  medicineAmount: number;
-  equipmentAmount: number;
-  bloodAmount: number;
-  additionalAmount: number;
-  prescription: string;
-  ticket: string;
-}
-
 export type serviceAdded = {
   id: string | undefined;
   isSameSite: boolean;
 };
+
+export interface iAllServices {
+  services: iService[];
+  total: number;
+}
 
 export interface iService {
   _id?: string;
@@ -71,7 +53,7 @@ export interface iService {
 }
 
 export interface iStage {
-  _id: string;
+  _id?: string;
   name: string;
   code: number;
   description: string;
@@ -99,4 +81,6 @@ export interface iServiceStore {
   setStages: (stages: iStage[]) => void;
   scripts: iScript[];
   setScripts: (scripts: iScript[]) => void;
+  allServices: iAllServices;
+  setAllServices: (allServices: iAllServices) => void;
 }
