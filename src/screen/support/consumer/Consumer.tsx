@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getConsumerTicketsHandler } from '../../../api/consumer/consumerHandler';
 import useConsumerStore from '../../../store/consumerStore';
+import CreatePrescription from '../prescription/CreatePrescription';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -67,6 +68,9 @@ const Consumer = () => {
               </Box>
             );
           })}
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <CreatePrescription />
         </TabPanel>
       </Box>
     </Box>

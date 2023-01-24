@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import { iServiceStore } from '../types/store/service';
 const useServiceStore = create<iServiceStore>((set, get) => ({
   departments: [],

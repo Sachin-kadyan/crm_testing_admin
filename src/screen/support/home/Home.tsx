@@ -1,12 +1,19 @@
 import { Box, Grid, TextField, Typography } from '@mui/material';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <Box>
       <Box bgcolor="primary.main" p={2}>
-        <TextField disabled color="error" label="Search Patient" fullWidth />
+        <TextField
+          onClick={() => navigate('/search')}
+          disabled
+          color="error"
+          label="Search Patient"
+          fullWidth
+        />
       </Box>
       <Grid container p={0.5}>
         {[
