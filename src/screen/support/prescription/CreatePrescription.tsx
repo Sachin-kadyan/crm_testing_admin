@@ -31,7 +31,7 @@ import { iService } from '../../../types/store/service';
 
 type iPrescription = {
   department: string;
-  subDepartment: string;
+  // subDepartment: string;
   doctor: string;
   admission: null | string;
   symptoms: string | null;
@@ -44,7 +44,7 @@ type iPrescription = {
 
 const initialPrescription = {
   department: '',
-  subDepartment: '',
+  // subDepartment: '',
   doctor: '',
   admission: 'none',
   symptoms: null,
@@ -63,6 +63,7 @@ const CreatePrescription = () => {
   const { id } = useParams();
   const [prescription, setPrescription] =
     useState<iPrescription>(initialPrescription);
+  const [diagnostics, setDiagnostics] = useState<string[]>([]);
   const defaultValidation = { message: '', value: false };
 
   const findService = async (query: string) => {
@@ -77,31 +78,13 @@ const CreatePrescription = () => {
 
   const [validations, setValidations] = useState({
     department: { message: '', value: false },
-    subDepartment: { message: '', value: false },
+    // subDepartment: { message: '', value: false },
     doctor: { message: '', value: false },
     admission: { message: '', value: false },
     service: { message: '', value: false },
     followUp: { message: '', value: false },
     image: { message: '', value: false }
   });
-
-  const departmentLabels = departments
-    .filter((item) => item.parent === null)
-    .map((item) => ({
-      label: item.name,
-      _id: item._id
-    }));
-
-  const subDepartmentLabels = departments
-    .filter((item) => item.parent === prescription.department)
-    .map((item) => ({
-      label: item.name,
-      _id: item._id!
-    }));
-
-  const doctorLabels = doctors
-    .filter((item) => item.departments.includes(prescription.department))
-    .map((item) => ({ label: item.name, _id: item._id }));
 
   const changePrescriptionValue = (field: any, value: any) => {
     setPrescription((prev: any) => {
@@ -112,7 +95,7 @@ const CreatePrescription = () => {
 
   const validation = () => {
     const department = prescription.department === '';
-    const subDepartment = prescription.subDepartment === '';
+    // const subDepartment = prescription.subDepartment === '';
     const doctor = prescription.doctor === '';
     const admission = prescription.admission === '';
     const image = prescription.image === null;
@@ -128,9 +111,9 @@ const CreatePrescription = () => {
       prev.department = department
         ? { message: 'Invalid Value', value: true }
         : defaultValidation;
-      prev.subDepartment = subDepartment
-        ? { message: 'Invalid Value', value: true }
-        : defaultValidation;
+      // prev.subDepartment = subDepartment
+      //   ? { message: 'Invalid Value', value: true }
+      //   : defaultValidation;
       prev.doctor = doctor
         ? { message: 'Invalid Value', value: true }
         : defaultValidation;
@@ -150,7 +133,7 @@ const CreatePrescription = () => {
     });
     return (
       department === false &&
-      subDepartment === false &&
+      // subDepartment === false &&
       doctor === false &&
       admission === false &&
       image === false &&
@@ -165,12 +148,11 @@ const CreatePrescription = () => {
       delete ticket.department;
       delete ticket.subDepartment;
       ticket.consumer = id;
-      ticket.departments = [
-        prescription.department,
-        prescription.subDepartment
-      ];
+      ticket.departments = [prescription.department];
+      ticket.diagnostics = diagnostics;
       await createTicketHandler(ticket);
       setPrescription(initialPrescription);
+      setDiagnostics([]);
     }
   };
 
@@ -187,12 +169,12 @@ const CreatePrescription = () => {
         <form>
           <Box my={1.5}>
             <Autocomplete
-              disablePortal
               fullWidth
               onChange={(_, newValue) =>
                 changePrescriptionValue('department', newValue!._id!)
               }
-              options={departmentLabels}
+              getOptionLabel={(option) => option.name}
+              options={departments.filter((item) => item.parent === null)}
               renderInput={(params) => (
                 <TextField {...params} label="Department" />
               )}
@@ -201,7 +183,7 @@ const CreatePrescription = () => {
               {validations.department.message}
             </FormHelperText>
           </Box>
-          <Box my={1.5}>
+          {/* <Box my={1.5}>
             <Autocomplete
               disablePortal
               fullWidth
@@ -216,7 +198,7 @@ const CreatePrescription = () => {
             <FormHelperText error={validations.subDepartment.value}>
               {validations.subDepartment.message}
             </FormHelperText>
-          </Box>
+          </Box> */}
           <Box my={1.5}>
             <Autocomplete
               disablePortal
@@ -224,7 +206,8 @@ const CreatePrescription = () => {
               onChange={(_, newValue) =>
                 changePrescriptionValue('doctor', newValue!._id!)
               }
-              options={doctorLabels}
+              options={doctors}
+              getOptionLabel={(option) => option.name}
               renderInput={(params) => <TextField {...params} label="Doctor" />}
             />
             <FormHelperText error={validations.doctor.value}>
@@ -259,16 +242,12 @@ const CreatePrescription = () => {
             {prescription.admission !== 'none' && (
               <Box my={1.5}>
                 <Autocomplete
-                  disablePortal
                   fullWidth
-                  value={prescription.service}
                   onChange={(_, newValue) =>
                     changePrescriptionValue('service', newValue)
                   }
-                  options={foundServices.map((item) => ({
-                    label: item.name,
-                    _id: item._id
-                  }))}
+                  options={foundServices}
+                  getOptionLabel={(option) => option.name}
                   renderInput={(params) => (
                     <TextField
                       onChange={(e) => findService(e.target.value)}
@@ -283,7 +262,7 @@ const CreatePrescription = () => {
               </Box>
             )}
           </Box>
-          <Box my={1.5}>
+          {/* <Box my={1.5}>
             <TextField
               value={prescription.symptoms}
               onChange={(e) =>
@@ -309,51 +288,74 @@ const CreatePrescription = () => {
               label="Conditions"
             />
           </Box>
+          <Box my={1.5}> */}
+          {/* {prescription.medicines.map((item, index) => (
+            <Chip
+              sx={{ mx: 1 }}
+              label={item}
+              onDelete={() =>
+                setPrescription((prev) => {
+                  prev.medicines.splice(index, 1);
+                  return { ...prev };
+                })
+              }
+            />
+          ))} */}
+          {/* <FormControl sx={{ mt: 0.5 }} fullWidth variant="outlined">
+            <InputLabel htmlFor="outlined-adornment-password">
+              Medicine
+            </InputLabel>
+            <OutlinedInput
+              fullWidth
+              value={medicine}
+              onChange={(e) => setMedicine(e.target.value)}
+              id="outlined-adornment-password"
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => {
+                      if (medicine.length <= 0) return;
+                      setPrescription((prev) => {
+                        prev.medicines.push(medicine);
+                        return { ...prev };
+                      });
+                      setMedicine('');
+                    }}
+                    edge="end"
+                  >
+                    <Add />
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Medicines"
+            />
+          </FormControl> */}
+          {/* </Box> */}
+          <FormControl fullWidth sx={{ my: 1 }}>
+            <InputLabel id="demo-multiple-name-label">Diagnostics</InputLabel>
+            <Select
+              labelId="demo-multiple-name-label"
+              value={diagnostics}
+              onChange={(e) =>
+                setDiagnostics(
+                  typeof e.target.value === 'string'
+                    ? e.target.value.split(',')
+                    : e.target.value
+                )
+              }
+              id="demo-multiple-name"
+              multiple
+              input={<OutlinedInput label="Diagnostics" />}
+            >
+              {['MRI', 'CT-SCAN', 'PETCT'].map((name) => (
+                <MenuItem key={name} value={name}>
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <Box my={1.5}>
-            {prescription.medicines.map((item, index) => (
-              <Chip
-                sx={{ mx: 1 }}
-                label={item}
-                onDelete={() =>
-                  setPrescription((prev) => {
-                    prev.medicines.splice(index, 1);
-                    return { ...prev };
-                  })
-                }
-              />
-            ))}
-            <FormControl sx={{ mt: 0.5 }} fullWidth variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Medicine
-              </InputLabel>
-              <OutlinedInput
-                fullWidth
-                value={medicine}
-                onChange={(e) => setMedicine(e.target.value)}
-                id="outlined-adornment-password"
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => {
-                        if (medicine.length <= 0) return;
-                        setPrescription((prev) => {
-                          prev.medicines.push(medicine);
-                          return { ...prev };
-                        });
-                        setMedicine('');
-                      }}
-                      edge="end"
-                    >
-                      <Add />
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Medicines"
-              />
-            </FormControl>
-          </Box>
-          <Box>
             <TextField
               inputProps={{ inputProps: { min: new Date() } }}
               value={prescription.followUp}

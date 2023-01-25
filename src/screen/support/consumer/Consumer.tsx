@@ -1,8 +1,17 @@
-import { Box, Tab, Tabs, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  CardMedia,
+  Tab,
+  Tabs,
+  Typography
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getConsumerTicketsHandler } from '../../../api/consumer/consumerHandler';
 import useConsumerStore from '../../../store/consumerStore';
+import Estimate from '../../ticket/widgets/Estimate';
 import CreatePrescription from '../prescription/CreatePrescription';
 
 interface TabPanelProps {
@@ -42,35 +51,79 @@ const Consumer = () => {
   return (
     <Box>
       <Tabs
+        variant="fullWidth"
         value={value}
         onChange={(_, newValue: number) => setValue(newValue)}
       >
         <Tab label="History" />
-        <Tab label="Create Prescription" />
+        <Tab label="Prescription" />
+        <Tab label="Estimate" />
       </Tabs>
       <Box>
         <TabPanel value={value} index={0}>
           {consumerHistory.map((history) => {
             return (
-              <Box
-                key={history._id}
-                bgcolor="primary.light"
-                p={1}
-                borderRadius={1}
-                my={0.5}
+              <Card
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  my: 1,
+                  backgroundColor: 'primary.light'
+                }}
               >
-                <Typography>{history.prescription.admission}</Typography>
-                <Typography>{history.prescription.condition}</Typography>
-                <Typography>{history.prescription.symptoms}</Typography>
-                {history.prescription.medicines?.map((item) => (
-                  <Typography>{item}</Typography>
-                ))}
-              </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                  <CardContent sx={{ flex: '1 0 auto' }}>
+                    <Typography
+                      textTransform="capitalize"
+                      component="div"
+                      variant="h6"
+                    >
+                      {history.prescription.admission === null
+                        ? 'No Admission '
+                        : history.prescription.admission}
+                    </Typography>
+                    <Typography
+                      variant="subtitle1"
+                      color="text.secondary"
+                      component="div"
+                    >
+                      {new Date(history.prescription.followUp).toDateString()}
+                    </Typography>
+                    {history.prescription !== null && (
+                      <Typography
+                        variant="subtitle2"
+                        color="text.secondary"
+                        component="div"
+                      >
+                        {history.prescription.service?.name}
+                      </Typography>
+                    )}
+                    {/* <Typography textTransform="capitalize">
+                      {history.prescription.condition}
+                    </Typography>
+                    <Typography textTransform="capitalize">
+                      {history.prescription.symptoms}
+                    </Typography> */}
+                    {history.prescription.medicines?.map((item) => (
+                      <Typography textTransform="capitalize">{item}</Typography>
+                    ))}
+                  </CardContent>
+                </Box>
+                <CardMedia
+                  component="img"
+                  sx={{ width: 151 }}
+                  image={history.prescription.image}
+                  alt="prescription image"
+                />
+              </Card>
             );
           })}
         </TabPanel>
         <TabPanel value={value} index={1}>
           <CreatePrescription />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <Estimate />
         </TabPanel>
       </Box>
     </Box>

@@ -1,4 +1,4 @@
-import { iEstimate } from './service';
+import { iEstimate, iService } from './service';
 
 export interface iConsumer {
   _id: string;
@@ -20,7 +20,8 @@ export interface iConsumer {
 
 export interface iPrescription {
   _id: string;
-  admission: null;
+  admission: null | string;
+  service?: iService;
   condition: string;
   consumer: string;
   departments: string[];
