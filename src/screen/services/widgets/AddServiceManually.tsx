@@ -33,13 +33,20 @@ const AddServiceManually = (props: Props) => {
     department: '',
     departmentType: '',
     tag: '',
-    opdCharge: 0,
-    ipdCharge: 0,
-    fourSharingRoomCharge: 0,
-    twinSharingRoomCharge: 0,
-    singleRoomCharge: 0,
-    deluxeRoomCharge: 0,
-    vipRoomCharge: 0
+    opd_one: 0,
+    ipd_one: 0,
+    four_one: 0,
+    twin_one: 0,
+    single_one: 0,
+    deluxe_one: 0,
+    vip_one: 0,
+    opd_two: 0,
+    ipd_two: 0,
+    four_two: 0,
+    twin_two: 0,
+    single_two: 0,
+    deluxe_two: 0,
+    vip_two: 0
   });
   const [serviceArray, setServiceArray] = useState<iService[]>([]);
 
@@ -51,13 +58,20 @@ const AddServiceManually = (props: Props) => {
       department: '',
       departmentType: '',
       tag: '',
-      opdCharge: 0,
-      ipdCharge: 0,
-      fourSharingRoomCharge: 0,
-      twinSharingRoomCharge: 0,
-      singleRoomCharge: 0,
-      deluxeRoomCharge: 0,
-      vipRoomCharge: 0
+      opd_one: 0,
+      ipd_one: 0,
+      four_one: 0,
+      twin_one: 0,
+      single_one: 0,
+      deluxe_one: 0,
+      vip_one: 0,
+      opd_two: 0,
+      ipd_two: 0,
+      four_two: 0,
+      twin_two: 0,
+      single_two: 0,
+      deluxe_two: 0,
+      vip_two: 0
     });
   };
 
@@ -67,13 +81,13 @@ const AddServiceManually = (props: Props) => {
       newServices.serviceId.length > 0 &&
       newServices.department.length > 0 &&
       newServices.departmentType.length > 0 &&
-      newServices.opdCharge > 0 &&
-      newServices.ipdCharge > 0 &&
-      newServices.singleRoomCharge > 0 &&
-      newServices.twinSharingRoomCharge > 0 &&
-      newServices.fourSharingRoomCharge > 0 &&
-      newServices.deluxeRoomCharge > 0 &&
-      newServices.vipRoomCharge > 0
+      newServices.opd_one >= 0 &&
+      newServices.ipd_one >= 0 &&
+      newServices.single_one >= 0 &&
+      newServices.twin_one >= 0 &&
+      newServices.four_one >= 0 &&
+      newServices.deluxe_one >= 0 &&
+      newServices.vip_one >= 0
     ) {
       setIsButtonDisabled(false);
     } else {
@@ -255,7 +269,7 @@ const AddServiceManually = (props: Props) => {
             </FormControl>
           </Box>
           <Typography fontWeight={500} fontSize="1rem">
-            Charges
+            Tariff One Charges
           </Typography>
           <Grid
             marginTop={1}
@@ -272,7 +286,7 @@ const AddServiceManually = (props: Props) => {
                 onChange={(e) => {
                   setNewServices({
                     ...newServices,
-                    opdCharge: +e.target.value
+                    opd_one: +e.target.value
                   });
                   checkFieldStatus();
                 }}
@@ -285,7 +299,7 @@ const AddServiceManually = (props: Props) => {
                 label="Enter IPD Charges"
                 variant="outlined"
                 onChange={(e) =>
-                  setNewServices({ ...newServices, ipdCharge: +e.target.value })
+                  setNewServices({ ...newServices, ipd_one: +e.target.value })
                 }
               />
             </Grid>
@@ -298,7 +312,7 @@ const AddServiceManually = (props: Props) => {
                 onChange={(e) => {
                   setNewServices({
                     ...newServices,
-                    fourSharingRoomCharge: +e.target.value
+                    four_one: +e.target.value
                   });
                   checkFieldStatus();
                 }}
@@ -313,7 +327,7 @@ const AddServiceManually = (props: Props) => {
                 onChange={(e) => {
                   setNewServices({
                     ...newServices,
-                    twinSharingRoomCharge: +e.target.value
+                    twin_one: +e.target.value
                   });
                   checkFieldStatus();
                 }}
@@ -328,7 +342,7 @@ const AddServiceManually = (props: Props) => {
                 onChange={(e) => {
                   setNewServices({
                     ...newServices,
-                    singleRoomCharge: +e.target.value
+                    single_one: +e.target.value
                   });
                   checkFieldStatus();
                 }}
@@ -343,7 +357,7 @@ const AddServiceManually = (props: Props) => {
                 onChange={(e) =>
                   setNewServices({
                     ...newServices,
-                    deluxeRoomCharge: +e.target.value
+                    deluxe_one: +e.target.value
                   })
                 }
               />
@@ -357,7 +371,117 @@ const AddServiceManually = (props: Props) => {
                 onChange={(e) => {
                   setNewServices({
                     ...newServices,
-                    vipRoomCharge: +e.target.value
+                    vip_one: +e.target.value
+                  });
+                  checkFieldStatus();
+                }}
+              />
+            </Grid>
+          </Grid>
+          <Typography mt={2} fontWeight={500} fontSize="1rem">
+            Tariff Two Charges
+          </Typography>
+          <Grid
+            marginTop={1}
+            container
+            rowSpacing={2}
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+          >
+            <Grid item xs={6}>
+              <TextField
+                sx={{ width: '30ch' }}
+                id="outlined-opd-charges"
+                label="Enter OPD Charges"
+                variant="outlined"
+                onChange={(e) => {
+                  setNewServices({
+                    ...newServices,
+                    opd_two: +e.target.value
+                  });
+                  checkFieldStatus();
+                }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                sx={{ width: '30ch' }}
+                id="outlined-ipd-charges"
+                label="Enter IPD Charges"
+                variant="outlined"
+                onChange={(e) =>
+                  setNewServices({ ...newServices, ipd_two: +e.target.value })
+                }
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                sx={{ width: '30ch' }}
+                id="outlined-four-sharing"
+                label="Enter Four Sharing Room Charges"
+                variant="outlined"
+                onChange={(e) => {
+                  setNewServices({
+                    ...newServices,
+                    four_two: +e.target.value
+                  });
+                  checkFieldStatus();
+                }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                sx={{ width: '30ch' }}
+                id="outlined-twin-sharing"
+                label="Enter Twin Sharing Room Charges"
+                variant="outlined"
+                onChange={(e) => {
+                  setNewServices({
+                    ...newServices,
+                    twin_two: +e.target.value
+                  });
+                  checkFieldStatus();
+                }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                sx={{ width: '30ch' }}
+                id="outlined-single-sharing"
+                label="Enter Single Room Charges"
+                variant="outlined"
+                onChange={(e) => {
+                  setNewServices({
+                    ...newServices,
+                    single_one: +e.target.value
+                  });
+                  checkFieldStatus();
+                }}
+              />
+            </Grid>{' '}
+            <Grid item xs={6}>
+              <TextField
+                sx={{ width: '30ch' }}
+                id="outlined-delux-sharing"
+                label="Enter Delux Room Charges"
+                variant="outlined"
+                onChange={(e) =>
+                  setNewServices({
+                    ...newServices,
+                    deluxe_two: +e.target.value
+                  })
+                }
+              />
+            </Grid>{' '}
+            <Grid item xs={6}>
+              <TextField
+                sx={{ width: '30ch' }}
+                id="outlined-four-sharing"
+                label="Enter VIP Room Charges"
+                variant="outlined"
+                onChange={(e) => {
+                  setNewServices({
+                    ...newServices,
+                    vip_two: +e.target.value
                   });
                   checkFieldStatus();
                 }}

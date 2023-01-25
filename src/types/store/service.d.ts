@@ -43,13 +43,20 @@ export interface iService {
   department: string;
   departmentType: string;
   tag: string;
-  opdCharge: number;
-  ipdCharge: number;
-  fourSharingRoomCharge: number;
-  twinSharingRoomCharge: number;
-  singleRoomCharge: number;
-  deluxeRoomCharge: number;
-  vipRoomCharge: number;
+  opd_one: number;
+  ipd_one: number;
+  four_one: number;
+  twin_one: number;
+  single_one: number;
+  deluxe_one: number;
+  vip_one: number;
+  opd_two: number;
+  ipd_two: number;
+  four_two: number;
+  twin_two: number;
+  single_two: number;
+  deluxe_two: number;
+  vip_two: number;
 }
 
 export interface iStage {

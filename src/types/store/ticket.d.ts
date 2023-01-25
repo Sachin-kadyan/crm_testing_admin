@@ -69,5 +69,14 @@ export interface iTicket {
 export interface iTicketStore {
   tickets: iTicket[];
   setTickets: (tickets: iTicket[]) => void;
+  notes: iNote[];
+  setNotes: (notes: iNote[]) => void;
 }
 
+export interface iNote {
+  text: string;
+  ticket: string;
+  createdAt?: number;
+  creator?: string;
+  _id?: string;
+}

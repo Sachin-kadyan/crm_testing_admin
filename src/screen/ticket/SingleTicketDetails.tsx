@@ -16,6 +16,9 @@ import {
   Tabs,
   Typography
 } from '@mui/material';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import { Suspense, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useTicketStore from '../../store/ticketStore';
@@ -30,16 +33,22 @@ import { getDoctorsHandler } from '../../api/doctor/doctorHandler';
 import { getStagesHandler } from '../../api/stages/stagesHandler';
 import Rx from '../../assets/Rx.svg';
 import MessagingWidget from './widgets/MessagingWidget';
+import NotesWidget from './widgets/NotesWidget';
 
 dayjs.extend(relativeTime);
 
 type Props = {};
 
 const SingleTicketDetails = (props: Props) => {
-  let { ticketID } = useParams();
+  const { ticketID } = useParams();
   const { tickets } = useTicketStore();
   const { doctors, departments } = useServiceStore();
   const [currentTicket, setCurrentTicket] = useState<iTicket>();
+  const [value, setValue] = useState('2');
+
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
 
   const getTicketInfo = (ticketID: string | undefined) => {
     const fetchTicket = tickets.find((element) => ticketID === element._id);
@@ -128,8 +137,29 @@ const SingleTicketDetails = (props: Props) => {
             <StageCard />
           </Box>
         </Box>
-        <Box position="relative" height="75vh" bgcolor="#F1F5F7">
-          <MessagingWidget />
+        <Box p={1} position="relative" height="75vh" bgcolor="#F1F5F7">
+          <TabContext value={value}>
+            <Box
+              sx={{ borderBottom: 1, borderColor: 'divider' }}
+              bgcolor="white"
+            >
+              <TabList
+                onChange={handleChange}
+                aria-label="lab API tabs example"
+              >
+                <Tab label="Whatsapp Message" value="1" />
+                <Tab label="Notes" value="2" />
+                {/* <Tab label="Item Three" value="3" /> */}
+              </TabList>
+            </Box>
+            <TabPanel value="1">
+              <MessagingWidget />
+            </TabPanel>
+            <TabPanel sx={{ p: 0, height: '90%' }} value="2">
+              <NotesWidget />
+            </TabPanel>
+            {/* <TabPanel value="3">Item Three</TabPanel> */}
+          </TabContext>
         </Box>
       </Box>
       <Box width="40%">
