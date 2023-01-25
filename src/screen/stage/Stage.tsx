@@ -74,7 +74,7 @@ const Stage = (props: Props) => {
   ];
 
   const returnParentName = (id: string | null) => {
-    return stages.find((element) => element._id === id)?.name;
+    return stages.find((stage: iStage) => stage._id === id)?.name;
   };
 
   const rows = stages.map((item: iStage, index: number) => {

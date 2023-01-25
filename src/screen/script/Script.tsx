@@ -1,7 +1,7 @@
 import { Delete } from '@mui/icons-material';
 import { Box, Chip, Stack, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getAllServicesHandler } from '../../api/service/serviceHandler';
 import { getStagesHandler } from '../../api/stages/stagesHandler';
 import AddScript from './widgets/AddScript';
@@ -9,9 +9,11 @@ import AddScript from './widgets/AddScript';
 type Props = {};
 
 const Script = (props: Props) => {
+  const [pageNumber, setPageNumber] = useState<number>(0);
+
   useEffect(() => {
     (async function () {
-      await getAllServicesHandler();
+      await getAllServicesHandler(pageNumber);
       await getStagesHandler();
     })();
   }, []);

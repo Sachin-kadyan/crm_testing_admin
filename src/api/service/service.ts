@@ -11,12 +11,22 @@ export const getServiceTags = async () => {
   return data;
 };
 
-export const getAllServices = async () => {
-  const { data } = await apiClient.get('/service');
+export const getAllServices = async (pageNumber: number) => {
+  const { data } = await apiClient.get(
+    `service?pageLength=10&page=${pageNumber}`
+  );
   return data;
 };
 
 export const createServiceTag = async (tag: createTag) => {
   const { data } = await apiClient.post('/department/tag', tag);
+  return data;
+};
+
+export const searchService = async (serviceName: string, tagId?: string) => {
+  const { data } = await apiClient.get(
+    `/service/search?search=${serviceName}${tagId ? `&tag=${tagId}` : ''}`
+  );
+
   return data;
 };

@@ -12,7 +12,7 @@ import {
 import React, { useState } from 'react';
 import { createScript } from '../../../api/script/script';
 import useServiceStore from '../../../store/serviceStore';
-import { iScript } from '../../../types/store/service';
+import { iScript, iService, iStage } from '../../../types/store/service';
 
 type Props = {};
 
@@ -68,7 +68,7 @@ const AddScript = (props: Props) => {
             aria-required={true}
             options={services}
             id="combo-box-demo"
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option: iService) => option.name}
             onChange={(event, value) =>
               setScript({ ...script, service: value?._id! })
             }
@@ -88,7 +88,7 @@ const AddScript = (props: Props) => {
               setScript({ ...script, stage: value?._id! })
             }
             id="combo-box-demo"
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option: iStage) => option.name}
             sx={{ width: 400, textTransform: 'capitalize' }}
             renderInput={(params) => (
               <TextField

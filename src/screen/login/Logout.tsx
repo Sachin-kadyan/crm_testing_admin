@@ -7,7 +7,7 @@ import cookie from 'js-cookie';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import useUserStore from '../../store/userStore';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Typography } from '@mui/material';
+import { Avatar } from '@mui/material';
 
 type Props = {};
 

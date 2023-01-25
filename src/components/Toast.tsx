@@ -1,17 +1,21 @@
-import useEventStore from "../store/eventStore";
-import { Alert, Snackbar } from "@mui/material";
+import useEventStore from '../store/eventStore';
+import { Alert, Snackbar } from '@mui/material';
 
 type iSnack = {
   message: string;
   id: number;
-  type: "error" | "success";
+  type: 'error' | 'success';
 };
 
 const Toast = () => {
   const { snacks, removeSnack } = useEventStore();
   const ApiSnack = ({ snack }: { snack: iSnack }) => {
     return (
-      <Snackbar autoHideDuration={3000} onClose={() => removeSnack(snack.id)} open={true}>
+      <Snackbar
+        autoHideDuration={3000}
+        onClose={() => removeSnack(snack.id)}
+        open={true}
+      >
         <Alert onClose={() => removeSnack(snack.id)} severity={snack.type}>
           {snack.message}
         </Alert>

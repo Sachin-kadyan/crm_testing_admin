@@ -14,10 +14,10 @@ export const createServiceHandler = async (parsedData: iService[]) => {
   setServices([...services, ...servicesAdded]);
 };
 
-export const getAllServicesHandler = async () => {
-  const { setServices } = useServiceStore.getState();
-  const services = await getAllServices();
-  setServices(services);
+export const getAllServicesHandler = async (pageNumber: number) => {
+  const { setAllServices } = useServiceStore.getState();
+  const fetchServices = await getAllServices(pageNumber);
+  setAllServices(fetchServices);
 };
 
 export const getServiceTagsHandler = async () => {

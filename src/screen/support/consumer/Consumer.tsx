@@ -104,7 +104,7 @@ const Consumer = () => {
                     <Typography textTransform="capitalize">
                       {history.prescription.symptoms}
                     </Typography> */}
-                    {history.prescription.medicines?.map((item) => (
+                    {history.prescription.medicines?.map((item: any) => (
                       <Typography textTransform="capitalize">{item}</Typography>
                     ))}
                   </CardContent>

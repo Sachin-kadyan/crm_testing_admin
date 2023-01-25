@@ -1,19 +1,23 @@
-import { Delete } from '@mui/icons-material';
 import { Box, Chip, Stack, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getAllServicesHandler } from '../../api/service/serviceHandler';
 import useServiceStore from '../../store/serviceStore';
+import { iDepartment, iService } from '../../types/store/service';
 import AddServiceManually from './widgets/AddServiceManually';
 import BulkServiceUpload from './widgets/BulkServiceUpload';
 
 type Props = {};
 
 const Services = (props: Props) => {
-  const { services, departments } = useServiceStore();
+  const { allServices, departments } = useServiceStore();
+
+  const [pageNumber, setPageNumber] = useState<number>(0);
 
   const departmentNameReturner = (id: string) => {
-    const departmentName = departments.find((element) => element._id === id);
+    const departmentName = departments.find(
+      (department: iDepartment) => department._id === id
+    );
     return departmentName!.name;
   };
 
@@ -56,7 +60,7 @@ const Services = (props: Props) => {
     }
   ];
 
-  const rows = services.map((item: any, index: number) => {
+  const rows = allServices.services.map((item: iService, index: number) => {
     return {
       name: item.name.toUpperCase(),
       departments: departmentNameReturner(item.department),
@@ -68,7 +72,7 @@ const Services = (props: Props) => {
 
   useEffect(() => {
     (async function () {
-      await getAllServicesHandler();
+      await getAllServicesHandler(pageNumber);
     })();
   }, []);
 
@@ -91,9 +95,12 @@ const Services = (props: Props) => {
         checkboxSelection
         sx={{ background: 'white', p: 3 }}
         columns={columns}
+        onPageChange={() => setPageNumber((prev) => prev++)}
         pageSize={10}
         rowsPerPageOptions={[10]}
         rows={rows}
+        page={pageNumber}
+        paginationMode="server"
       />
     </Stack>
   );

@@ -3,6 +3,7 @@ import { Chip, Stack, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import useServiceStore from '../../store/serviceStore';
+import { iDepartment } from '../../types/store/service';
 import AddDepartment from './widget/AddDepartment';
 
 const Department = () => {
@@ -43,12 +44,12 @@ const Department = () => {
       filterable: false
     }
   ];
-  const rows = departments.map((item, index) => {
+  const rows = departments.map((department: iDepartment, index: number) => {
     return {
-      name: item.name.toUpperCase(),
-      parent: item.parent
+      name: department.name.toUpperCase(),
+      parent: department.parent
         ? departments
-            .find((dept) => dept._id === item.parent)
+            .find((dept: iDepartment) => dept._id === department.parent)
             ?.name.toUpperCase()
         : '',
       id: index + 1

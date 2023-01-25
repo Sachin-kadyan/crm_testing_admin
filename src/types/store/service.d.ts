@@ -26,33 +26,15 @@ export interface iServiceTag {
   _id: string;
 }
 
-export interface iEstimate {
-  type: number;
-  isEmergency: boolean;
-  wardDays: number;
-  icuDays: number;
-  icuType: string;
-  paymentType: number;
-  insuranceCompany: string;
-  insurancePolicyNumber: string;
-  insurancePolicyAmount: number;
-  service: serviceAdded[];
-  investigation: string[];
-  procedure: string[];
-  investigationAmount: number;
-  procedureAmount: number;
-  medicineAmount: number;
-  equipmentAmount: number;
-  bloodAmount: number;
-  additionalAmount: number;
-  prescription: string;
-  ticket: string;
-}
-
 export type serviceAdded = {
   id: string | undefined;
   isSameSite: boolean;
 };
+
+export interface iAllServices {
+  services: iService[];
+  total: number;
+}
 
 export interface iService {
   _id?: string;
@@ -61,17 +43,24 @@ export interface iService {
   department: string;
   departmentType: string;
   tag: string;
-  opdCharge: number;
-  ipdCharge: number;
-  fourSharingRoomCharge: number;
-  twinSharingRoomCharge: number;
-  singleRoomCharge: number;
-  deluxeRoomCharge: number;
-  vipRoomCharge: number;
+  opd_one: number;
+  ipd_one: number;
+  four_one: number;
+  twin_one: number;
+  single_one: number;
+  deluxe_one: number;
+  vip_one: number;
+  opd_two: number;
+  ipd_two: number;
+  four_two: number;
+  twin_two: number;
+  single_two: number;
+  deluxe_two: number;
+  vip_two: number;
 }
 
 export interface iStage {
-  _id: string;
+  _id?: string;
   name: string;
   code: number;
   description: string;
@@ -99,4 +88,6 @@ export interface iServiceStore {
   setStages: (stages: iStage[]) => void;
   scripts: iScript[];
   setScripts: (scripts: iScript[]) => void;
+  allServices: iAllServices;
+  setAllServices: (allServices: iAllServices) => void;
 }

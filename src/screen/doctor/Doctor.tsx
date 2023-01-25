@@ -4,6 +4,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect } from 'react';
 import { getDoctorsHandler } from '../../api/doctor/doctorHandler';
 import useServiceStore from '../../store/serviceStore';
+import { iDepartment, iDoctor } from '../../types/store/service';
 import AddDoctor from './widgets/AddDoctor';
 
 type Props = {};
@@ -11,7 +12,10 @@ type Props = {};
 const Doctor = (props: Props) => {
   const { doctors, departments } = useServiceStore();
   const departmentMap = new Map<string, string>(
-    departments.map((department) => [department._id!, department.name])
+    departments.map((department: iDepartment) => [
+      department._id!,
+      department.name
+    ])
   );
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 100 },
@@ -52,10 +56,10 @@ const Doctor = (props: Props) => {
       filterable: false
     }
   ];
-  const rows = doctors.map((item, index) => {
+  const rows = doctors.map((doctor: iDoctor, index: number) => {
     return {
-      name: item.name.toUpperCase(),
-      departments: item.departments.map((id) => departmentMap.get(id)),
+      name: doctor.name.toUpperCase(),
+      departments: doctor.departments.map((id) => departmentMap.get(id)),
       id: index + 1
     };
   });

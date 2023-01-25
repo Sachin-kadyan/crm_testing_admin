@@ -1,6 +1,7 @@
 import fs from 'fs';
 import useTicketStore from '../../store/ticketStore';
-import { createTicket, getTicket } from './ticket';
+import { iNote } from '../../types/store/ticket';
+import { createNewNote, getAllNotes, createTicket, getTicket } from './ticket';
 
 export const getTicketHandler = async () => {
   const { setTickets } = useTicketStore.getState();
@@ -48,4 +49,16 @@ export const createTicketHandler = async (prescription: iCreateTicket) => {
   prescriptionData.append('image', blob);
 
   return await createTicket(prescriptionData);
+};
+
+export const getAllNotesHandler = async (ticketId: string) => {
+  const { setNotes } = useTicketStore.getState();
+  const notes = await getAllNotes(ticketId);
+  setNotes(notes);
+};
+
+export const createNotesHandler = async (note: iNote) => {
+  const { notes, setNotes } = useTicketStore.getState();
+  const noteAdded = await createNewNote(note);
+  setNotes([...notes, noteAdded]);
 };

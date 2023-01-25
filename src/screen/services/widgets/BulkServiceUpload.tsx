@@ -4,7 +4,6 @@ import {
   IconButton,
   Modal,
   Stack,
-  LinearProgress,
   Typography,
   Alert
 } from '@mui/material';
@@ -13,6 +12,7 @@ import UploadIcon from '@mui/icons-material/Upload';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { CSVFileParser } from '../../../utils/csvFileParser';
 import { createServiceHandler } from '../../../api/service/serviceHandler';
+import { iService } from '../../../types/store/service';
 
 type Props = {};
 
@@ -42,37 +42,29 @@ const BulkServiceUpload = (props: Props) => {
       setMessage('Please Wait Parsing CSV file');
       const data = await CSVFileParser(filename);
 
-      const uploadData = data.map(
-        (item: {
-          name: string;
-          serviceId: string;
-          department: string;
-          departmentType: string;
-          tag: string;
-          opdCharge: number;
-          ipdCharge: number;
-          fourSharingRoomCharge: number;
-          twinSharingRoomCharge: number;
-          singleRoomCharge: number;
-          deluxeRoomCharge: number;
-          vipRoomCharge: number;
-        }) => {
-          return {
-            name: item.name,
-            serviceId: item.serviceId,
-            department: item.department,
-            departmentType: item.departmentType,
-            tag: item.tag,
-            opdCharge: +item.opdCharge,
-            ipdCharge: +item.ipdCharge,
-            fourSharingRoomCharge: +item.fourSharingRoomCharge,
-            twinSharingRoomCharge: +item.twinSharingRoomCharge,
-            singleRoomCharge: +item.singleRoomCharge,
-            deluxeRoomCharge: +item.deluxeRoomCharge,
-            vipRoomCharge: +item.vipRoomCharge
-          };
-        }
-      );
+      const uploadData = data.map((item: iService) => {
+        return {
+          name: item.name,
+          serviceId: item.serviceId,
+          department: item.department,
+          departmentType: item.departmentType,
+          tag: item.tag,
+          opd_one: +item.opd_one,
+          ip_one: +item.ipd_one,
+          four_one: +item.four_one,
+          twin_one: +item.twin_one,
+          single_one: +item.single_one,
+          deluxe_one: +item.deluxe_one,
+          vip_one: +item.vip_one,
+          opd_two: +item.opd_two,
+          ip_two: +item.ipd_two,
+          four_two: +item.four_two,
+          twin_two: +item.twin_two,
+          single_two: +item.single_two,
+          deluxe_two: +item.deluxe_two,
+          vip_two: +item.vip_two
+        };
+      });
       await createServiceHandler(uploadData);
       setMessage('File Uploaded Please Close the Window');
     }
@@ -161,7 +153,6 @@ const BulkServiceUpload = (props: Props) => {
                 <CancelIcon fontSize="small" />
               </IconButton>
             </Box>
-            {/* <LinearProgress variant="determinate" value={50} /> */}
           </Box>
           {message.length > 0 && (
             <Alert severity="success" color="info">

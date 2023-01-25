@@ -7,6 +7,13 @@ const useServiceStore = create<iServiceStore>((set, get) => ({
   setDoctors: (doctors) => {
     set({ doctors });
   },
+  allServices: {
+    services: [],
+    total: 0
+  },
+  setAllServices: (allServices) => {
+    set({ allServices });
+  },
   services: [],
   setServices: (services) => {
     set({ services });

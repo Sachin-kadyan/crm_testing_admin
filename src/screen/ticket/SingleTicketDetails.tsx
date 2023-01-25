@@ -16,6 +16,9 @@ import {
   Tabs,
   Typography
 } from '@mui/material';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import { Suspense, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useTicketStore from '../../store/ticketStore';
@@ -29,34 +32,43 @@ import useServiceStore from '../../store/serviceStore';
 import { getDoctorsHandler } from '../../api/doctor/doctorHandler';
 import { getStagesHandler } from '../../api/stages/stagesHandler';
 import Rx from '../../assets/Rx.svg';
+import MessagingWidget from './widgets/MessagingWidget';
+import NotesWidget from './widgets/NotesWidget';
+import { iDepartment, iDoctor } from '../../types/store/service';
 
 dayjs.extend(relativeTime);
 
 type Props = {};
 
 const SingleTicketDetails = (props: Props) => {
-  let { ticketID } = useParams();
+  const { ticketID } = useParams();
   const { tickets } = useTicketStore();
-  const { doctors, departments, services } = useServiceStore();
+  const { doctors, departments } = useServiceStore();
   const [currentTicket, setCurrentTicket] = useState<iTicket>();
+  const [value, setValue] = useState('2');
 
-  useEffect(() => {
-    getTicketInfo();
-    getDoctorsHandler();
-    getStagesHandler();
-  }, []);
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
 
-  const getTicketInfo = () => {
+  const getTicketInfo = (ticketID: string | undefined) => {
     const fetchTicket = tickets.find((element) => ticketID === element._id);
     setCurrentTicket(fetchTicket);
   };
 
+  useEffect(() => {
+    getTicketInfo(ticketID);
+    getDoctorsHandler();
+    getStagesHandler();
+  }, [ticketID]);
+
   const doctorSetter = (id: string) => {
-    return doctors.find((element) => element._id === id)?.name;
+    return doctors.find((doctor: iDoctor) => doctor._id === id)?.name;
   };
 
   const departmentSetter = (id: string) => {
-    return departments.find((element) => element._id === id)?.name;
+    return departments.find((department: iDepartment) => department._id === id)
+      ?.name;
   };
 
   return (
@@ -122,10 +134,34 @@ const SingleTicketDetails = (props: Props) => {
             <Chip label="5 Days" />
           </Box>
         </Box>
-        <Box p={1} height="90vh" bgcolor="#F1F5F7">
+        <Box p={1} height="15vh" bgcolor="#F1F5F7">
           <Box bgcolor={'white'} p={2} borderRadius={2}>
             <StageCard />
           </Box>
+        </Box>
+        <Box p={1} position="relative" height="75vh" bgcolor="#F1F5F7">
+          <TabContext value={value}>
+            <Box
+              sx={{ borderBottom: 1, borderColor: 'divider' }}
+              bgcolor="white"
+            >
+              <TabList
+                onChange={handleChange}
+                aria-label="lab API tabs example"
+              >
+                <Tab label="Whatsapp Message" value="1" />
+                <Tab label="Notes" value="2" />
+                {/* <Tab label="Item Three" value="3" /> */}
+              </TabList>
+            </Box>
+            <TabPanel value="1">
+              <MessagingWidget />
+            </TabPanel>
+            <TabPanel sx={{ p: 0, height: '90%' }} value="2">
+              <NotesWidget />
+            </TabPanel>
+            {/* <TabPanel value="3">Item Three</TabPanel> */}
+          </TabContext>
         </Box>
       </Box>
       <Box width="40%">
@@ -157,9 +193,6 @@ const SingleTicketDetails = (props: Props) => {
           <Chip label="Documents" variant="outlined" color="info" />
           <Chip label="Estimates" variant="outlined" color="info" />
           <Chip label="Prescriptsions" variant="outlined" color="info" />
-          <Chip label="Tasks" variant="outlined" color="info" />
-          <Chip label="Tasks" variant="outlined" color="info" />
-          <Chip label="Tasks" variant="outlined" color="info" />
         </Stack>
         {/* Lead View  */}
 
@@ -218,7 +251,7 @@ const SingleTicketDetails = (props: Props) => {
             <Stack direction="row" spacing={2}>
               <Chip
                 color="error"
-                label="$2,500"
+                label={`₹${currentTicket?.estimate[0]?.total}`}
                 variant="outlined"
                 size="medium"
                 sx={{
@@ -228,9 +261,9 @@ const SingleTicketDetails = (props: Props) => {
               <Chip
                 color="info"
                 label={
-                  currentTicket?.estimate[0].paymentType === 0
+                  currentTicket?.estimate[0]?.paymentType === 0
                     ? 'Cash'
-                    : currentTicket?.estimate[0].paymentType === 1
+                    : currentTicket?.estimate[0]?.paymentType === 1
                     ? 'Insurance'
                     : 'CGHS/ECHS'
                 }

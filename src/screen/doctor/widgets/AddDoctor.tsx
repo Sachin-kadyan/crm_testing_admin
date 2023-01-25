@@ -14,6 +14,7 @@ import React, { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import useServiceStore from '../../../store/serviceStore';
 import { createNewDoctorHandler } from '../../../api/doctor/doctorHandler';
+import { iDepartment } from '../../../types/store/service';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -96,10 +97,10 @@ const AddDoctor = () => {
               }
             >
               <MenuItem value={''}>None</MenuItem>
-              {departments.map((item) => {
+              {departments.map((department: iDepartment) => {
                 return (
-                  <MenuItem key={item._id} value={item._id}>
-                    {item.name}
+                  <MenuItem key={department._id} value={department._id}>
+                    {department.name}
                   </MenuItem>
                 );
               })}
