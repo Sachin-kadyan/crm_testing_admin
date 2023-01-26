@@ -33,7 +33,7 @@ const Ticket = () => {
     })();
   }, []);
   return (
-    <Box height={'100vh'} display="flex" position="relative" width="100%">
+    <Box height={'100vh'} display="flex" position="fixed" width="100%">
       <Box width="25%" position="sticky" top={0}>
         <Box p={1} height={'10vh'} borderBottom={0.5} borderColor="#f0f0f0">
           <TextField

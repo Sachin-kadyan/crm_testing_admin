@@ -100,7 +100,6 @@ const Services = (props: Props) => {
         rowsPerPageOptions={[10]}
         rows={rows}
         page={pageNumber}
-        paginationMode="server"
       />
     </Stack>
   );

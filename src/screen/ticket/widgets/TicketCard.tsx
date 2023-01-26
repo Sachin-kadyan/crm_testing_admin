@@ -5,7 +5,7 @@ import useServiceStore from '../../../store/serviceStore';
 import FemaleIcon from '@mui/icons-material/Female';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ageSetter } from '../../../utils/ageReturn';
 
 type Props = {
@@ -25,14 +25,15 @@ const TicketCard = (props: Props) => {
 
   const navigate = useNavigate();
 
+  const { ticketID } = useParams();
+
   return (
     <Box
       p={2}
-      bgcolor="#f1f5f7"
+      bgcolor={ticketID === props.patientData._id ? '#E2ECFB' : '#f1f5f7'}
       borderRadius={2}
       my={1}
       sx={{
-        bgcolor: '#f1f5f7',
         '&:hover': {
           bgcolor: '#E2ECFB'
         }
@@ -92,15 +93,21 @@ const TicketCard = (props: Props) => {
       >
         <Typography fontWeight={500}>₹5,000</Typography>
         <Chip
+          disabled={props.patientData.estimate.length === 0 ? true : false}
           label={
             props.patientData.estimate[0]?.paymentType === 0
               ? 'Cash'
               : props.patientData.estimate[0]?.paymentType === 1
               ? 'Insurance'
-              : 'CGHS/ECHS'
+              : props.patientData.estimate[0]?.paymentType === 2
+              ? 'CGHS| ECHS'
+              : 'Payment Type Not Available'
           }
         />
         <Chip
+          sx={{
+            display: props.patientData.estimate.length === 0 ? 'none' : ''
+          }}
           label={
             220 > 15000 ? 'High' : 220 < 4500 && 450 < 2220 ? 'Medium' : 'Low'
           }

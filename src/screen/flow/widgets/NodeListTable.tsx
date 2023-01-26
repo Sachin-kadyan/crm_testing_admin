@@ -120,8 +120,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.menuTitle}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 1, 60)}
-          errorMessage={'Footer should be between 1-60'}
+          validator={(value) => maxLength(value, 1, 20)}
+          errorMessage={'Footer should be between 1-20'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -132,8 +132,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.sectionTitle}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 1, 60)}
-          errorMessage={'Footer should be between 1-60'}
+          validator={(value) => maxLength(value, 1, 20)}
+          errorMessage={'Footer should be between 1-20'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -144,8 +144,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listTitle0}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 24)}
+          errorMessage={'List Title should be between 0-24'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -156,8 +156,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listDesc0}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button Id 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 72)}
+          errorMessage={'List Item should be between 0-72'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -168,8 +168,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listId0}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 2 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 200)}
+          errorMessage={'List Id should be between 0-200'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -180,8 +180,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listTitle1}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 24)}
+          errorMessage={'List Title should be between 0-24'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -192,8 +192,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listDesc1}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button Id 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 72)}
+          errorMessage={'List Item should be between 0-72'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -204,8 +204,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listId1}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 2 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 200)}
+          errorMessage={'List Id should be between 0-200'}
         />
       </Box>{' '}
       <Box minWidth="15vw">
@@ -216,8 +216,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listTitle2}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 24)}
+          errorMessage={'List Title should be between 0-24'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -228,8 +228,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listDesc2}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button Id 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 72)}
+          errorMessage={'List Item should be between 0-72'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -240,8 +240,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listId2}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 2 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 200)}
+          errorMessage={'List Id should be between 0-200'}
         />
       </Box>{' '}
       <Box minWidth="15vw">
@@ -252,8 +252,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listTitle3}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 24)}
+          errorMessage={'List Title should be between 0-24'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -264,8 +264,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listDesc3}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button Id 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 72)}
+          errorMessage={'List Item should be between 0-72'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -276,8 +276,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listId3}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 2 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 200)}
+          errorMessage={'List Id should be between 0-200'}
         />
       </Box>{' '}
       <Box minWidth="15vw">
@@ -288,8 +288,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listTitle4}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 24)}
+          errorMessage={'List Title should be between 0-24'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -300,8 +300,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listDesc4}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button Id 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 72)}
+          errorMessage={'List Item should be between 0-72'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -312,8 +312,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listId4}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 2 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 200)}
+          errorMessage={'List Id should be between 0-200'}
         />
       </Box>{' '}
       <Box minWidth="15vw">
@@ -324,8 +324,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listTitle5}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 24)}
+          errorMessage={'List Title should be between 0-24'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -336,8 +336,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listDesc5}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button Id 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 72)}
+          errorMessage={'List Item should be between 0-72'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -348,8 +348,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listId5}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 2 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 200)}
+          errorMessage={'List Id should be between 0-200'}
         />
       </Box>{' '}
       <Box minWidth="15vw">
@@ -360,8 +360,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listTitle6}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 24)}
+          errorMessage={'List Title should be between 0-24'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -372,8 +372,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listDesc6}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button Id 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 72)}
+          errorMessage={'List Item should be between 0-72'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -384,8 +384,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listId6}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 2 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 200)}
+          errorMessage={'List Id should be between 0-200'}
         />
       </Box>{' '}
       <Box minWidth="15vw">
@@ -396,8 +396,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listTitle7}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 24)}
+          errorMessage={'List Title should be between 0-24'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -408,8 +408,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listDesc7}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button Id 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 72)}
+          errorMessage={'List Item should be between 0-72'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -420,8 +420,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listId7}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 2 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 200)}
+          errorMessage={'List Id should be between 0-200'}
         />
       </Box>{' '}
       <Box minWidth="15vw">
@@ -432,8 +432,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listTitle8}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 24)}
+          errorMessage={'List Title should be between 0-24'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -444,8 +444,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listDesc8}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button Id 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 72)}
+          errorMessage={'List Item should be between 0-72'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -456,8 +456,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listId8}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 2 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 200)}
+          errorMessage={'List Id should be between 0-200'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -468,8 +468,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listTitle9}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 24)}
+          errorMessage={'List Title should be between 0-24'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -480,8 +480,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listDesc9}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button Id 1 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 72)}
+          errorMessage={'List Item should be between 0-72'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -492,8 +492,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.listId9}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 0, 50)}
-          errorMessage={'Reply Button 2 should be between 0-50'}
+          validator={(value) => maxLength(value, 0, 200)}
+          errorMessage={'List Id should be between 0-200'}
         />
       </Box>
     </Stack>

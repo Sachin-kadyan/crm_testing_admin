@@ -35,6 +35,7 @@ import Rx from '../../assets/Rx.svg';
 import MessagingWidget from './widgets/MessagingWidget';
 import NotesWidget from './widgets/NotesWidget';
 import { iDepartment, iDoctor } from '../../types/store/service';
+import QueryResolutionWidget from './widgets/QueryResolutionWidget';
 
 dayjs.extend(relativeTime);
 
@@ -128,41 +129,47 @@ const SingleTicketDetails = (props: Props) => {
             justifyContent="space-evenly"
             alignItems="center"
           >
-            <IconButton sx={{ bgcolor: 'green', color: 'white' }}>
-              <Call />
-            </IconButton>
+            <a href={`tel:${currentTicket?.consumer[0].phone}`}>
+              <IconButton sx={{ bgcolor: 'green', color: 'white' }}>
+                <Call />
+              </IconButton>
+            </a>
             <Chip label="5 Days" />
           </Box>
         </Box>
-        <Box p={1} height="15vh" bgcolor="#F1F5F7">
-          <Box bgcolor={'white'} p={2} borderRadius={2}>
-            <StageCard />
-          </Box>
-        </Box>
-        <Box p={1} position="relative" height="75vh" bgcolor="#F1F5F7">
-          <TabContext value={value}>
-            <Box
-              sx={{ borderBottom: 1, borderColor: 'divider' }}
-              bgcolor="white"
-            >
-              <TabList
-                onChange={handleChange}
-                aria-label="lab API tabs example"
-              >
-                <Tab label="Whatsapp Message" value="1" />
-                <Tab label="Notes" value="2" />
-                {/* <Tab label="Item Three" value="3" /> */}
-              </TabList>
+        <Stack bgcolor="#F1F5F7" height="90vh" direction="column">
+          <Box p={1} height="15%">
+            <Box bgcolor={'white'} p={2} borderRadius={2}>
+              <StageCard />
             </Box>
-            <TabPanel value="1">
-              <MessagingWidget />
-            </TabPanel>
-            <TabPanel sx={{ p: 0, height: '90%' }} value="2">
-              <NotesWidget />
-            </TabPanel>
-            {/* <TabPanel value="3">Item Three</TabPanel> */}
-          </TabContext>
-        </Box>
+          </Box>
+          <Box p={1} height="82.5%" position="relative" bgcolor="#F1F5F7">
+            <TabContext value={value}>
+              <Box
+                sx={{ borderBottom: 1, borderColor: 'divider' }}
+                bgcolor="white"
+              >
+                <TabList
+                  onChange={handleChange}
+                  aria-label="lab API tabs example"
+                >
+                  <Tab label="Whatsapp Message" value="1" />
+                  <Tab label="Notes" value="2" />
+                  <Tab label="Query Resolution" value="3" />
+                </TabList>
+              </Box>
+              <TabPanel value="1">
+                <MessagingWidget />
+              </TabPanel>
+              <TabPanel sx={{ p: 0, height: '100%' }} value="2">
+                <NotesWidget />
+              </TabPanel>
+              <TabPanel sx={{ p: 0, height: '100%' }} value="3">
+                <QueryResolutionWidget />
+              </TabPanel>
+            </TabContext>
+          </Box>
+        </Stack>
       </Box>
       <Box width="40%">
         <Box

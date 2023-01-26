@@ -1,4 +1,4 @@
-import { Box, Chip, Stack, Typography } from '@mui/material';
+import { Box, Chip, Stack, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
@@ -18,7 +18,7 @@ const NotesWidget = (props: Props) => {
     border: 0,
     width: '100%',
     padding: '1rem',
-    ' &:hover, &:focus ': {
+    'input:focus': {
       outline: 'none'
     }
   };
@@ -30,6 +30,7 @@ const NotesWidget = (props: Props) => {
       ticket: ticketID!
     };
     createNotesHandler(data);
+    setNote('');
   };
 
   const [note, setNote] = useState('');
@@ -45,20 +46,19 @@ const NotesWidget = (props: Props) => {
   const { notes } = useTicketStore();
 
   return (
-    <Box
-      bgcolor="white"
-      p={1}
-      sx={{
-        overflowY: 'scroll',
-        '&::-webkit-scrollbar ': {
-          display: 'none'
-        }
-      }}
-    >
+    <Box height="95%" position="relative" bgcolor="white" p={1}>
       {loading ? (
-        <>Loading... </>
+        <Box height="90%">Loading... </Box>
       ) : notes.length > 0 ? (
-        <Box height="90%">
+        <Box
+          height="90%"
+          sx={{
+            overflowY: 'scroll',
+            '&::-webkit-scrollbar ': {
+              display: 'none'
+            }
+          }}
+        >
           {notes.map((note: iNote, index) => {
             return (
               <Box key={note._id}>
@@ -83,7 +83,7 @@ const NotesWidget = (props: Props) => {
         </Box>
       ) : (
         <Stack
-          height="100%"
+          height="90%"
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -95,16 +95,33 @@ const NotesWidget = (props: Props) => {
         </Stack>
       )}
 
-      <Box borderTop={2.5} borderColor="#317AE2" bgcolor="white" height="10%">
-        <Stack p={1} direction="row" spacing={1} alignItems="center">
-          <input
+      <Box
+        height="10%"
+        position="sticky"
+        bottom={2}
+        borderTop={2.5}
+        borderColor="#317AE2"
+        bgcolor="white"
+      >
+        <Stack direction="row" spacing={1} alignItems="center">
+          <TextField
+            variant="standard"
+            margin="normal"
+            value={note}
+            fullWidth
+            id="note"
+            autoFocus
             onChange={(e) => setNote(e.target.value)}
-            placeholder="Enter New Note"
-            style={TextInput}
+            placeholder="Write Your Note "
+            InputProps={{
+              disableUnderline: true
+            }}
           />
           <Box
+            width="25%"
             sx={{ cursor: 'pointer' }}
             display="flex"
+            justifyContent="space-evenly"
             onClick={handleAddNewNote}
           >
             <Typography color="gray">Add Note</Typography>
