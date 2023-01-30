@@ -1,6 +1,7 @@
 import {
   Button,
   FormControl,
+  Grid,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -43,42 +44,36 @@ const Login = () => {
   };
 
   return (
-    <Stack
-      direction="row"
-      spacing={10}
-      sx={{ height: '100vh', width: '100vw', background: '#226D4A' }}
+    <Grid
+      container
+      sx={{ minHeight: '100vh', background: '#226D4A' }}
+      alignItems="center"
     >
-      <Stack
+      <Grid
+        xs={0}
+        md={6}
+        item
         sx={{
-          width: '50%',
           backgroundImage: `url(${loginBg})`,
-          height: '100vh',
+          minHeight: '100vh',
           backgroundPosition: 'right',
           backgroundSize: 'cover'
         }}
-      ></Stack>
-
-      <Stack sx={{ width: '50%', padding: '2rem' }}>
-        <Typography variant="h2" color="white" fontWeight="bold">
-          OCTA
-        </Typography>
-        <Typography variant="h5" color="white" fontWeight="bold">
-          A Patient Conversion Healthcare Tool
-        </Typography>
+      ></Grid>
+      <Grid xs={12} md={6} p={2} alignItems="center">
         <Stack
           boxShadow={5}
-          padding={10}
+          padding={4}
           justifyContent="center"
           sx={{
             background: 'white'
           }}
           borderRadius={5}
-          marginTop={10}
         >
-          <Typography variant="h4" color="#226D4A" fontWeight="bold">
+          <Typography variant="h6" color="#226D4A" fontWeight="bold">
             Welcome Back !
           </Typography>
-          <Typography variant="subtitle1" color="#226D4A" fontWeight="bold">
+          <Typography variant="caption" color="#226D4A" fontWeight="bold">
             Please Enter You Details to Login into your account
           </Typography>
           <TextField
@@ -130,8 +125,8 @@ const Login = () => {
             Login
           </Button>
         </Stack>
-      </Stack>
-    </Stack>
+      </Grid>
+    </Grid>
   );
 };
 
