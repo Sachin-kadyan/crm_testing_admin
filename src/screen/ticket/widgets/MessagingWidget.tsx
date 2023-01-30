@@ -3,10 +3,13 @@ import { Box, Stack, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { database } from '../../../utils/firebase';
 import { collection, DocumentData, onSnapshot } from 'firebase/firestore';
+import { useParams } from 'react-router-dom';
 
 type Props = {};
 
 const MessagingWidget = (props: Props) => {
+  const { ticketID } = useParams();
+
   const TextInput = {
     border: 0,
     width: '100%',
@@ -16,25 +19,21 @@ const MessagingWidget = (props: Props) => {
     }
   };
 
-  const collectionRef = collection(
-    database,
-    'ticket',
-    '63bbba656cf5f7cd69ef6de3',
-    'messages'
-  );
+  if (ticketID) {
+    const collectionRef = collection(database, 'ticket', ticketID, 'messages');
+    onSnapshot(collectionRef, (snapshot) => {
+      const message: DocumentData[] = [];
+      snapshot.forEach((doc) => {
+        message.push(doc.data());
+      });
+      setMessages(message);
+    });
+  }
 
   const [messages, setMessages] = useState<DocumentData[]>([]);
   const [sendMessage, setSendMessage] = useState('');
 
   const handleSendMessage = async () => {};
-
-  onSnapshot(collectionRef, (snapshot) => {
-    const message: DocumentData[] = [];
-    snapshot.forEach((doc) => {
-      message.push(doc.data());
-    });
-    setMessages(message);
-  });
 
   return (
     <Stack direction="column" bgcolor="white">

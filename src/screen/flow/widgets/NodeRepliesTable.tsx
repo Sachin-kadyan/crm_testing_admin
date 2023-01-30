@@ -1,4 +1,4 @@
-import { Box, MenuItem, Select, Stack, TextField } from '@mui/material';
+import { Box, MenuItem, Select, Stack } from '@mui/material';
 import React, { useState } from 'react';
 import { iNodeRepliesFlow } from '../../../types/store/node';
 import InputField from './InputField';
@@ -12,8 +12,12 @@ type Props = {
 const NodeRepliesTable = ({ rowData, updateData, setInvalidCount }: Props) => {
   const [data, setData] = useState(rowData);
 
-  const maxLength = (value: string, min: number, max: number) =>
-    value.length >= min && value.length <= max;
+  const maxLength = (value: string, min: number, max: number) => {
+    if (!value) {
+      value = '';
+    }
+    return value.length >= min && value.length <= max;
+  };
 
   const onChangeTextField = (e: any) => {
     setData((prev) => {
