@@ -1,4 +1,3 @@
-import fs from 'fs';
 import useTicketStore from '../../store/ticketStore';
 import { iNote } from '../../types/store/ticket';
 import { createNewNote, getAllNotes, createTicket, getTicket } from './ticket';

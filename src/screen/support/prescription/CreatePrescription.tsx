@@ -56,7 +56,7 @@ const initialPrescription = {
 
 const CreatePrescription = () => {
   const { departments, doctors } = useServiceStore();
-  const [medicine, setMedicine] = useState('');
+  // const [medicine, setMedicine] = useState('');
   const [openCamera, setOpenCamera] = useState(false);
   const [foundServices, setFoundServices] = useState<iService[]>([]);
   const camera = useRef<Webcam>(null);
@@ -465,7 +465,7 @@ const CreatePrescription = () => {
             screenshotFormat="image/jpeg"
             ref={camera}
             videoConstraints={{
-              facingMode: 'user'
+              facingMode: { exact: 'environment' }
             }}
           />
         ) : (
