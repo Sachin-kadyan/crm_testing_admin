@@ -41,7 +41,7 @@ class ApiClient {
       headers
       // withCredentials: true,
     });
-
+    /* @ts-ignore */
     http.interceptors.request.use(this.injectToken, (error) =>
       Promise.reject(error)
     );

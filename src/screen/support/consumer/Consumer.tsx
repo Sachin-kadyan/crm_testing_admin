@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardMedia,
@@ -7,11 +8,12 @@ import {
   Tabs,
   Typography
 } from '@mui/material';
+import { Stack } from '@mui/system';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { getConsumerTicketsHandler } from '../../../api/consumer/consumerHandler';
+import { uploadAndSendEstimateHandler } from '../../../api/estimate/estimateHandler';
 import useConsumerStore from '../../../store/consumerStore';
-import Estimate from '../../ticket/widgets/Estimate';
 import CreatePrescription from '../prescription/CreatePrescription';
 
 interface TabPanelProps {
@@ -24,6 +26,36 @@ const Consumer = () => {
   const [value, setValue] = useState(0);
   const { consumerHistory } = useConsumerStore();
   const { id } = useParams();
+
+  const UploadComp = ({ id }: { id: string }) => {
+    const [file, setFile] = useState<File | null>(null);
+    return (
+      <>
+        {file ? (
+          <>
+            <Button
+              size="small"
+              variant="contained"
+              onClick={() => uploadAndSendEstimateHandler(file, id)}
+            >
+              Send
+            </Button>
+            <Typography variant="caption">{file?.name}</Typography>
+          </>
+        ) : (
+          <Button size="small" variant="contained" component="label">
+            Upload Estimate
+            <input
+              hidden
+              accept="application/pdf"
+              onChange={(e) => setFile(e.target.files![0])}
+              type="file"
+            />
+          </Button>
+        )}
+      </>
+    );
+  };
 
   const TabPanel = (props: TabPanelProps) => {
     const { children, value, index, ...other } = props;
@@ -57,7 +89,6 @@ const Consumer = () => {
       >
         <Tab label="History" />
         <Tab label="Prescription" />
-        <Tab label="Estimate" />
       </Tabs>
       <Box>
         <TabPanel value={value} index={0}>
@@ -107,6 +138,18 @@ const Consumer = () => {
                     {history.prescription.medicines?.map((item: any) => (
                       <Typography textTransform="capitalize">{item}</Typography>
                     ))}
+                    {history.prescription.admission !== null && (
+                      <Stack spacing={1}>
+                        <Link
+                          to={`/consumer/${history.consumer}/estimate/${history.prescription._id}`}
+                        >
+                          <Button size="small" variant="contained">
+                            Create Estimate
+                          </Button>
+                        </Link>
+                        <UploadComp id={history._id} />
+                      </Stack>
+                    )}
                   </CardContent>
                 </Box>
                 <CardMedia
@@ -121,9 +164,6 @@ const Consumer = () => {
         </TabPanel>
         <TabPanel value={value} index={1}>
           <CreatePrescription />
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <Estimate />
         </TabPanel>
       </Box>
     </Box>
