@@ -1,8 +1,20 @@
-import { Box, Stack, TextField, Typography } from '@mui/material';
+import { SearchOutlined } from '@mui/icons-material';
+import {
+  Box,
+  CardContent,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  TextField,
+  Typography
+} from '@mui/material';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { searchConsumerHandler } from '../../../api/consumer/consumerHandler';
 import useConsumerStore from '../../../store/consumerStore';
+import BackHeader from '../widgets/BackHeader';
 
 const Search = () => {
   const [search, setSearch] = useState('');
@@ -10,40 +22,61 @@ const Search = () => {
 
   return (
     <Box>
-      <Box bgcolor="primary.main" p={2}>
-        <TextField
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          color="info"
-          label="Search Patient"
-          onBlur={(e) => searchConsumerHandler(e.target.value)}
-          fullWidth
-        />
+      <BackHeader title="Search Patient" />
+      <Box px={1} py={1}>
+        <FormControl fullWidth variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-password">
+            Search Patient
+          </InputLabel>
+          <OutlinedInput
+            value={search}
+            label="Search Patient"
+            onChange={(e) => setSearch(e.target.value)}
+            onBlur={(e) => searchConsumerHandler(e.target.value)}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => searchConsumerHandler(search)}
+                  edge="end"
+                >
+                  <SearchOutlined />
+                </IconButton>
+              </InputAdornment>
+            }
+            fullWidth
+          />
+        </FormControl>
       </Box>
       <Box p={0.5}>
         {searchResults.map((item) => {
           return (
-            <Box bgcolor="primary.light" borderRadius={1} p={1} key={item._id}>
+            <Box
+              bgcolor="primary.light"
+              borderRadius={1}
+              my={0.4}
+              key={item._id}
+            >
               <Link to={`/consumer/${item._id}`}>
-                <Stack flexDirection="row" justifyContent="space-between">
-                  <Typography>
-                    {item.firstName} {item.lastName}
+                <CardContent>
+                  <Typography sx={{ fontSize: 14 }} color="text.secondary">
+                    UHID {item.uid}
                   </Typography>
-                  <Typography>{item.phone}</Typography>
-                </Stack>
-                <Stack flexDirection="row" justifyContent="space-between">
-                  <Typography>UHID: {item.uid}</Typography>
-                  <Typography>{item.gender}</Typography>
-                </Stack>
-                <Stack>
-                  <Typography>{item.email}</Typography>
-                </Stack>
-                <Stack>
-                  <Typography>
-                    {item.address.house} {item.address.city}{' '}
-                    {item.address.state} {item.address.postalCode}
+                  <Typography
+                    textTransform="capitalize"
+                    variant="h5"
+                    component="div"
+                  >
+                    {item.firstName + ' ' + item.lastName}
                   </Typography>
-                </Stack>
+                  <Typography color="text.secondary">
+                    {item.gender === 'M'
+                      ? 'Male'
+                      : item.gender === 'F'
+                      ? 'Female'
+                      : 'Other'}
+                  </Typography>
+                  <Typography variant="body2">{item.email}</Typography>
+                </CardContent>
               </Link>
             </Box>
           );

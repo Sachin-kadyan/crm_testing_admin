@@ -9,12 +9,6 @@ export interface iConsumer {
   uid: string;
   dob: string | number | Date;
   gender: 'M' | 'F' | 'O';
-  address: {
-    house: number;
-    city: string;
-    state: string;
-    postalCode: number;
-  };
 }
 
 interface iTicket {

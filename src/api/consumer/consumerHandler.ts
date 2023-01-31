@@ -1,5 +1,10 @@
 import useConsumerStore from '../../store/consumerStore';
-import { getConsumerTickets, searchConsumer } from './consumer';
+import { iConsumer } from '../../types/store/consumer';
+import {
+  getConsumerTickets,
+  registerConsumer,
+  searchConsumer
+} from './consumer';
 
 export const searchConsumerHandler = async (search: string) => {
   const { setSearchResults } = useConsumerStore.getState();
@@ -11,4 +16,10 @@ export const getConsumerTicketsHandler = async (consumerId: string) => {
   const { setConsumerHistory } = useConsumerStore.getState();
   const tickets = await getConsumerTickets(consumerId);
   setConsumerHistory(tickets);
+};
+
+export type iConsumerRequest = Omit<iConsumer, '_id'>;
+
+export const registerConsumerHandler = async (consumer: iConsumerRequest) => {
+  return await registerConsumer(consumer);
 };
