@@ -48,7 +48,7 @@ const AddDoctor = () => {
 
   const addNewDoctor = async () => {
     newDoctor.name = `Dr.${newDoctor.name}`;
-    // await createNewDoctorHandler(newDoctor);
+    await createNewDoctorHandler(newDoctor);
     setMessage('Doctor Added To System');
     console.log(newDoctor);
     setTimeout(() => {
