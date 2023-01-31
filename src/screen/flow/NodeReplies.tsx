@@ -95,7 +95,7 @@ const NodeReplies = (props: Props) => {
 
           {isGoToNodeConnector && (
             <Button
-              onClick={() => navigate('/connector')}
+              onClick={() => navigate('/flow/connector')}
               endIcon={<ArrowRight />}
             >
               Go To Node Connector
@@ -105,7 +105,7 @@ const NodeReplies = (props: Props) => {
       </Box>
       {errorMessage.message.length > 0 && (
         <Alert
-          severity={errorMessage.type === 'error' ? 'error' : 'info'}
+          severity={errorMessage.type === 'error' ? 'error' : 'warning'}
           sx={{ my: 1, width: '50%' }}
         >
           {errorMessage.message}

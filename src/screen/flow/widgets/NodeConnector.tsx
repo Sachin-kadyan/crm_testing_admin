@@ -107,7 +107,7 @@ const NodeConnector = (props: Props) => {
   useEffect(() => {
     (async function () {
       await getNodeConnectorHandler();
-      await getAllServicesHandler(0);
+      await getAllServicesHandler(0, 50);
     })();
   }, []);
   return (

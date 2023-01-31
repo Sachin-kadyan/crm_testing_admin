@@ -9,8 +9,10 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createScript } from '../../../api/script/script';
+import { searchService } from '../../../api/service/service';
+import { getStagesHandler } from '../../../api/stages/stagesHandler';
 import useServiceStore from '../../../store/serviceStore';
 import { iScript, iService, iStage } from '../../../types/store/service';
 
@@ -20,7 +22,10 @@ const drawerWidth = 600;
 
 const AddScript = (props: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { services, stages } = useServiceStore();
+  const { stages } = useServiceStore();
+  const [loading, setLoading] = useState(false);
+  const [searchServiceValue, setSearchServiceValue] = useState('');
+  const [services, setServices] = useState<iService[]>();
   const [script, setScript] = useState<iScript>({
     text: '',
     service: '',
@@ -35,6 +40,23 @@ const AddScript = (props: Props) => {
       stage: ''
     });
   };
+
+  const handleServiceSearch = async (value: string) => {
+    setLoading(true);
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    (async function () {
+      await getStagesHandler();
+      const services = await searchService(
+        searchServiceValue,
+        '63bbae206cf5f7cd69ef6ddc'
+      );
+      setServices(services);
+    })();
+  }, [searchServiceValue]);
 
   return (
     <Box>
@@ -66,8 +88,10 @@ const AddScript = (props: Props) => {
         <Stack p={2} direction="row" spacing={2}>
           <Autocomplete
             aria-required={true}
-            options={services}
+            options={services ? services : []}
             id="combo-box-demo"
+            isOptionEqualToValue={(option, value) => option.name === value.name}
+            noOptionsText="No Service Available With This Name"
             getOptionLabel={(option: iService) => option.name}
             onChange={(event, value) =>
               setScript({ ...script, service: value?._id! })
@@ -78,6 +102,9 @@ const AddScript = (props: Props) => {
                 {...params}
                 sx={{ textTransform: 'capitalize' }}
                 label="Select Surgery"
+                onChange={(e) => {
+                  setSearchServiceValue((prev) => e.target.value);
+                }}
               />
             )}
           />
@@ -88,6 +115,8 @@ const AddScript = (props: Props) => {
               setScript({ ...script, stage: value?._id! })
             }
             id="combo-box-demo"
+            loading={loading}
+            loadingText=" Loading Services"
             getOptionLabel={(option: iStage) => option.name}
             sx={{ width: 400, textTransform: 'capitalize' }}
             renderInput={(params) => (

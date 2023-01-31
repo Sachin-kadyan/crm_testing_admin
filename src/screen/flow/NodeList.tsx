@@ -65,7 +65,7 @@ const NodeList = (props: Props) => {
     const shouldGoToConnector = await createNodeListHandler(fileData);
     setErrorMessage({
       ...errorMessage,
-      message: 'Node Replies Added To Server Successfully '
+      message: 'Node List Added To Server Successfully '
     });
     setIsGoToNodeConnector(shouldGoToConnector);
   };
@@ -95,7 +95,7 @@ const NodeList = (props: Props) => {
 
           {isGoToNodeConnector && (
             <Button
-              onClick={() => navigate('/connector')}
+              onClick={() => navigate('/flow/connector')}
               endIcon={<ArrowRight />}
             >
               Go To Node Connector

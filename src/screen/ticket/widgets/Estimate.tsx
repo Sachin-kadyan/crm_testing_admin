@@ -29,6 +29,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { createEstimateHandler } from '../../../api/estimate/estimateHandler';
+import { searchService } from '../../../api/service/service';
 import { getAllServicesHandler } from '../../../api/service/serviceHandler';
 import { getWardsHandler } from '../../../api/ward/wardHandler';
 import useServiceStore from '../../../store/serviceStore';
@@ -46,14 +47,12 @@ type Props = {};
 const drawerWidth = 1200;
 
 const Estimate = (props: Props) => {
-  const [pageNumber, setPageNumber] = useState<number>(0);
   const { tickets } = useTicketStore();
   const { ticketID } = useParams();
   const ticket = tickets.find((element) => element._id === ticketID);
 
   useEffect(() => {
     (async function () {
-      await getAllServicesHandler(pageNumber);
       await getWardsHandler();
     })();
   }, []);
@@ -96,7 +95,9 @@ const Estimate = (props: Props) => {
   const [investigation, setInvestigation] = useState('');
   const [clickedIndex, setClickedIndex] = useState<number | undefined>();
   const [isPreview, setIsPreview] = useState<boolean>(false);
-  const { allServices, wards, doctors } = useServiceStore();
+  const [services, setServices] = useState<iService[]>();
+  const [searchServiceValue, setSearchServiceValue] = useState('');
+  const { wards, doctors } = useServiceStore();
 
   const [alert, setAlert] = useState<AlertType>({
     investigation: '',
@@ -197,9 +198,20 @@ const Estimate = (props: Props) => {
     });
   };
 
+  useEffect(() => {
+    (async function () {
+      const services = await searchService(
+        searchServiceValue,
+        '63bbae206cf5f7cd69ef6ddc'
+      );
+      setServices(services);
+    })();
+  }, [searchServiceValue]);
+
   const serviceGetter = (id: string | undefined) => {
-    return allServices.services.find((service: iService) => service._id === id)
-      ?.name;
+    return (
+      services && services.find((service: iService) => service._id === id)?.name
+    );
   };
 
   const handleCreateEstimate = () => {
@@ -473,18 +485,25 @@ const Estimate = (props: Props) => {
               <Stack direction="row" spacing={2}>
                 <Autocomplete
                   aria-required={true}
-                  options={allServices.services}
-                  onChange={(event, value) =>
-                    setServiceObject({ ...serviceObject, id: value?._id })
-                  }
+                  options={services ? services : []}
                   id="combo-box-demo"
+                  isOptionEqualToValue={(option, value) =>
+                    option.name === value.name
+                  }
+                  noOptionsText="No Service Available With This Name"
                   getOptionLabel={(option: iService) => option.name}
+                  onChange={(event, value) =>
+                    setServiceObject({ ...serviceObject, id: value?._id! })
+                  }
                   sx={{ width: 400, textTransform: 'capitalize' }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       sx={{ textTransform: 'capitalize' }}
                       label="Select Surgery"
+                      onChange={(e) => {
+                        setSearchServiceValue((prev) => e.target.value);
+                      }}
                     />
                   )}
                 />
@@ -552,7 +571,7 @@ const Estimate = (props: Props) => {
               <Stack direction="row" spacing={2}>
                 <Autocomplete
                   aria-required={true}
-                  options={allServices.services}
+                  options={services ? services : []}
                   onChange={(event, value) => setInvestigation(value?._id!)}
                   id="combo-box-demo"
                   getOptionLabel={(option: iService) => option.name}
@@ -616,7 +635,7 @@ const Estimate = (props: Props) => {
               <Stack direction="row" spacing={2}>
                 <Autocomplete
                   aria-required={true}
-                  options={allServices.services}
+                  options={services ? services : []}
                   onChange={(event, value) => setProcedure(value?._id!)}
                   id="combo-box-demo"
                   getOptionLabel={(option: iService) => option.name}

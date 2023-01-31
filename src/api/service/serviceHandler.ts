@@ -14,9 +14,12 @@ export const createServiceHandler = async (parsedData: iService[]) => {
   setServices([...services, ...servicesAdded]);
 };
 
-export const getAllServicesHandler = async (pageNumber: number) => {
+export const getAllServicesHandler = async (
+  pageNumber: number,
+  pageSize: number
+) => {
   const { setAllServices } = useServiceStore.getState();
-  const fetchServices = await getAllServices(pageNumber);
+  const fetchServices = await getAllServices(pageNumber, pageSize);
   setAllServices(fetchServices);
 };
 

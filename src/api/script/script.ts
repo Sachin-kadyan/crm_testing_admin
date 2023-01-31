@@ -8,6 +8,6 @@ export const createScript = async (script: iScript) => {
 };
 
 export const getSingleScript = async (serviceId: string, stageId: string) => {
-  const { data } = await apiClient.post(`/script/${serviceId}/${stageId}`);
+  const { data } = await apiClient.get(`/script/${serviceId}/${stageId}`);
   return data;
 };

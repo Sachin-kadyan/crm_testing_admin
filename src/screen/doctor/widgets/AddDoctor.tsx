@@ -1,7 +1,9 @@
 import {
   Alert,
+  Autocomplete,
   Button,
   FormControl,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Modal,
@@ -45,8 +47,10 @@ const AddDoctor = () => {
   });
 
   const addNewDoctor = async () => {
-    await createNewDoctorHandler(newDoctor);
+    newDoctor.name = `Dr.${newDoctor.name}`;
+    // await createNewDoctorHandler(newDoctor);
     setMessage('Doctor Added To System');
+    console.log(newDoctor);
     setTimeout(() => {
       setMessage('');
     }, 2000);
@@ -54,6 +58,7 @@ const AddDoctor = () => {
       name: '',
       department: []
     });
+    setOpenModal(false);
   };
 
   return (
@@ -78,13 +83,42 @@ const AddDoctor = () => {
             }
             fullWidth
             label="Doctor Name"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">Dr.</InputAdornment>
+              )
+            }}
           />
-          <FormControl fullWidth>
+
+          <Autocomplete
+            sx={{ textTransform: 'uppercase' }}
+            options={departments}
+            getOptionLabel={(option) => option.name}
+            onChange={(event, value) => {
+              setNewDoctor({
+                ...newDoctor,
+                department: [value?._id as string]
+              });
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                sx={{ textTransform: 'capitalize' }}
+                value={newDoctor.department[0]}
+                label="Search & Select Department "
+                InputProps={{
+                  ...params.InputProps,
+                  type: 'search'
+                }}
+              />
+            )}
+          />
+
+          {/* <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">
               Select Departments
             </InputLabel>
             <Select
-              multiple
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               label="Select Departments"
@@ -105,7 +139,7 @@ const AddDoctor = () => {
                 );
               })}
             </Select>
-          </FormControl>
+          </FormControl> */}
           {message.length > 0 && <Alert>{message}</Alert>}
           <Button
             onClick={addNewDoctor}

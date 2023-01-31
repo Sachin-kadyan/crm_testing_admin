@@ -13,7 +13,7 @@ const Script = (props: Props) => {
 
   useEffect(() => {
     (async function () {
-      await getAllServicesHandler(pageNumber);
+      await getAllServicesHandler(1, 10);
       await getStagesHandler();
     })();
   }, []);

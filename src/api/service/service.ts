@@ -11,9 +11,9 @@ export const getServiceTags = async () => {
   return data;
 };
 
-export const getAllServices = async (pageNumber: number) => {
+export const getAllServices = async (pageNumber: number, pageSize: number) => {
   const { data } = await apiClient.get(
-    `service?pageLength=10&page=${pageNumber}`
+    `service?pageLength=${pageSize}&page=${pageNumber}`
   );
   return data;
 };
