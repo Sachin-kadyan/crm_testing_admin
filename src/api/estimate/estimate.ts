@@ -13,6 +13,7 @@ export const uploadAndSendEstimate = async (estimate: File, ticket: string) => {
     `/ticket/${ticket}/estimate/upload`,
     estimateUpload,
     {
+      //  @ts-ignore
       headers: {
         'Content-Type': 'multipart/form-data'
       }
