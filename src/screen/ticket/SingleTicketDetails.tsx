@@ -1,4 +1,5 @@
 import {
+  Add,
   Call,
   CoronavirusOutlined,
   Female,
@@ -9,7 +10,9 @@ import {
 } from '@mui/icons-material';
 import {
   Box,
+  Button,
   Chip,
+  Fab,
   IconButton,
   Stack,
   Tab,
@@ -36,6 +39,8 @@ import MessagingWidget from './widgets/MessagingWidget';
 import NotesWidget from './widgets/NotesWidget';
 import { iDepartment, iDoctor } from '../../types/store/service';
 import QueryResolutionWidget from './widgets/QueryResolutionWidget';
+import { getSingleScript } from '../../api/script/script';
+import PrescriptionTabsWidget from './widgets/PrescriptionTabsWidget';
 
 dayjs.extend(relativeTime);
 
@@ -47,6 +52,8 @@ const SingleTicketDetails = (props: Props) => {
   const { doctors, departments } = useServiceStore();
   const [currentTicket, setCurrentTicket] = useState<iTicket>();
   const [value, setValue] = useState('2');
+  const [script, setScript] = useState('');
+  const [isScript, setIsScript] = useState(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -58,10 +65,21 @@ const SingleTicketDetails = (props: Props) => {
   };
 
   useEffect(() => {
-    getTicketInfo(ticketID);
-    getDoctorsHandler();
-    getStagesHandler();
-  }, [ticketID]);
+    (async function () {
+      getTicketInfo(ticketID);
+      await getDoctorsHandler();
+      await getStagesHandler();
+      if (currentTicket) {
+        const script = await getSingleScript(
+          currentTicket?.prescription[0].service._id,
+          currentTicket?.stage
+        );
+        setScript(script);
+      }
+    })();
+  }, [ticketID, currentTicket]);
+
+  console.log(script);
 
   const doctorSetter = (id: string) => {
     return doctors.find((doctor: iDoctor) => doctor._id === id)?.name;
@@ -140,7 +158,7 @@ const SingleTicketDetails = (props: Props) => {
         <Stack bgcolor="#F1F5F7" height="90vh" direction="column">
           <Box p={1} height="15%">
             <Box bgcolor={'white'} p={2} borderRadius={2}>
-              <StageCard />
+              <StageCard stage={currentTicket && currentTicket?.stage} />
             </Box>
           </Box>
           <Box p={1} height="82.5%" position="relative" bgcolor="#F1F5F7">
@@ -171,7 +189,7 @@ const SingleTicketDetails = (props: Props) => {
           </Box>
         </Stack>
       </Box>
-      <Box width="40%">
+      <Box width="40%" height="100vh" position="relative">
         <Box
           height="10vh"
           p={1}
@@ -185,129 +203,152 @@ const SingleTicketDetails = (props: Props) => {
           <Estimate />
         </Box>
 
-        {
+        {isScript ? (
           <Box bgcolor="white" height="90vh">
             <Stack p={1}>
               <Typography variant="h6" fontWeight={500}>
                 Script Name
               </Typography>
               <Typography>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Consectetur ipsa magnam iure, sapiente perspiciatis pariatur
-                mollitia inventore sunt sit architecto numquam voluptas? Dolores
-                explicabo id, nesciunt consequuntur ex animi rem!
+                {script ? script : 'Script Not Available'}
               </Typography>
             </Stack>
           </Box>
-        }
-        <Stack
-          direction="row"
-          spacing={2}
-          p={1}
-          sx={{
-            overflowX: 'scroll',
-            '&::-webkit-scrollbar ': {
-              display: 'none'
-            }
-          }}
-        >
-          <Chip label="Tasks" variant="outlined" color="info" />
-          <Chip label="Appointments" variant="outlined" color="info" />
-          <Chip label="Documents" variant="outlined" color="info" />
-          <Chip label="Estimates" variant="outlined" color="info" />
-          <Chip label="Prescriptsions" variant="outlined" color="info" />
-        </Stack>
-        {/* Lead View  */}
-        {/* 
-        <Stack borderRadius={2} m={1} bgcolor="white">
-          <Box p={1} borderBottom={1} borderColor="#f5f5f5">
-            <Typography
-              textTransform="uppercase"
-              variant="subtitle1"
-              fontWeight={500}
-            >
-              Lead Details
-            </Typography>
-          </Box>
-          <Box p={1}>
-            <Stack direction="row" spacing={3} my={1}>
-              <MedicalServicesOutlined htmlColor="gray" />
-              <Typography textTransform={'capitalize'}>
-                {doctorSetter(currentTicket?.prescription[0].doctor!)}(
-                {departmentSetter(
-                  currentTicket?.prescription[0].departments[0]!
-                )}
-                )
-              </Typography>
-            </Stack>
-            <Stack direction="row" spacing={3} my={1}>
-              <CoronavirusOutlined htmlColor="gray" />
-              <Typography>{currentTicket?.prescription[0].symptoms}</Typography>
-            </Stack>
-            <Stack direction="row" spacing={3} my={1}>
-              <img src={Rx} alt="prescriptionIcon" />
-              <Typography color="primary">View Prescription</Typography>
-            </Stack>
-          </Box>
-        </Stack>
-        <Stack borderRadius={2} m={1} bgcolor="white">
-          <Box
-            p={1}
-            borderBottom={1}
-            borderColor="#f5f5f5"
-            display="flex"
-            justifyContent="space-between"
-          >
-            <Typography
-              variant="subtitle1"
-              fontWeight={500}
-              textTransform="uppercase"
-            >
-              Value and Payment Mode
-            </Typography>
-            <Stack direction="row" spacing={2}>
-              <ReceiptLongOutlined color="primary" />
-              <Typography color="primary">View Estimate</Typography>
-            </Stack>
-          </Box>
-          <Box p={1}>
-            <Stack direction="row" spacing={2}>
-              <Chip
-                color="error"
-                label={`₹${currentTicket?.estimate[0]?.total}`}
-                variant="outlined"
-                size="medium"
-                sx={{
-                  fontSize: '1rem'
-                }}
-              />
-              <Chip
-                color="info"
-                label={
-                  currentTicket?.estimate[0]?.paymentType === 0
-                    ? 'Cash'
-                    : currentTicket?.estimate[0]?.paymentType === 1
-                    ? 'Insurance'
-                    : 'CGHS/ECHS'
+        ) : (
+          <Box>
+            <Stack
+              direction="row"
+              spacing={2}
+              p={1}
+              sx={{
+                overflowX: 'scroll',
+                '&::-webkit-scrollbar ': {
+                  display: 'none'
                 }
-                variant="filled"
-                size="medium"
-                sx={{
-                  fontSize: '1rem'
-                }}
-              />
+              }}
+            >
+              <Chip label="Tasks" variant="outlined" color="info" />
+              <Chip label="Appointments" variant="outlined" color="info" />
+              <Chip label="Documents" variant="outlined" color="info" />
+              <Chip label="Estimates" variant="outlined" color="info" />
+              <Chip label="Prescriptsions" variant="outlined" color="info" />
+            </Stack>
+
+            <Stack borderRadius={2} m={1} bgcolor="white">
+              <Box p={1} borderBottom={1} borderColor="#f5f5f5">
+                <Typography
+                  textTransform="uppercase"
+                  variant="subtitle1"
+                  fontWeight={500}
+                >
+                  Lead Details
+                </Typography>
+              </Box>
+              <Box p={1}>
+                <Stack direction="row" spacing={3} my={1}>
+                  <MedicalServicesOutlined htmlColor="gray" />
+                  <Typography textTransform={'capitalize'}>
+                    {doctorSetter(currentTicket?.prescription[0].doctor!)}(
+                    {departmentSetter(
+                      currentTicket?.prescription[0].departments[0]!
+                    )}
+                    )
+                  </Typography>
+                </Stack>
+                <Stack direction="row" spacing={3} my={1}>
+                  <CoronavirusOutlined htmlColor="gray" />
+                  <Typography>
+                    {currentTicket?.prescription[0].symptoms}
+                  </Typography>
+                </Stack>
+                <Stack direction="row" spacing={3} my={1}>
+                  <img src={Rx} alt="prescriptionIcon" />
+                  <Typography color="primary">View Prescription</Typography>
+                </Stack>
+              </Box>
+            </Stack>
+            <Stack borderRadius={2} m={1} bgcolor="white">
+              <Box
+                p={1}
+                borderBottom={1}
+                borderColor="#f5f5f5"
+                display="flex"
+                justifyContent="space-between"
+              >
+                <Typography
+                  variant="subtitle1"
+                  fontWeight={500}
+                  textTransform="uppercase"
+                >
+                  Value and Payment Mode
+                </Typography>
+                <Stack direction="row" spacing={2}>
+                  <ReceiptLongOutlined color="primary" />
+                  <Typography color="primary">View Estimate</Typography>
+                </Stack>
+              </Box>
+              <Box p={1}>
+                <Stack direction="row" spacing={2}>
+                  <Chip
+                    color="error"
+                    label={`₹${currentTicket?.estimate[0]?.total}`}
+                    variant="outlined"
+                    size="medium"
+                    sx={{
+                      fontSize: '1rem'
+                    }}
+                  />
+                  <Chip
+                    color="info"
+                    label={
+                      currentTicket?.estimate[0]?.paymentType === 0
+                        ? 'Cash'
+                        : currentTicket?.estimate[0]?.paymentType === 1
+                        ? 'Insurance'
+                        : 'CGHS/ECHS'
+                    }
+                    variant="filled"
+                    size="medium"
+                    sx={{
+                      fontSize: '1rem'
+                    }}
+                  />
+                </Stack>
+              </Box>
+            </Stack>
+            <Stack borderRadius={2} m={1} bgcolor="white">
+              {currentTicket ? (
+                <PrescriptionTabsWidget currentTicket={currentTicket} />
+              ) : (
+                <Typography>Loading...</Typography>
+              )}
             </Stack>
           </Box>
-        </Stack>
-        <Stack borderRadius={2} m={1} bgcolor="white">
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs aria-label="basic tabs example">
-              <Tab label="Item One" />
-              <Tab label="Item Two" />
-              <Tab label="Item Three" />
-            </Tabs>
-          </Box>
-        </Stack> */}
+        )}
+
+        {/* Lead View  */}
+
+        <Box
+          height="7vh"
+          p={1}
+          width="100%"
+          position="absolute"
+          bottom={0}
+          bgcolor="white"
+          borderTop={0.5}
+          borderLeft={0.5}
+          borderColor="#F0F0F0"
+          display="flex"
+          justifyContent="space-between"
+        >
+          <Button onClick={() => setIsScript((prev) => !prev)}>
+            {!isScript ? 'View Agent Script' : 'Close Script '}
+          </Button>
+          <Fab size="small" color="primary" variant="extended">
+            <Add sx={{ mr: 1 }} />
+            Add New Task
+          </Fab>
+        </Box>
       </Box>
     </Stack>
   );

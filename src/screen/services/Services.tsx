@@ -11,8 +11,20 @@ type Props = {};
 
 const Services = (props: Props) => {
   const { allServices, departments } = useServiceStore();
+  const [pageState, setPageState] = useState({
+    isLoading: false,
+    total: 0,
+    page: 0,
+    pageSize: 10
+  });
 
-  const [pageNumber, setPageNumber] = useState<number>(0);
+  useEffect(() => {
+    (async function () {
+      setPageState((prev) => ({ ...prev, isLoading: true }));
+      await getAllServicesHandler(pageState.page, pageState.pageSize);
+      setPageState((prev) => ({ ...prev, isLoading: false }));
+    })();
+  }, [pageState.page, pageState.pageSize]);
 
   const departmentNameReturner = (id: string) => {
     const departmentName = departments.find(
@@ -70,12 +82,6 @@ const Services = (props: Props) => {
     };
   });
 
-  useEffect(() => {
-    (async function () {
-      await getAllServicesHandler(pageNumber);
-    })();
-  }, []);
-
   return (
     <Stack height="85vh">
       <Box
@@ -92,14 +98,21 @@ const Services = (props: Props) => {
         </Box>
       </Box>
       <DataGrid
-        checkboxSelection
+        rowCount={allServices.total}
         sx={{ background: 'white', p: 3 }}
         columns={columns}
-        onPageChange={() => setPageNumber((prev) => prev++)}
-        pageSize={10}
-        rowsPerPageOptions={[10]}
+        pagination
+        paginationMode="server"
+        onPageChange={(newPage) =>
+          setPageState((prev) => ({ ...prev, page: newPage }))
+        }
+        onPageSizeChange={(newPageSize) =>
+          setPageState((prev) => ({ ...prev, pageSize: newPageSize }))
+        }
+        rowsPerPageOptions={[10, 20, 30, 40]}
+        pageSize={pageState.pageSize}
         rows={rows}
-        page={pageNumber}
+        page={pageState.page}
       />
     </Stack>
   );
