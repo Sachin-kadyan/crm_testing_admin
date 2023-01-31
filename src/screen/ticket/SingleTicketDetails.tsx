@@ -184,6 +184,22 @@ const SingleTicketDetails = (props: Props) => {
         >
           <Estimate />
         </Box>
+
+        {
+          <Box bgcolor="white" height="90vh">
+            <Stack p={1}>
+              <Typography variant="h6" fontWeight={500}>
+                Script Name
+              </Typography>
+              <Typography>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Consectetur ipsa magnam iure, sapiente perspiciatis pariatur
+                mollitia inventore sunt sit architecto numquam voluptas? Dolores
+                explicabo id, nesciunt consequuntur ex animi rem!
+              </Typography>
+            </Stack>
+          </Box>
+        }
         <Stack
           direction="row"
           spacing={2}
@@ -202,7 +218,7 @@ const SingleTicketDetails = (props: Props) => {
           <Chip label="Prescriptsions" variant="outlined" color="info" />
         </Stack>
         {/* Lead View  */}
-
+        {/* 
         <Stack borderRadius={2} m={1} bgcolor="white">
           <Box p={1} borderBottom={1} borderColor="#f5f5f5">
             <Typography
@@ -291,7 +307,7 @@ const SingleTicketDetails = (props: Props) => {
               <Tab label="Item Three" />
             </Tabs>
           </Box>
-        </Stack>
+        </Stack> */}
       </Box>
     </Stack>
   );

@@ -1,4 +1,10 @@
-import { Box, InputAdornment, TextField } from '@mui/material';
+import {
+  Box,
+  InputAdornment,
+  Skeleton,
+  TextField,
+  Typography
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 import { useEffect } from 'react';
@@ -37,12 +43,14 @@ const Ticket = () => {
       <Box width="25%" position="sticky" top={0}>
         <Box p={1} height={'10vh'} borderBottom={0.5} borderColor="#f0f0f0">
           <TextField
+            sx={{ bgcolor: '#f5f7f5', p: 1, borderRadius: 1 }}
             size="small"
             fullWidth
             placeholder="Search Leads"
             id="outlined-start-adornment"
-            variant="filled"
+            variant="standard"
             InputProps={{
+              disableUnderline: true,
               startAdornment: (
                 <InputAdornment position="start">
                   <SearchIcon />
@@ -61,9 +69,18 @@ const Ticket = () => {
             }
           }}
         >
-          {tickets.map((item: iTicket) => {
-            return <TicketCard patientData={item} />;
-          })}
+          {tickets
+            ? tickets.map((item: iTicket) => {
+                return <TicketCard patientData={item} />;
+              })
+            : [0, 1, 2, 3, 4, 5].map((_) => (
+                <Skeleton
+                  variant="rectangular"
+                  sx={{ borderRadius: 2, my: 1 }}
+                  width="100%"
+                  height="15%"
+                />
+              ))}
         </Box>
       </Box>
       <Box bgcolor="#E2ECFB" width="75%">

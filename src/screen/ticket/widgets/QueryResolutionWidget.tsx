@@ -1,97 +1,103 @@
-import { Add, Close } from '@mui/icons-material';
+import { Box, Stack, Typography } from '@mui/material';
+
+import React, { useEffect, useState } from 'react';
+import useUserStore from '../../../store/userStore';
+import { ReactComponent as NoResultFoundSVG } from '../../../assets/images/no-result-found.svg';
 import {
-  Autocomplete,
-  Box,
-  Button,
-  Stack,
-  TextareaAutosize,
-  TextField
-} from '@mui/material';
-
-import React, { useState } from 'react';
-import useServiceStore from '../../../store/serviceStore';
-import { iDepartment } from '../../../types/store/service';
-
-import { doc, setDoc } from 'firebase/firestore';
+  collection,
+  onSnapshot,
+  DocumentData,
+  query,
+  where,
+  orderBy
+} from 'firebase/firestore';
 import { database } from '../../../utils/firebase';
+import CreateQueryModal from './CreateQueryModal';
+import QueryFetched from './QueryFetched';
+import QueryRoom from './QueryRoom';
+import { useParams } from 'react-router-dom';
 
 type Props = {};
 
 const QueryResolutionWidget = (props: Props) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [queryTitle, setQueryTitle] = useState('');
-  const [queryDepartment, setQueryDepartment] = useState('');
-  const [queryMessage, setQueryMessage] = useState('');
+  const [fetchedQueries, setFetchedQueries] = useState<DocumentData[]>();
+  const [roomId, setRoomId] = useState(null);
+  const [roomName, setRoomName] = useState('');
 
-  const { departments } = useServiceStore();
+  const { ticketID } = useParams();
 
-  const collectionRef = doc(database, 'queries');
-  console.log(collectionRef);
+  const { user } = useUserStore();
+
+  useEffect(() => {
+    setRoomId(null);
+    const collectionRef = collection(database, 'queries');
+    const q = query(
+      collectionRef,
+      orderBy('createdAt', 'desc'),
+      where('agentId', '==', user?._id),
+      where('ticketId', '==', ticketID)
+    );
+    const unsub = onSnapshot(q, (snapshot) => {
+      const queries: DocumentData[] = [];
+      snapshot.forEach((doc) => {
+        queries.push({ ...doc.data(), id: doc.id });
+      });
+      setFetchedQueries(queries);
+    });
+    return () => unsub();
+  }, [ticketID]);
 
   return (
-    <Box height="95%" position="relative" p={1} bgcolor="white">
-      <Box height="90%"></Box>
-      <Box
-        sx={{
-          transition: '400ms ease-in-out'
-        }}
-        p={2}
-        borderRadius="10px 10px 0px 0px"
-        height={isOpen ? '60%' : '15%'}
-        position="sticky"
-        bottom={isOpen ? 20 : 1}
-        bgcolor="#f1f5f7"
-      >
-        <Box my={1}>
-          <Button
-            onClick={() => setIsOpen((prev) => !prev)}
-            endIcon={isOpen ? <Close /> : <Add />}
-          >
-            {isOpen ? 'Close' : 'Create New Query'}
-          </Button>
-        </Box>
-
-        {isOpen && (
-          <Stack spacing={2} direction="column" height="100%" p={1}>
-            <Autocomplete
-              fullWidth
-              size="small"
-              aria-required={true}
-              options={departments}
-              onChange={(event, value) => setQueryDepartment(value?._id!)}
-              id="combo-box-demo"
-              getOptionLabel={(option: iDepartment) => option.name}
-              sx={{ width: 400, textTransform: 'capitalize' }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  sx={{ textTransform: 'capitalize' }}
-                  label="Select Department"
-                />
-              )}
-            />
-            <TextField
-              label="Enter Query Title"
-              size="small"
-              fullWidth
-              onChange={(e) => setQueryTitle(e.target.value)}
-            />
-
-            <TextareaAutosize
-              aria-label="empty textarea"
-              placeholder="Enter Message"
-              minRows={3}
-              style={{
-                padding: '7px',
-                outline: 'solid 1px #999',
-                background: 'transparent',
-                borderRadius: '5px'
-              }}
-            />
-            <Button variant="contained">Create Query Room</Button>
-          </Stack>
-        )}
-      </Box>
+    <Box p={1} height="95%" bgcolor="white">
+      {!roomId && (
+        <Stack position="relative" height="100%">
+          <Box height="90%">
+            {fetchedQueries ? (
+              fetchedQueries.length > 0 ? (
+                fetchedQueries?.map((item: any, index: number) => {
+                  return (
+                    <QueryFetched
+                      onClick={() => {
+                        setRoomId(item.id);
+                        setRoomName(item.subject);
+                      }}
+                      id={item.id}
+                      subject={item.subject}
+                      departmentId={item.documentId}
+                      createdAt={item.createdAt}
+                    />
+                  );
+                })
+              ) : (
+                <Stack
+                  height="90%"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <NoResultFoundSVG />
+                  <Typography color="gray" variant="caption" mt={1}>
+                    No Queries available.
+                  </Typography>
+                </Stack>
+              )
+            ) : (
+              <Typography>Loading... </Typography>
+            )}
+          </Box>
+          <CreateQueryModal />
+        </Stack>
+      )}
+      {roomId && (
+        <QueryRoom
+          onRoomClose={() => {
+            setRoomId(null);
+            setRoomName('');
+          }}
+          roomId={roomId}
+          roomName={roomName}
+        />
+      )}
     </Box>
   );
 };

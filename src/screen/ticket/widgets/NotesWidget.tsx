@@ -59,7 +59,7 @@ const NotesWidget = (props: Props) => {
             }
           }}
         >
-          {notes.map((note: iNote, index) => {
+          {notes.map((note: iNote) => {
             return (
               <Box key={note._id}>
                 <Stack
