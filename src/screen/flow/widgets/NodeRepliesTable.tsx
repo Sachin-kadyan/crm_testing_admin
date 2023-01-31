@@ -89,7 +89,7 @@ const NodeRepliesTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           placeholder="AAP121"
           size="small"
           validator={(value) => maxLength(value, 1, 2048)}
-          errorMessage={'Header Link  should be "None" or between 1-50'}
+          errorMessage={'Header Link  should be "None" or between 1-2048npm'}
         />
       </Box>
       <Box minWidth="15vw">
@@ -112,8 +112,8 @@ const NodeRepliesTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.footer}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 1, 60)}
-          errorMessage={'Footer should be between 1-60'}
+          validator={(value) => maxLength(value, 0, 60)}
+          errorMessage={'Footer should be between 0-60'}
         />
       </Box>
       <Box minWidth="15vw">
