@@ -112,8 +112,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.footer}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 1, 60)}
-          errorMessage={'Footer should be between 1-60'}
+          validator={(value) => maxLength(value, 0, 60)}
+          errorMessage={'Footer should be between 0-60'}
         />
       </Box>
       <Box minWidth="15vw">
