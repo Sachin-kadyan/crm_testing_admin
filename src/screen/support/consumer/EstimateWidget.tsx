@@ -49,7 +49,7 @@ const EstimateWidget = (props: Props) => {
 
   useEffect(() => {
     (async function () {
-      await getAllServicesHandler(pageNumber);
+      await getAllServicesHandler(pageNumber, 50);
       await getWardsHandler();
     })();
   }, []);
