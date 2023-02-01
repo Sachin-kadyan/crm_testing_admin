@@ -219,6 +219,7 @@ const SingleTicketDetails = (props: Props) => {
               <Typography variant="h6" fontWeight={500}>
                 Script Name
               </Typography>
+
               <Box
                 sx={{
                   overflowY: 'scroll',

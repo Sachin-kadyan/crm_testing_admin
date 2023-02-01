@@ -10,6 +10,7 @@ import {
   FormHelperText
 } from '@mui/material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { registerConsumerHandler } from '../../../api/consumer/consumerHandler';
 import useEventStore from '../../../store/eventStore';
 import BackHeader from '../widgets/BackHeader';
@@ -38,50 +39,51 @@ const RegisterConsumer = () => {
   const [consumer, setConsumer] = useState(initialConsumerFields);
   const [validations, setValidations] = useState(initialValidationsFields);
   const { setSnacks } = useEventStore();
+  const navigate = useNavigate();
 
   const validationsChecker = () => {
     const firstName = consumer.firstName === initialConsumerFields.firstName;
-    const lastName = consumer.lastName === initialConsumerFields.lastName;
-    const email =
-      consumer.email.match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      ) === null;
+    // const lastName = consumer.lastName === initialConsumerFields.lastName;
+    // const email =
+    //   consumer.email.match(
+    //     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    //   ) === null;
     const phone = consumer.phone.length !== 10;
     const uid = consumer.uid === initialConsumerFields.uid;
-    const age = consumer.age === initialConsumerFields.age;
-    const gender = consumer.uid === initialConsumerFields.gender;
+    // const age = consumer.age === initialConsumerFields.age;
+    // const gender = consumer.gender === initialConsumerFields.gender;
     setValidations((prev) => {
       prev.firstName = firstName
         ? { message: 'Please enter correct first name', value: true }
         : defaultValidations;
-      prev.lastName = lastName
-        ? { message: 'Please enter correct last name', value: true }
-        : defaultValidations;
-      prev.email = email
-        ? { message: 'Please enter correct email', value: true }
-        : defaultValidations;
+      // prev.lastName = lastName
+      //   ? { message: 'Please enter correct last name', value: true }
+      //   : defaultValidations;
+      // prev.email = email
+      //   ? { message: 'Please enter correct email', value: true }
+      //   : defaultValidations;
       prev.phone = phone
         ? { message: 'Please enter correct phone number', value: true }
         : defaultValidations;
       prev.uid = uid
         ? { message: 'Please enter correct UHID', value: true }
         : defaultValidations;
-      prev.age = age
-        ? { message: 'Please enter correct age', value: true }
-        : defaultValidations;
-      prev.gender = gender
-        ? { message: 'Please enter correct gender', value: true }
-        : defaultValidations;
+      // prev.age = age
+      //   ? { message: 'Please enter correct age', value: true }
+      //   : defaultValidations;
+      // prev.gender = gender
+      //   ? { message: 'Please enter correct gender', value: true }
+      //   : defaultValidations;
       return { ...prev };
     });
     return (
       firstName === false &&
-      lastName === false &&
-      email === false &&
+      // lastName === false &&
+      // email === false &&
       phone === false &&
-      uid === false &&
-      age === false &&
-      gender === false
+      uid === false
+      // age === false &&
+      // gender === false
     );
   };
 
@@ -91,11 +93,14 @@ const RegisterConsumer = () => {
       const dob = new Date();
       dob.setFullYear(dob.getFullYear() - +consumer.age);
       const consumerPayload: any = consumer;
-      consumerPayload.dob = dob;
-      consumerPayload.phone = `91${consumer.phone}`;
+      consumerPayload.email = consumer.email ? consumer.email : null;
+      consumerPayload.lastName = consumer.lastName ? consumer.lastName : null;
+      consumerPayload.gender = consumer.gender ? consumer.gender : null;
+      consumerPayload.dob = consumer.age ? dob : null;
       await registerConsumerHandler(consumerPayload);
       setConsumer(initialConsumerFields);
       setSnacks('Patient Registered Successfully!', 'success');
+      navigate('/');
     }
   };
 

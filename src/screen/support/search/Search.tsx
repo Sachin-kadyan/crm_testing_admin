@@ -33,6 +33,11 @@ const Search = () => {
             label="Search Patient"
             onChange={(e) => setSearch(e.target.value)}
             onBlur={(e) => searchConsumerHandler(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                searchConsumerHandler(search);
+              }
+            }}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -66,14 +71,18 @@ const Search = () => {
                     variant="h5"
                     component="div"
                   >
-                    {item.firstName + ' ' + item.lastName}
+                    {item.firstName +
+                      ' ' +
+                      (item.lastName ? item.lastName : '')}
                   </Typography>
                   <Typography color="text.secondary">
                     {item.gender === 'M'
                       ? 'Male'
                       : item.gender === 'F'
                       ? 'Female'
-                      : 'Other'}
+                      : item.gender === 'O'
+                      ? 'Other'
+                      : 'Not Specified'}
                   </Typography>
                   <Typography variant="body2">{item.email}</Typography>
                 </CardContent>
