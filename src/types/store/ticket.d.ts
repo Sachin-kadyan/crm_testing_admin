@@ -65,6 +65,7 @@ export interface iTicket {
   creator: string;
   assigned: string;
   stage: string;
+  createdAt: string;
 }
 
 export interface iTicketStore {

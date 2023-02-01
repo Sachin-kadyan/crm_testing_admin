@@ -37,7 +37,7 @@ import { getStagesHandler } from '../../api/stages/stagesHandler';
 import Rx from '../../assets/Rx.svg';
 import MessagingWidget from './widgets/MessagingWidget';
 import NotesWidget from './widgets/NotesWidget';
-import { iDepartment, iDoctor } from '../../types/store/service';
+import { iDepartment, iDoctor, iScript } from '../../types/store/service';
 import QueryResolutionWidget from './widgets/QueryResolutionWidget';
 import { getSingleScript } from '../../api/script/script';
 import PrescriptionTabsWidget from './widgets/PrescriptionTabsWidget';
@@ -52,7 +52,7 @@ const SingleTicketDetails = (props: Props) => {
   const { doctors, departments } = useServiceStore();
   const [currentTicket, setCurrentTicket] = useState<iTicket>();
   const [value, setValue] = useState('2');
-  const [script, setScript] = useState('');
+  const [script, setScript] = useState<iScript>();
   const [isScript, setIsScript] = useState(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -88,6 +88,13 @@ const SingleTicketDetails = (props: Props) => {
   const departmentSetter = (id: string) => {
     return departments.find((department: iDepartment) => department._id === id)
       ?.name;
+  };
+
+  // @date : string <TimeStamp>
+  const daysDiffernceFromNow = (date: string) => {
+    const d = dayjs(date);
+    const today = dayjs(new Date());
+    return today.diff(d, 'days');
   };
 
   return (
@@ -152,7 +159,10 @@ const SingleTicketDetails = (props: Props) => {
                 <Call />
               </IconButton>
             </a>
-            <Chip label="5 Days" />
+            <Chip
+              label={`${daysDiffernceFromNow(currentTicket?.createdAt!)}
+              days`}
+            />
           </Box>
         </Box>
         <Stack bgcolor="#F1F5F7" height="90vh" direction="column">
@@ -209,9 +219,19 @@ const SingleTicketDetails = (props: Props) => {
               <Typography variant="h6" fontWeight={500}>
                 Script Name
               </Typography>
-              <Typography>
-                {script ? script : 'Script Not Available'}
-              </Typography>
+              <Box
+                sx={{
+                  overflowY: 'scroll',
+                  '&::-webkit-scrollbar ': {
+                    display: 'none'
+                  },
+                  height: '100%'
+                }}
+              >
+                <Typography>
+                  {script ? script.text : 'Script Not Available'}
+                </Typography>
+              </Box>
             </Stack>
           </Box>
         ) : (

@@ -242,7 +242,57 @@ const NodeList = (props: Props) => {
             }}
           />
         ))}
-        <Button endIcon={<Add />}>Add Row</Button>
+        <Button
+          onClick={() => {
+            setFileData([
+              ...fileData,
+              {
+                disease: '',
+                nodeId: '',
+                nodeName: '',
+                headerType: '',
+                headerLink: '',
+                body: '',
+                footer: '',
+                menuTitle: '',
+                sectionTitle: '',
+                listTitle0: '',
+                listDesc0: '',
+                listId0: '',
+                listTitle1: '',
+                listDesc1: '',
+                listId1: '',
+                listTitle2: '',
+                listDesc2: '',
+                listId2: '',
+                listTitle3: '',
+                listDesc3: '',
+                listId3: '',
+                listTitle4: '',
+                listDesc4: '',
+                listId4: '',
+                listTitle5: '',
+                listDesc5: '',
+                listId5: '',
+                listTitle6: '',
+                listDesc6: '',
+                listId6: '',
+                listTitle7: '',
+                listDesc7: '',
+                listId7: '',
+                listTitle8: '',
+                listDesc8: '',
+                listId8: '',
+                listTitle9: '',
+                listDesc9: '',
+                listId9: ''
+              }
+            ]);
+          }}
+          endIcon={<Add />}
+        >
+          Add Row
+        </Button>
       </Box>
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <Stack sx={style} spacing={5} direction="column">
