@@ -52,7 +52,7 @@ const SingleTicketDetails = (props: Props) => {
   const { doctors, departments } = useServiceStore();
   const [currentTicket, setCurrentTicket] = useState<iTicket>();
   const [value, setValue] = useState('2');
-  const [script, setScript] = useState<iScript>();
+  const [script, setScript] = useState();
   const [isScript, setIsScript] = useState(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -219,19 +219,10 @@ const SingleTicketDetails = (props: Props) => {
               <Typography variant="h6" fontWeight={500}>
                 Script Name
               </Typography>
-              <Box
-                sx={{
-                  overflowY: 'scroll',
-                  '&::-webkit-scrollbar ': {
-                    display: 'none'
-                  },
-                  height: '100%'
-                }}
-              >
-                <Typography>
-                  {script ? script.text : 'Script Not Available'}
-                </Typography>
-              </Box>
+
+              <Typography>
+                {script ? script : 'Script Not Available'}
+              </Typography>
             </Stack>
           </Box>
         ) : (
