@@ -14,6 +14,7 @@ import { useParams, Link } from 'react-router-dom';
 import { getConsumerTicketsHandler } from '../../../api/consumer/consumerHandler';
 import { uploadAndSendEstimateHandler } from '../../../api/estimate/estimateHandler';
 import useConsumerStore from '../../../store/consumerStore';
+import useEventStore from '../../../store/eventStore';
 import CreatePrescription from '../prescription/CreatePrescription';
 import BackHeader from '../widgets/BackHeader';
 
@@ -26,18 +27,29 @@ interface TabPanelProps {
 const Consumer = () => {
   const [value, setValue] = useState(0);
   const { consumerHistory } = useConsumerStore();
+  const { setSnacks } = useEventStore();
   const { id } = useParams();
 
   const UploadComp = ({ id }: { id: string }) => {
     const [file, setFile] = useState<File | null>(null);
+    const [loading, setLoading] = useState(false);
+    const uploadHandler = async () => {
+      if (!file) return;
+      setLoading(true);
+      await uploadAndSendEstimateHandler(file, id);
+      setSnacks('File sent to customer', 'success');
+      setFile(null);
+      setLoading(false);
+    };
     return (
       <>
         {file ? (
           <>
             <Button
+              disabled={loading}
               size="small"
               variant="contained"
-              onClick={() => uploadAndSendEstimateHandler(file, id)}
+              onClick={uploadHandler}
             >
               Send
             </Button>
