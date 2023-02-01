@@ -15,6 +15,7 @@ import { getConsumerTicketsHandler } from '../../../api/consumer/consumerHandler
 import { uploadAndSendEstimateHandler } from '../../../api/estimate/estimateHandler';
 import useConsumerStore from '../../../store/consumerStore';
 import CreatePrescription from '../prescription/CreatePrescription';
+import BackHeader from '../widgets/BackHeader';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -82,16 +83,19 @@ const Consumer = () => {
   }, []);
   return (
     <Box>
-      <Tabs
-        variant="fullWidth"
-        value={value}
-        onChange={(_, newValue: number) => setValue(newValue)}
-      >
-        <Tab label="History" />
-        <Tab label="Prescription" />
-      </Tabs>
+      <BackHeader title="Patient" />
+      <Stack position="sticky" top={55} bgcolor="white" zIndex={10}>
+        <Tabs
+          variant="fullWidth"
+          value={value}
+          onChange={(_, newValue: number) => setValue(newValue)}
+        >
+          <Tab label="Prescription" />
+          <Tab label="History" />
+        </Tabs>
+      </Stack>
       <Box>
-        <TabPanel value={value} index={0}>
+        <TabPanel value={value} index={1}>
           {consumerHistory.map((history) => {
             return (
               <Card
@@ -139,7 +143,7 @@ const Consumer = () => {
                       <Typography textTransform="capitalize">{item}</Typography>
                     ))}
                     {history.prescription.admission !== null && (
-                      <Stack spacing={1}>
+                      <Stack spacing={1} alignItems="flex-start">
                         <Link
                           to={`/consumer/${history.consumer}/estimate/${history.prescription._id}`}
                         >
@@ -162,7 +166,7 @@ const Consumer = () => {
             );
           })}
         </TabPanel>
-        <TabPanel value={value} index={1}>
+        <TabPanel value={value} index={0}>
           <CreatePrescription />
         </TabPanel>
       </Box>
