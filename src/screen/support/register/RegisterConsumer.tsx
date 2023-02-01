@@ -44,10 +44,7 @@ const RegisterConsumer = () => {
   const validationsChecker = () => {
     const firstName = consumer.firstName === initialConsumerFields.firstName;
     // const lastName = consumer.lastName === initialConsumerFields.lastName;
-    // const email =
-    //   consumer.email.match(
-    //     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    //   ) === null;
+
     const phone = consumer.phone.length !== 10;
     const uid = consumer.uid === initialConsumerFields.uid;
     // const age = consumer.age === initialConsumerFields.age;
@@ -92,8 +89,12 @@ const RegisterConsumer = () => {
     if (check === true) {
       const dob = new Date();
       dob.setFullYear(dob.getFullYear() - +consumer.age);
+      const email =
+        consumer.email.match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        ) === null;
       const consumerPayload: any = consumer;
-      consumerPayload.email = consumer.email ? consumer.email : null;
+      consumerPayload.email = email ? consumer.email : null;
       consumerPayload.lastName = consumer.lastName ? consumer.lastName : null;
       consumerPayload.gender = consumer.gender ? consumer.gender : null;
       consumerPayload.dob = consumer.age ? dob : null;
