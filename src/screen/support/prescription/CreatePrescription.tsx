@@ -1,4 +1,4 @@
-import { Add, Camera, Check, Close, Delete, Undo } from '@mui/icons-material';
+import { Camera, Check, Close, Delete, Label, Undo } from '@mui/icons-material';
 import {
   MenuItem,
   Autocomplete,
@@ -8,9 +8,7 @@ import {
   Select,
   TextField,
   OutlinedInput,
-  InputAdornment,
   IconButton,
-  Chip,
   CardMedia,
   Typography,
   CardContent,
@@ -20,7 +18,7 @@ import {
 } from '@mui/material';
 import { Stack } from '@mui/system';
 import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Webcam from 'react-webcam';
 import { apiClient } from '../../../api/apiClient';
 import { getDepartmentsHandler } from '../../../api/department/departmentHandler';
@@ -61,6 +59,7 @@ const CreatePrescription = () => {
   const [foundServices, setFoundServices] = useState<iService[]>([]);
   const camera = useRef<Webcam>(null);
   const { id } = useParams();
+  const navigate = useNavigate();
   const [prescription, setPrescription] =
     useState<iPrescription>(initialPrescription);
   const [diagnostics, setDiagnostics] = useState<string[]>([]);
@@ -105,7 +104,7 @@ const CreatePrescription = () => {
         service = true;
       }
     }
-    const followUp = new Date(prescription.followUp).getTime() < Date.now();
+    // const followUp = new Date(prescription.followUp).getTime() < Date.now();
 
     setValidations((prev) => {
       prev.department = department
@@ -120,9 +119,9 @@ const CreatePrescription = () => {
       prev.admission = admission
         ? { message: 'Invalid Value', value: true }
         : defaultValidation;
-      prev.followUp = followUp
-        ? { message: 'Invalid Value', value: true }
-        : defaultValidation;
+      // prev.followUp = followUp
+      //   ? { message: 'Invalid Value', value: true }
+      //   : defaultValidation;
       prev.image = image
         ? { message: 'Invalid Value', value: true }
         : defaultValidation;
@@ -137,7 +136,7 @@ const CreatePrescription = () => {
       doctor === false &&
       admission === false &&
       image === false &&
-      followUp === false &&
+      // followUp === false &&
       service === false
     );
   };
@@ -150,9 +149,11 @@ const CreatePrescription = () => {
       ticket.consumer = id;
       ticket.departments = [prescription.department];
       ticket.diagnostics = diagnostics;
+      ticket.followup = ticket.followup ? ticket.followup : null;
       await createTicketHandler(ticket);
       setPrescription(initialPrescription);
       setDiagnostics([]);
+      navigate('/');
     }
   };
 
@@ -215,30 +216,30 @@ const CreatePrescription = () => {
             </FormHelperText>
           </Box>
           <Box my={1.5}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Admission Type
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={prescription.admission}
-                label="Admission Type"
-                onChange={(e) =>
-                  changePrescriptionValue('admission', e.target.value!)
-                }
-              >
-                <MenuItem value={'none'}>None</MenuItem>
-                <MenuItem value={'Surgery'}>Surgery</MenuItem>
-                <MenuItem value={'Radiation'}>Radiation</MenuItem>
-                <MenuItem value={'Medical Management'}>
-                  Medical Management
-                </MenuItem>
-              </Select>
-              <FormHelperText error={validations.admission.value}>
-                {validations.admission.message}
-              </FormHelperText>
-            </FormControl>
+            <Typography color="gray" id="demo-simple-select-label">
+              Admission Type
+            </Typography>
+            <Stack flexWrap={'wrap'} flexDirection="row">
+              {['none', 'Surgery', 'Radiation', 'Medical Management'].map(
+                (item) => (
+                  <Button
+                    size="small"
+                    sx={{ m: 0.4 }}
+                    key={item}
+                    onClick={() => changePrescriptionValue('admission', item)}
+                    variant={
+                      prescription.admission === item ? 'contained' : 'outlined'
+                    }
+                  >
+                    {item}
+                  </Button>
+                )
+              )}
+            </Stack>
+
+            <FormHelperText error={validations.admission.value}>
+              {validations.admission.message}
+            </FormHelperText>
             {prescription.admission !== 'none' && (
               <Box my={1.5}>
                 <Autocomplete
@@ -332,30 +333,36 @@ const CreatePrescription = () => {
             />
           </FormControl> */}
           {/* </Box> */}
-          <FormControl fullWidth sx={{ my: 1 }}>
-            <InputLabel id="demo-multiple-name-label">Diagnostics</InputLabel>
-            <Select
-              labelId="demo-multiple-name-label"
-              value={diagnostics}
-              onChange={(e) =>
-                setDiagnostics(
-                  typeof e.target.value === 'string'
-                    ? e.target.value.split(',')
-                    : e.target.value
-                )
-              }
-              id="demo-multiple-name"
-              multiple
-              input={<OutlinedInput label="Diagnostics" />}
-            >
-              {['MRI', 'CT-SCAN', 'PETCT'].map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
           <Box my={1.5}>
+            <Typography color="gray" id="demo-simple-select-label">
+              Diagnostics
+            </Typography>
+            <Stack flexWrap={'wrap'} flexDirection="row">
+              {['CT-Scan', 'PET-CT', 'MRI'].map((item) => (
+                <Button
+                  size="small"
+                  sx={{ m: 0.4 }}
+                  key={item}
+                  onClick={() => {
+                    const diag = new Set(diagnostics);
+                    if (diag.has(item)) {
+                      diag.delete(item);
+                    } else {
+                      diag.add(item);
+                    }
+                    setDiagnostics(Array.from(diag));
+                  }}
+                  variant={
+                    new Set(diagnostics).has(item) ? 'contained' : 'outlined'
+                  }
+                >
+                  {item}
+                </Button>
+              ))}
+            </Stack>
+          </Box>
+
+          <Box my={1.8}>
             <TextField
               inputProps={{ inputProps: { min: new Date() } }}
               value={prescription.followUp}
