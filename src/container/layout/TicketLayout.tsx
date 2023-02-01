@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   InputAdornment,
   Skeleton,
   TextField,
@@ -16,6 +17,7 @@ import { getDoctorsHandler } from '../../api/doctor/doctorHandler';
 import { getDepartmentsHandler } from '../../api/department/departmentHandler';
 import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
 import DefaultScreen from '../../components/DefaultScreen';
+import { ArrowBack } from '@mui/icons-material';
 
 const Ticket = () => {
   const { tickets } = useTicketStore();
@@ -41,7 +43,15 @@ const Ticket = () => {
   return (
     <Box height={'100vh'} display="flex" position="fixed" width="100%">
       <Box width="25%" position="sticky" top={0}>
-        <Box p={1} height={'10vh'} borderBottom={0.5} borderColor="#f0f0f0">
+        <Box p={1} height={'13vh'} borderBottom={0.5} borderColor="#f0f0f0">
+          <Button
+            onClick={() => navigate('/')}
+            color="inherit"
+            startIcon={<ArrowBack />}
+            sx={{ mb: 1 }}
+          >
+            Go Back To Dashboard
+          </Button>
           <TextField
             sx={{ bgcolor: '#f5f7f5', p: 1, borderRadius: 1 }}
             size="small"
@@ -61,7 +71,7 @@ const Ticket = () => {
         </Box>
         <Box
           p={1}
-          height={'90vh'}
+          height={'87vh'}
           sx={{
             overflowY: 'scroll',
             '&::-webkit-scrollbar ': {

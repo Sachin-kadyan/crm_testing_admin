@@ -173,7 +173,31 @@ const NodeReplies = (props: Props) => {
             }}
           />
         ))}
-        <Button endIcon={<Add />}>Add Row</Button>
+        <Button
+          onClick={() =>
+            setFileData([
+              ...fileData,
+              {
+                diseaseId: '',
+                nodeId: '',
+                nodeName: '',
+                headerType: 'None',
+                headerLink: '',
+                body: '',
+                footer: '',
+                replyButton1: '',
+                replyButtonId1: '',
+                replyButton2: '',
+                replyButtonId2: '',
+                replyButton3: '',
+                replyButtonId3: ''
+              }
+            ])
+          }
+          endIcon={<Add />}
+        >
+          Add Row
+        </Button>
       </Box>
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <Stack sx={style} spacing={5} direction="column">

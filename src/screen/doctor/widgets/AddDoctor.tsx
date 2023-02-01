@@ -2,12 +2,8 @@ import {
   Alert,
   Autocomplete,
   Button,
-  FormControl,
   InputAdornment,
-  InputLabel,
-  MenuItem,
   Modal,
-  Select,
   Stack,
   TextField,
   Typography
@@ -16,7 +12,6 @@ import React, { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import useServiceStore from '../../../store/serviceStore';
 import { createNewDoctorHandler } from '../../../api/doctor/doctorHandler';
-import { iDepartment } from '../../../types/store/service';
 
 const style = {
   position: 'absolute' as 'absolute',
