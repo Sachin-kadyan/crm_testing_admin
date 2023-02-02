@@ -14,7 +14,10 @@ import {
   CardContent,
   Button,
   Grid,
-  FormHelperText
+  FormHelperText,
+  Checkbox,
+  FormGroup,
+  FormControlLabel
 } from '@mui/material';
 import { Stack } from '@mui/system';
 import { useEffect, useRef, useState } from 'react';
@@ -37,6 +40,8 @@ type iPrescription = {
   medicines: string[];
   followUp: Date | number;
   image: string | null;
+  caregiver_name: string | null;
+  caregiver_phone: string | null;
   service?: { _id: string; label: string };
 };
 
@@ -49,7 +54,9 @@ const initialPrescription = {
   condition: null,
   medicines: [],
   followUp: new Date(),
-  image: null
+  image: null,
+  caregiver_name: null,
+  caregiver_phone: null
 };
 
 const CreatePrescription = () => {
@@ -64,6 +71,7 @@ const CreatePrescription = () => {
     useState<iPrescription>(initialPrescription);
   const [diagnostics, setDiagnostics] = useState<string[]>([]);
   const defaultValidation = { message: '', value: false };
+  const [isCaregiver, setIsCaregiver] = useState(false);
 
   const findService = async (query: string) => {
     try {
@@ -98,12 +106,12 @@ const CreatePrescription = () => {
     const doctor = prescription.doctor === '';
     const admission = prescription.admission === '';
     const image = prescription.image === null;
-    let service = false;
-    if (prescription.admission !== 'none') {
-      if (!prescription.service || prescription.service?._id === '') {
-        service = true;
-      }
-    }
+    // let service = false;
+    // if (prescription.admission !== 'none') {
+    //   if (!prescription.service || prescription.service?._id === '') {
+    //     service = true;
+    //   }
+    // }
     // const followUp = new Date(prescription.followUp).getTime() < Date.now();
 
     setValidations((prev) => {
@@ -125,9 +133,9 @@ const CreatePrescription = () => {
       prev.image = image
         ? { message: 'Invalid Value', value: true }
         : defaultValidation;
-      prev.service = service
-        ? { message: 'Please specify service', value: true }
-        : defaultValidation;
+      // prev.service = service
+      //   ? { message: 'Please specify service', value: true }
+      //   : defaultValidation;
       return { ...prev };
     });
     return (
@@ -135,9 +143,9 @@ const CreatePrescription = () => {
       // subDepartment === false &&
       doctor === false &&
       admission === false &&
-      image === false &&
+      image === false
       // followUp === false &&
-      service === false
+      // service === false
     );
   };
   const handelUploadPrescription = async () => {
@@ -368,7 +376,6 @@ const CreatePrescription = () => {
             <TextField
               inputProps={{ inputProps: { min: new Date() } }}
               value={prescription.followUp}
-              required
               onChange={(e) =>
                 changePrescriptionValue('followUp', e.target.value)
               }
@@ -379,6 +386,39 @@ const CreatePrescription = () => {
               helperText={validations.followUp.message}
             />
           </Box>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isCaregiver}
+                  onChange={(e) => setIsCaregiver(e.target.checked)}
+                />
+              }
+              label="Caregiver should receive updates and information."
+            />
+            {isCaregiver && (
+              <>
+                <TextField
+                  sx={{ my: 0.5 }}
+                  value={prescription.caregiver_name}
+                  onChange={(e) =>
+                    changePrescriptionValue('caregiver_name', e.target.value)
+                  }
+                  fullWidth
+                  label="Caregiver Name"
+                />
+                <TextField
+                  sx={{ my: 0.5 }}
+                  value={prescription.caregiver_phone}
+                  onChange={(e) =>
+                    changePrescriptionValue('caregiver_phone', e.target.value)
+                  }
+                  fullWidth
+                  label="Caregiver Phone"
+                />
+              </>
+            )}
+          </FormGroup>
           <Box my={1.5}>
             <Grid container>
               <Grid item xs={6}>
@@ -474,7 +514,7 @@ const CreatePrescription = () => {
             screenshotFormat="image/jpeg"
             ref={camera}
             videoConstraints={{
-              facingMode: { exact: 'environment' }
+              facingMode: 'user'
             }}
           />
         ) : (
