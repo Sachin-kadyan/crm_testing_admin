@@ -20,6 +20,8 @@ export type iCreateTicket = {
   consumer: string;
   service?: { _id: string; label: string };
   diagnostics: string[];
+  caregiver_phone: string | null;
+  caregiver_name: string | null;
 };
 
 export const createTicketHandler = async (prescription: iCreateTicket) => {
@@ -34,6 +36,10 @@ export const createTicketHandler = async (prescription: iCreateTicket) => {
   prescriptionData.append('symptoms', prescription.symptoms!);
   prescription.condition &&
     prescriptionData.append('condition', prescription.condition);
+  prescription.caregiver_name &&
+    prescriptionData.append('caregiver_name', prescription.caregiver_name);
+  prescription.caregiver_phone &&
+    prescriptionData.append('caregiver_phone', prescription.caregiver_phone);
   prescriptionData.append('medicines', JSON.stringify(prescription.medicines));
   prescriptionData.append('followUp', JSON.stringify(prescription.followUp));
   prescriptionData.append(
