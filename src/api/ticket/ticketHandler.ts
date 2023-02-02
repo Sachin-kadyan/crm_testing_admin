@@ -1,6 +1,13 @@
 import useTicketStore from '../../store/ticketStore';
-import { iNote } from '../../types/store/ticket';
-import { createNewNote, getAllNotes, createTicket, getTicket } from './ticket';
+import { iNote, iReminder } from '../../types/store/ticket';
+import {
+  createNewNote,
+  getAllNotes,
+  createTicket,
+  getTicket,
+  getAllReminders,
+  createNewReminder
+} from './ticket';
 
 export const getTicketHandler = async () => {
   const { setTickets } = useTicketStore.getState();
@@ -66,4 +73,16 @@ export const createNotesHandler = async (note: iNote) => {
   const { notes, setNotes } = useTicketStore.getState();
   const noteAdded = await createNewNote(note);
   setNotes([...notes, noteAdded]);
+};
+
+export const getAllReminderHandler = async (ticketId: string) => {
+  const { setReminders } = useTicketStore.getState();
+  const reminders = await getAllReminders(ticketId);
+  setReminders(reminders);
+};
+
+export const createNewReminderHandler = async (reminderData: iReminder) => {
+  const { reminders, setReminders } = useTicketStore.getState();
+  const reminderAdded = await createNewReminder(reminderData);
+  setReminders([...reminders, reminderAdded]);
 };

@@ -9,7 +9,7 @@ import useTicketStore from '../../../store/ticketStore';
 import { ReactComponent as NoResultFoundSVG } from '../../../assets/images/no-result-found.svg';
 import dayjs from 'dayjs';
 import { iNote } from '../../../types/store/ticket';
-import { Send } from '@mui/icons-material';
+import { Send, StickyNote2Outlined } from '@mui/icons-material';
 
 type Props = {};
 
@@ -70,7 +70,8 @@ const NotesWidget = (props: Props) => {
                   direction="column"
                   spacing={1}
                 >
-                  <Typography>{note.text}</Typography>
+                  <StickyNote2Outlined />
+                  <Typography variant="caption">{note.text}</Typography>
                   <Chip
                     sx={{ width: '25%' }}
                     size="small"

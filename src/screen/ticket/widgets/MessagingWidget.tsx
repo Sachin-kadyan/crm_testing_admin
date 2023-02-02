@@ -13,6 +13,7 @@ const MessagingWidget = (props: Props) => {
   const TextInput = {
     border: 0,
     width: '100%',
+    outline: 0,
     padding: '1rem',
     ' &:hover, &:focus ': {
       outline: 'none'
@@ -36,65 +37,31 @@ const MessagingWidget = (props: Props) => {
   const handleSendMessage = async () => {};
 
   return (
-    <Stack direction="column" bgcolor="white">
-      <Box height="80%" bgcolor="white" borderRadius={2}>
-        {/* Message Section  */}
-        <Box
-          sx={{
-            overflowY: 'scroll',
-            '&::-webkit-scrollbar ': {
-              display: 'none'
-            }
-          }}
-        >
-          {messages
-            ? messages.map((item) =>
-                item.type === 'received' ? (
-                  <Box display="flex" justifyContent="flex-start">
-                    <Box
-                      sx={{
-                        borderRadius: `-webkit-border-radius: 20px;
-                    -webkit-border-bottom-left-radius: 0;
-                    -moz-border-radius: 20px;
-                    -moz-border-radius-bottomleft: 0;
-                    border-radius: 20px;
-                    border-bottom-left-radius: 0;`
-                      }}
-                      m={1}
-                      bgcolor="#f1f5f7"
-                    >
-                      <Typography>{item.text}</Typography>
-                    </Box>
-                  </Box>
-                ) : (
-                  <Box display="flex" justifyContent="flex-end">
-                    <Box
-                      sx={{
-                        borderRadius: `-webkit-border-radius: 20px;
-                    -webkit-border-bottom-right-radius: 0;
-                    -moz-border-radius: 20px;
-                    -moz-border-radius-bottomright: 0;
-                    border-radius: 20px;
-                    border-bottom-right-radius: 0;`
-                      }}
-                      bgcolor="#317AE2"
-                    >
-                      <Typography color="white">{item.text}</Typography>
-                    </Box>
-                  </Box>
-                )
-              )
-            : 'Loading'}
-
-          {/* Type Sent */}
-        </Box>
+    <Stack
+      direction="column"
+      height="95%"
+      position="relative"
+      bgcolor="white"
+      p={1}
+    >
+      <Box
+        sx={{
+          overflowY: 'scroll',
+          '&::-webkit-scrollbar ': {
+            display: 'none'
+          }
+        }}
+        height="90%"
+      >
+        Hllo
       </Box>
+
       <Box
         borderTop={2.5}
         borderColor="#317AE2"
         bottom={0}
         bgcolor="white"
-        height="20%"
+        height="10%"
       >
         <Stack p={1} direction="row" spacing={2} alignItems="center">
           <input

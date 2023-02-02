@@ -73,6 +73,8 @@ export interface iTicketStore {
   setTickets: (tickets: iTicket[]) => void;
   notes: iNote[];
   setNotes: (notes: iNote[]) => void;
+  reminders: iReminder[];
+  setReminders: (reminders: iReminder[]) => void;
 }
 
 export interface iNote {
@@ -81,4 +83,13 @@ export interface iNote {
   createdAt?: number;
   creator?: string;
   _id?: string;
+}
+
+export interface iReminder {
+  _id?: string;
+  date: number;
+  title: string;
+  description: string;
+  ticket: string;
+  creator?: string;
 }

@@ -1,4 +1,4 @@
-import { iNote } from '../../types/store/ticket';
+import { iNote, iReminder } from '../../types/store/ticket';
 import { apiClient } from '../apiClient';
 
 export const getTicket = async () => {
@@ -24,5 +24,15 @@ export const getAllNotes = async (ticketId: string) => {
 
 export const createNewNote = async (note: iNote) => {
   const { data } = await apiClient.post('/ticket/note', note);
+  return data;
+};
+
+export const getAllReminders = async (ticketId: string) => {
+  const { data } = await apiClient.get(`task/reminder/${ticketId}`);
+  return data;
+};
+
+export const createNewReminder = async (reminderData: iReminder) => {
+  const { data } = await apiClient.post(`/task/reminder`, reminderData);
   return data;
 };

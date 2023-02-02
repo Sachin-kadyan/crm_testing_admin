@@ -3,6 +3,7 @@ import {
   Call,
   CoronavirusOutlined,
   Female,
+  InfoOutlined,
   Male,
   MedicalServicesOutlined,
   ReceiptLongOutlined,
@@ -17,6 +18,7 @@ import {
   Stack,
   Tab,
   Tabs,
+  Tooltip,
   Typography
 } from '@mui/material';
 import TabContext from '@mui/lab/TabContext';
@@ -35,12 +37,15 @@ import useServiceStore from '../../store/serviceStore';
 import { getDoctorsHandler } from '../../api/doctor/doctorHandler';
 import { getStagesHandler } from '../../api/stages/stagesHandler';
 import Rx from '../../assets/Rx.svg';
+import Bulb from '../../assets/Vector.svg';
 import MessagingWidget from './widgets/MessagingWidget';
 import NotesWidget from './widgets/NotesWidget';
 import { iDepartment, iDoctor, iScript } from '../../types/store/service';
 import QueryResolutionWidget from './widgets/QueryResolutionWidget';
 import { getSingleScript } from '../../api/script/script';
 import PrescriptionTabsWidget from './widgets/PrescriptionTabsWidget';
+import AddNewTaskWidget from './widgets/AddNewTaskWidget';
+import { getAllReminderHandler } from '../../api/ticket/ticketHandler';
 
 dayjs.extend(relativeTime);
 
@@ -69,6 +74,7 @@ const SingleTicketDetails = (props: Props) => {
       getTicketInfo(ticketID);
       await getDoctorsHandler();
       await getStagesHandler();
+      await getAllReminderHandler(ticketID!);
       if (currentTicket) {
         const script = await getSingleScript(
           currentTicket?.prescription[0].service._id,
@@ -79,7 +85,7 @@ const SingleTicketDetails = (props: Props) => {
     })();
   }, [ticketID, currentTicket]);
 
-  console.log(script);
+  const { reminders } = useTicketStore();
 
   const doctorSetter = (id: string) => {
     return doctors.find((doctor: iDoctor) => doctor._id === id)?.name;
@@ -186,7 +192,7 @@ const SingleTicketDetails = (props: Props) => {
                   <Tab label="Query Resolution" value="3" />
                 </TabList>
               </Box>
-              <TabPanel value="1">
+              <TabPanel sx={{ p: 0, height: '100%' }} value="1">
                 <MessagingWidget />
               </TabPanel>
               <TabPanel sx={{ p: 0, height: '100%' }} value="2">
@@ -236,7 +242,15 @@ const SingleTicketDetails = (props: Props) => {
             </Stack>
           </Box>
         ) : (
-          <Box>
+          <Box
+            height="83vh"
+            sx={{
+              overflowX: 'scroll',
+              '&::-webkit-scrollbar ': {
+                display: 'none'
+              }
+            }}
+          >
             <Stack
               direction="row"
               spacing={2}
@@ -344,6 +358,64 @@ const SingleTicketDetails = (props: Props) => {
                 <Typography>Loading...</Typography>
               )}
             </Stack>
+            <Box
+              sx={{
+                overflowX: 'scroll',
+                '&::-webkit-scrollbar ': {
+                  display: 'none'
+                }
+              }}
+              m={1}
+              borderRadius={2}
+              bgcolor="white"
+            >
+              <Box p={1} borderBottom={1} borderColor="#f5f5f5">
+                <Stack direction="row" spacing={3} my={1}>
+                  <img src={Bulb} alt="prescriptionIcon" />
+                  <Typography
+                    textTransform="uppercase"
+                    variant="subtitle1"
+                    fontWeight={500}
+                  >
+                    Reminders For You
+                  </Typography>
+                </Stack>
+              </Box>
+              <Box>
+                {reminders.length > 0
+                  ? reminders.map((reminder, index) => {
+                      return (
+                        dayjs(reminder.date).diff(new Date(), 'days') > 0 && (
+                          <Box
+                            display="flex"
+                            justifyContent="space-between"
+                            alignItems="center"
+                            p={2}
+                            bgcolor={index % 2 === 0 ? '#f5f5f7' : 'white'}
+                          >
+                            <Box>
+                              <Typography>{reminder.title}</Typography>
+                              <Chip
+                                size="small"
+                                variant="outlined"
+                                color="primary"
+                                label={dayjs(reminder.date).format(
+                                  'DD/MMM/YYYY hh:mm A '
+                                )}
+                              />
+                            </Box>
+                            <Box>
+                              <Tooltip title={reminder.description}>
+                                <InfoOutlined />
+                              </Tooltip>
+                            </Box>
+                          </Box>
+                        )
+                      );
+                    })
+                  : 'No Reminders '}{' '}
+              </Box>
+            </Box>
           </Box>
         )}
 
@@ -365,10 +437,7 @@ const SingleTicketDetails = (props: Props) => {
           <Button onClick={() => setIsScript((prev) => !prev)}>
             {!isScript ? 'View Agent Script' : 'Close Script '}
           </Button>
-          <Fab size="small" color="primary" variant="extended">
-            <Add sx={{ mr: 1 }} />
-            Add New Task
-          </Fab>
+          <AddNewTaskWidget />
         </Box>
       </Box>
     </Stack>

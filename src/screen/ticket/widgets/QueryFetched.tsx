@@ -1,3 +1,4 @@
+import { ContactSupportOutlined } from '@mui/icons-material';
 import { Box, Chip, Stack, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import React from 'react';
@@ -24,8 +25,18 @@ const QueryFetched = (props: Props) => {
   };
 
   return (
-    <Box my={1} p={1} bgcolor="#f1f5f7" onClick={props.onClick}>
-      <Typography>{props.subject}</Typography>
+    <Stack
+      spacing={2}
+      direction="column"
+      my={1}
+      p={1}
+      bgcolor="#f1f5f7"
+      onClick={props.onClick}
+    >
+      <Stack direction="row" spacing={1}>
+        <ContactSupportOutlined />
+        <Typography fontWeight={500}>{props.subject}</Typography>
+      </Stack>
       <Stack direction="row" spacing={2}>
         {props.departmentId && (
           <Chip
@@ -42,7 +53,7 @@ const QueryFetched = (props: Props) => {
           )}
         />
       </Stack>
-    </Box>
+    </Stack>
   );
 };
 

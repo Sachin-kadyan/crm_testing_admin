@@ -8,8 +8,7 @@ import {
   onSnapshot,
   orderBy,
   query,
-  Timestamp,
-  where
+  Timestamp
 } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { database } from '../../../utils/firebase';
