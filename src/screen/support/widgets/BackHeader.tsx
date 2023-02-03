@@ -19,12 +19,14 @@ const BackHeader = ({ title }: Props) => {
       bgcolor="primary.main"
       p={2}
     >
-      <ArrowBack
-        onClick={() => navigate(-1)}
-        color="secondary"
-        sx={{ marginRight: 1 }}
-      />
-      <Typography variant="subtitle1" color="secondary">
+      <Typography color="white">
+        <ArrowBack
+          onClick={() => navigate(-1)}
+          color="inherit"
+          sx={{ marginRight: 1 }}
+        />
+      </Typography>
+      <Typography variant="subtitle1" fontWeight={500} color="white">
         {title}
       </Typography>
     </Stack>

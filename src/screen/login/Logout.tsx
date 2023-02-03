@@ -86,7 +86,10 @@ const Logout = (props: Props) => {
         onClick={handleClick}
         endIcon={<KeyboardArrowDownIcon />}
       >
-        <Avatar src="https://asiasociety.org/sites/default/files/styles/1200w/public/S/smallSanjitSignh_0.jpg" />
+        <Avatar sx={{ fontSize: '1rem', bgcolor: 'orange' }}>
+          {user?.firstName[0]}
+          {user?.lastName[0]}
+        </Avatar>
       </Button>
       <StyledMenu
         id="demo-customized-menu"

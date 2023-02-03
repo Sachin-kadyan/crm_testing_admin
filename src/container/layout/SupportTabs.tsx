@@ -27,17 +27,27 @@ const SupportTabs = (props: Props) => {
   return (
     <Box>
       <Outlet />
-      <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}>
+      <Paper
+        sx={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 99999
+        }}
+      >
         <BottomNavigation
           value={value}
           onChange={handleChange}
           style={{
             position: 'absolute',
             bottom: 0,
-            width: '100vw'
+            borderTop: 1,
+            borderColor: 'gray',
+            width: '100vw',
+            background: 'lightgray'
           }}
           showLabels
-          color="red"
         >
           <BottomNavigationAction
             onClick={() => navigate('/')}

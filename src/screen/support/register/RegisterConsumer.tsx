@@ -1,6 +1,8 @@
 import {
+  AppRegistrationOutlined,
   FemaleOutlined,
   MaleOutlined,
+  PersonAddAlt1Outlined,
   TransgenderOutlined
 } from '@mui/icons-material';
 import {
@@ -14,7 +16,8 @@ import {
   InputLabel,
   FormHelperText,
   Paper,
-  Typography
+  Typography,
+  Avatar
 } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -122,8 +125,29 @@ const RegisterConsumer = () => {
 
   return (
     <Box>
-      <BackHeader title="Register" />
-      <Stack p={1} spacing={2}>
+      {/* <BackHeader title="Register" /> */}
+      <Stack
+        direction="row"
+        spacing={2}
+        borderRadius="0rem 0rem 1rem 1rem"
+        p={1}
+        bgcolor="primary.main"
+        height={'15vh'}
+        mb={2}
+      >
+        <Avatar>
+          <PersonAddAlt1Outlined />
+        </Avatar>
+        <Stack>
+          <Typography color="white" variant="h6">
+            Patient Registration
+          </Typography>
+          <Typography variant="body2" color="lightgray">
+            Register Patient here for further tasks on the registered patient
+          </Typography>
+        </Stack>
+      </Stack>
+      <Stack p={1} spacing={2} height="80vh">
         <Stack direction="row" spacing={2}>
           <TextField
             value={consumer.firstName}
@@ -232,7 +256,7 @@ const RegisterConsumer = () => {
             {validations.gender.message}
           </FormHelperText>
         </FormControl>
-        <Button onClick={registerConsumer} variant="contained">
+        <Button size="large" onClick={registerConsumer} variant="contained">
           Register
         </Button>
       </Stack>

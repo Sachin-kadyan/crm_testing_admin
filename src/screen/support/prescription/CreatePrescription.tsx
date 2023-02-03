@@ -1,4 +1,12 @@
-import { Camera, Check, Close, Delete, Label, Undo } from '@mui/icons-material';
+import {
+  Camera,
+  Check,
+  Close,
+  Delete,
+  Label,
+  Undo,
+  Upload
+} from '@mui/icons-material';
 import {
   MenuItem,
   Autocomplete,
@@ -178,6 +186,7 @@ const CreatePrescription = () => {
         <form>
           <Box my={1.5}>
             <Autocomplete
+              size="small"
               fullWidth
               onChange={(_, newValue) =>
                 changePrescriptionValue('department', newValue!._id!)
@@ -210,6 +219,7 @@ const CreatePrescription = () => {
           </Box> */}
           <Box my={1.5}>
             <Autocomplete
+              size="small"
               disablePortal
               fullWidth
               onChange={(_, newValue) =>
@@ -253,6 +263,7 @@ const CreatePrescription = () => {
             {prescription.admission !== 'none' && (
               <Box my={1.5}>
                 <Autocomplete
+                  size="small"
                   fullWidth
                   onChange={(_, newValue) =>
                     changePrescriptionValue('service', newValue)
@@ -374,6 +385,7 @@ const CreatePrescription = () => {
 
           <Box my={1.8}>
             <TextField
+              size="small"
               inputProps={{ inputProps: { min: new Date() } }}
               value={prescription.followUp}
               onChange={(e) =>
@@ -382,6 +394,7 @@ const CreatePrescription = () => {
               fullWidth
               label="Follow Up Date"
               type="date"
+              variant="standard"
               error={validations.followUp.value}
               helperText={validations.followUp.message}
             />
@@ -399,6 +412,7 @@ const CreatePrescription = () => {
             {isCaregiver && (
               <>
                 <TextField
+                  size="small"
                   sx={{ my: 0.5 }}
                   value={prescription.caregiver_name}
                   onChange={(e) =>
@@ -408,6 +422,7 @@ const CreatePrescription = () => {
                   label="Caregiver Name"
                 />
                 <TextField
+                  size="small"
                   sx={{ my: 0.5 }}
                   value={prescription.caregiver_phone}
                   onChange={(e) =>
@@ -482,12 +497,13 @@ const CreatePrescription = () => {
               {validations.image.message}
             </FormHelperText>
           </Box>
-          <Box my={1.5}>
+          <Box height="20vh">
             <Button
               onClick={handelUploadPrescription}
               variant="contained"
               fullWidth
-              startIcon={<Check />}
+              size="large"
+              startIcon={<Upload />}
             >
               Upload Prescription
             </Button>

@@ -878,7 +878,7 @@ const EstimateWidget = (props: Props) => {
           </Stack>
         </Stack>
       </Box>
-      <Box position={'sticky'} bottom={5}>
+      <Box height="20vh" p={1}>
         <Button
           fullWidth
           variant="contained"

@@ -63,7 +63,7 @@ const QueryResolutionWidget = (props: Props) => {
                       }}
                       id={item.id}
                       subject={item.subject}
-                      departmentId={item.documentId}
+                      departmentId={item.departmentId}
                       createdAt={item.createdAt}
                     />
                   );

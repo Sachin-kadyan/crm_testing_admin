@@ -1,5 +1,11 @@
-import { SearchOutlined } from '@mui/icons-material';
 import {
+  FemaleOutlined,
+  MaleOutlined,
+  SearchOutlined,
+  TransgenderOutlined
+} from '@mui/icons-material';
+import {
+  Avatar,
   Box,
   CardContent,
   FormControl,
@@ -7,9 +13,12 @@ import {
   InputAdornment,
   InputLabel,
   OutlinedInput,
+  Paper,
+  Stack,
   TextField,
   Typography
 } from '@mui/material';
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { searchConsumerHandler } from '../../../api/consumer/consumerHandler';
@@ -22,15 +31,26 @@ const Search = () => {
 
   return (
     <Box>
-      <BackHeader title="Search Patient" />
-      <Box px={1} py={1}>
-        <FormControl fullWidth variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">
-            Search Patient
-          </InputLabel>
+      {/* <BackHeader title="Search Patient" /> */}
+      <Stack
+        spacing={2}
+        borderRadius="0rem 0rem 1rem 1rem"
+        p={1}
+        bgcolor="primary.main"
+        height={'17vh'}
+        mb={2}
+      >
+        <Stack>
+          <Typography color="white" variant="h6">
+            Search Regsitered Patients
+          </Typography>
+        </Stack>
+        <FormControl fullWidth variant="standard">
           <OutlinedInput
+            size="small"
+            sx={{ bgcolor: 'white', outline: 'none' }}
             value={search}
-            label="Search Patient"
+            placeholder="Search Patient"
             onChange={(e) => setSearch(e.target.value)}
             onBlur={(e) => searchConsumerHandler(e.target.value)}
             onKeyDown={(e) => {
@@ -51,43 +71,60 @@ const Search = () => {
             fullWidth
           />
         </FormControl>
-      </Box>
-      <Box p={0.5}>
+      </Stack>
+      <Box p={1}>
         {searchResults.map((item) => {
           return (
-            <Box
-              bgcolor="primary.light"
-              borderRadius={1}
-              my={0.4}
-              key={item._id}
-            >
+            <Paper sx={{ my: 1, p: 1, bgcolor: 'lightgray' }} key={item._id}>
               <Link to={`/consumer/${item._id}`}>
-                <CardContent>
-                  <Typography sx={{ fontSize: 14 }} color="text.secondary">
+                <Box>
+                  <Typography
+                    variant="caption"
+                    fontWeight={500}
+                    color="text.secondary"
+                  >
                     UHID {item.uid}
                   </Typography>
-                  <Typography
-                    textTransform="capitalize"
-                    variant="h5"
-                    component="div"
-                  >
-                    {item.firstName +
-                      ' ' +
-                      (item.lastName ? item.lastName : '')}
-                  </Typography>
-                  <Typography color="text.secondary">
-                    {item.gender === 'M'
-                      ? 'Male'
-                      : item.gender === 'F'
-                      ? 'Female'
-                      : item.gender === 'O'
-                      ? 'Other'
-                      : 'Not Specified'}
-                  </Typography>
-                  <Typography variant="body2">{item.email}</Typography>
-                </CardContent>
+
+                  <Stack direction="row" spacing={2} alignItems="center">
+                    <Avatar sx={{ bgcolor: 'primary.main' }}>
+                      {item.firstName[0].toLocaleUpperCase()}
+                      {item?.lastName[0].toLocaleUpperCase()}
+                    </Avatar>
+                    <Stack>
+                      <Typography
+                        fontSize="1.1rem"
+                        textTransform="capitalize"
+                        variant="body1"
+                        fontWeight={500}
+                      >
+                        {item.firstName +
+                          ' ' +
+                          (item.lastName ? item.lastName : '')}
+                      </Typography>
+                      <Stack direction="row" spacing={1}>
+                        <Typography color="text.secondary">
+                          {item.gender === 'M' ? (
+                            <MaleOutlined />
+                          ) : item.gender === 'F' ? (
+                            <FemaleOutlined />
+                          ) : item.gender === 'O' ? (
+                            <TransgenderOutlined />
+                          ) : (
+                            'Not Specified'
+                          )}
+                        </Typography>
+                        <Typography variant="body2">
+                          {dayjs(item.dob).toNow(true)}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                  </Stack>
+
+                  <Typography variant="caption">{item.email}</Typography>
+                </Box>
               </Link>
-            </Box>
+            </Paper>
           );
         })}
       </Box>
