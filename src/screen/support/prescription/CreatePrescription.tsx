@@ -240,21 +240,19 @@ const CreatePrescription = () => {
               Admission Type
             </Typography>
             <Stack flexWrap={'wrap'} flexDirection="row">
-              {['none', 'Surgery', 'Radiation', 'Medical Management'].map(
-                (item) => (
-                  <Button
-                    size="small"
-                    sx={{ m: 0.4 }}
-                    key={item}
-                    onClick={() => changePrescriptionValue('admission', item)}
-                    variant={
-                      prescription.admission === item ? 'contained' : 'outlined'
-                    }
-                  >
-                    {item}
-                  </Button>
-                )
-              )}
+              {['none', 'Surgery', 'Radiation', 'MM'].map((item) => (
+                <Button
+                  size="small"
+                  sx={{ m: 0.4 }}
+                  key={item}
+                  onClick={() => changePrescriptionValue('admission', item)}
+                  variant={
+                    prescription.admission === item ? 'contained' : 'outlined'
+                  }
+                >
+                  {item}
+                </Button>
+              ))}
             </Stack>
 
             <FormHelperText error={validations.admission.value}>
@@ -359,6 +357,16 @@ const CreatePrescription = () => {
               Diagnostics
             </Typography>
             <Stack flexWrap={'wrap'} flexDirection="row">
+              <Button
+                size="small"
+                sx={{ m: 0.4 }}
+                onClick={() => {
+                  setDiagnostics([]);
+                }}
+                variant={diagnostics.length === 0 ? 'contained' : 'outlined'}
+              >
+                None
+              </Button>
               {['CT-Scan', 'PET-CT', 'MRI'].map((item) => (
                 <Button
                   size="small"

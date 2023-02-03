@@ -33,7 +33,7 @@ const SupportTabs = (props: Props) => {
           bottom: 0,
           left: 0,
           right: 0,
-          zIndex: 99999
+          zIndex: 5
         }}
       >
         <BottomNavigation
