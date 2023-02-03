@@ -138,19 +138,19 @@ const Search = () => {
                 );
               })
             ) : (
-              'Loading...'
+              <Stack display="flex" justifyContent="center" alignItems="center">
+                <img
+                  src={NotAvailable}
+                  alt="No Department Selected"
+                  width="50%"
+                />
+                <Typography variant="body2" fontWeight={500} color="GrayText">
+                  No Results Found
+                </Typography>
+              </Stack>
             )
           ) : (
-            <Stack display="flex" justifyContent="center" alignItems="center">
-              <img
-                src={NotAvailable}
-                alt="No Department Selected"
-                width="50%"
-              />
-              <Typography variant="body2" fontWeight={500} color="GrayText">
-                No Results Found
-              </Typography>
-            </Stack>
+            'Loading'
           )
         ) : (
           <Stack display="flex" justifyContent="center" alignItems="center">
