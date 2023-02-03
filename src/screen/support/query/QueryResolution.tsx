@@ -67,18 +67,19 @@ const QueryResolution = (props: Props) => {
 
   return (
     <Box>
-      <Box p={2} bgcolor="antiquewhite" borderRadius="0rem 0rem 1rem 1rem">
-        <Typography variant="body2" fontWeight={500} mb={2}>
+      <Box p={2} bgcolor="primary.main" borderRadius="0rem 0rem 1rem 1rem">
+        <Typography color="white" variant="subtitle1" fontWeight={500} mb={2}>
           Select Your Department to get the Queries from Remote Agent
         </Typography>
         <FormControl size="small" fullWidth sx={{ my: 2 }}>
-          <InputLabel id="departments">Select Department</InputLabel>
+          <Typography variant="caption" color="white ">
+            Select Department
+          </Typography>
           <Select
-            label="Select Department"
-            labelId="departments"
             sx={{
               textTransform: 'capitalize',
-              fontSize: '0.8rem'
+              fontSize: '0.8rem',
+              bgcolor: 'white'
             }}
             value={selectedDept}
             onChange={(e) => setSelectedDept(e.target.value)}
