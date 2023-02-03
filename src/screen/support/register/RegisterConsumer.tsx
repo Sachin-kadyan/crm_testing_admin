@@ -1,4 +1,9 @@
 import {
+  FemaleOutlined,
+  MaleOutlined,
+  TransgenderOutlined
+} from '@mui/icons-material';
+import {
   Box,
   Select,
   Stack,
@@ -7,7 +12,9 @@ import {
   Button,
   FormControl,
   InputLabel,
-  FormHelperText
+  FormHelperText,
+  Paper,
+  Typography
 } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -94,7 +101,7 @@ const RegisterConsumer = () => {
           /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         ) === null;
       const consumerPayload: any = consumer;
-    consumerPayload.email = email ? null : consumer.email;
+      consumerPayload.email = email ? null : consumer.email;
       consumerPayload.lastName = consumer.lastName ? consumer.lastName : null;
       consumerPayload.gender = consumer.gender ? consumer.gender : null;
       consumerPayload.dob = consumer.age ? dob : null;
@@ -116,31 +123,36 @@ const RegisterConsumer = () => {
   return (
     <Box>
       <BackHeader title="Register" />
-      <Stack p={1} spacing={1.2}>
-        <TextField
-          value={consumer.firstName}
-          onChange={(e) => updateConsumerState('firstName', e.target.value)}
-          fullWidth
-          type="text"
-          placeholder="Jhon"
-          label="First Name"
-          error={validations.firstName.value}
-          helperText={validations.firstName.message}
-        />
-        <TextField
-          value={consumer.lastName}
-          onChange={(e) => updateConsumerState('lastName', e.target.value)}
-          fullWidth
-          type="text"
-          placeholder="Doe"
-          label="Last Name"
-          error={validations.lastName.value}
-          helperText={validations.lastName.message}
-        />
+      <Stack p={1} spacing={2}>
+        <Stack direction="row" spacing={2}>
+          <TextField
+            value={consumer.firstName}
+            onChange={(e) => updateConsumerState('firstName', e.target.value)}
+            fullWidth
+            size="small"
+            type="text"
+            placeholder="Jhon"
+            label="First Name"
+            error={validations.firstName.value}
+            helperText={validations.firstName.message}
+          />
+          <TextField
+            value={consumer.lastName}
+            onChange={(e) => updateConsumerState('lastName', e.target.value)}
+            fullWidth
+            size="small"
+            type="text"
+            placeholder="Doe"
+            label="Last Name"
+            error={validations.lastName.value}
+            helperText={validations.lastName.message}
+          />
+        </Stack>
         <TextField
           value={consumer.email}
           onChange={(e) => updateConsumerState('email', e.target.value)}
           fullWidth
+          size="small"
           type="email"
           placeholder="Jhondoe@gmail.com"
           label="Email Address"
@@ -152,6 +164,7 @@ const RegisterConsumer = () => {
           onChange={(e) => updateConsumerState('phone', e.target.value)}
           fullWidth
           type="tel"
+          size="small"
           placeholder="8979XXXXXX"
           label="Phone Number"
           error={validations.phone.value}
@@ -161,6 +174,7 @@ const RegisterConsumer = () => {
           value={consumer.uid}
           onChange={(e) => updateConsumerState('uid', e.target.value)}
           fullWidth
+          size="small"
           type="text"
           placeholder="33XXX"
           label="UHID"
@@ -171,13 +185,37 @@ const RegisterConsumer = () => {
           value={consumer.age}
           onChange={(e) => updateConsumerState('age', e.target.value)}
           fullWidth
+          size="small"
           type="number"
           placeholder="32"
           label="Age"
           error={validations.age.value}
           helperText={validations.age.message}
         />
-        <FormControl fullWidth>
+        {/* <Typography color="GrayText">Select Gender</Typography>
+        <Stack spacing={2} direction="row">
+          <Paper
+            onClick={() => {
+              updateConsumerState('gender', 'M');
+            }}
+            elevation={1}
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              bgcolor: consumer.gender === 'M' ? 'primary' : 'white'
+            }}
+            square
+          >
+            <MaleOutlined />
+          </Paper>
+          <Paper elevation={1} sx={{ p: 2, borderRadius: 2 }} square>
+            <FemaleOutlined />
+          </Paper>
+          <Paper elevation={1} sx={{ p: 2, borderRadius: 2 }} square>
+            <TransgenderOutlined />
+          </Paper>
+        </Stack> */}
+        <FormControl fullWidth size="small">
           <InputLabel id="demo-simple-select-label">Gender</InputLabel>
           <Select
             value={consumer.gender}
