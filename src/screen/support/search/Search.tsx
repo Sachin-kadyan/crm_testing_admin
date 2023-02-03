@@ -89,7 +89,7 @@ const Search = () => {
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Avatar sx={{ bgcolor: 'primary.main' }}>
                       {item.firstName[0].toLocaleUpperCase()}
-                      {item?.lastName[0].toLocaleUpperCase()}
+                      {item.lastName && item.lastName[0].toLocaleUpperCase()}
                     </Avatar>
                     <Stack>
                       <Typography
@@ -111,12 +111,14 @@ const Search = () => {
                           ) : item.gender === 'O' ? (
                             <TransgenderOutlined />
                           ) : (
-                            'Not Specified'
+                            'Gender Not Specified'
                           )}
                         </Typography>
-                        <Typography variant="body2">
-                          {dayjs(item.dob).toNow(true)}
-                        </Typography>
+                        {item.dob && (
+                          <Typography variant="body2">
+                            {dayjs(item.dob).toNow(true)}
+                          </Typography>
+                        )}
                       </Stack>
                     </Stack>
                   </Stack>

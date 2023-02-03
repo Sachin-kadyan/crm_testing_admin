@@ -99,10 +99,11 @@ const RegisterConsumer = () => {
     if (check === true) {
       const dob = new Date();
       dob.setFullYear(dob.getFullYear() - +consumer.age);
-      const email =
-        consumer.email.match(
-          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        ) === null;
+      const email = consumer.email
+        ? consumer.email.match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          ) === null
+        : true;
       const consumerPayload: any = consumer;
       consumerPayload.email = email ? null : consumer.email;
       consumerPayload.lastName = consumer.lastName ? consumer.lastName : null;
@@ -110,7 +111,7 @@ const RegisterConsumer = () => {
       consumerPayload.dob = consumer.age ? dob : null;
       console.log(email);
       await registerConsumerHandler(consumerPayload);
-      setConsumer(initialConsumerFields);
+      setConsumer({ ...initialConsumerFields });
       setSnacks('Patient Registered Successfully!', 'success');
       navigate('/');
     }
