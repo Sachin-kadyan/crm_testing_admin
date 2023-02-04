@@ -6,6 +6,7 @@ import useServiceStore from '../../store/serviceStore';
 import { iDepartment, iService } from '../../types/store/service';
 import AddServiceManually from './widgets/AddServiceManually';
 import BulkServiceUpload from './widgets/BulkServiceUpload';
+import SearchServicesWidget from './widgets/SearchServicesWidget';
 
 type Props = {};
 
@@ -91,7 +92,10 @@ const Services = (props: Props) => {
         marginY={3}
         sx={{ height: '5vh' }}
       >
-        <Typography variant="h4">Services</Typography>
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Typography variant="h4">Services</Typography>
+          <SearchServicesWidget />
+        </Stack>
         <Box display="flex" width={'40%'} justifyContent="space-around">
           <AddServiceManually />
           <BulkServiceUpload />
