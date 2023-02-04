@@ -495,6 +495,11 @@ const Estimate = (props: Props) => {
                   onChange={(event, value) =>
                     setServiceObject({ ...serviceObject, id: value?._id! })
                   }
+                  renderOption={(props, option) => (
+                    <li {...props} style={{ textTransform: 'capitalize' }}>
+                      {option.name}
+                    </li>
+                  )}
                   sx={{ width: 400, textTransform: 'capitalize' }}
                   renderInput={(params) => (
                     <TextField
@@ -582,6 +587,9 @@ const Estimate = (props: Props) => {
                       sx={{ textTransform: 'capitalize' }}
                       label="Select Investigation"
                     />
+                  )}
+                  renderOption={(props, option) => (
+                    <li {...props}>{option.name}</li>
                   )}
                 />
                 <Button endIcon={<AddCircle />} onClick={addInvestigation}>

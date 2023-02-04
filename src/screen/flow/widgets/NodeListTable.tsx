@@ -50,8 +50,8 @@ const NodeListTable = ({ rowData, updateData, setInvalidCount }: Props) => {
           value={data.nodeId}
           placeholder="AAP121"
           size="small"
-          validator={(value) => maxLength(value, 1, 20)}
-          errorMessage={'Node Id should be between 1-50'}
+          validator={(value) => maxLength(value, 1, 100)}
+          errorMessage={'Node Id should be between 1-100'}
         />
       </Box>
       <Box minWidth="15vw">
