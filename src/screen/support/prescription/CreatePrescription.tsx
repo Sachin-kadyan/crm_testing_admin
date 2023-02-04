@@ -191,6 +191,11 @@ const CreatePrescription = () => {
               onChange={(_, newValue) =>
                 changePrescriptionValue('department', newValue!._id!)
               }
+              renderOption={(props, option) => (
+                <li {...props} style={{ textTransform: 'capitalize' }}>
+                  {option.name}
+                </li>
+              )}
               getOptionLabel={(option) => option.name}
               options={departments.filter((item) => item.parent === null)}
               renderInput={(params) => (
@@ -221,6 +226,11 @@ const CreatePrescription = () => {
             <Autocomplete
               size="small"
               disablePortal
+              renderOption={(props, option) => (
+                <li {...props} style={{ textTransform: 'capitalize' }}>
+                  {option.name}
+                </li>
+              )}
               fullWidth
               onChange={(_, newValue) =>
                 changePrescriptionValue('doctor', newValue!._id!)
