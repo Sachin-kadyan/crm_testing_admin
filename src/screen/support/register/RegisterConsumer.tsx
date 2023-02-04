@@ -1,21 +1,10 @@
-import {
-  AppRegistrationOutlined,
-  FemaleOutlined,
-  MaleOutlined,
-  PersonAddAlt1Outlined,
-  TransgenderOutlined
-} from '@mui/icons-material';
+import { PersonAddAlt1Outlined } from '@mui/icons-material';
 import {
   Box,
-  Select,
   Stack,
   TextField,
-  MenuItem,
   Button,
-  FormControl,
-  InputLabel,
   FormHelperText,
-  Paper,
   Typography,
   Avatar
 } from '@mui/material';
@@ -23,11 +12,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerConsumerHandler } from '../../../api/consumer/consumerHandler';
 import useEventStore from '../../../store/eventStore';
-import BackHeader from '../widgets/BackHeader';
 const initialConsumerFields = {
   firstName: '',
   lastName: '',
-  email: '',
+  email: null,
   phone: '',
   uid: '',
   age: '',
@@ -99,17 +87,16 @@ const RegisterConsumer = () => {
     if (check === true) {
       const dob = new Date();
       dob.setFullYear(dob.getFullYear() - +consumer.age);
-      const email = consumer.email
-        ? consumer.email.match(
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-          ) === null
-        : true;
+      // const email = consumer.email
+      //   ? consumer.email.match(
+      //       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      //     ) === null
+      //   : true;
       const consumerPayload: any = consumer;
-      consumerPayload.email = email ? null : consumer.email;
+      // consumerPayload.email = email ? null : consumer.email;
       consumerPayload.lastName = consumer.lastName ? consumer.lastName : null;
       consumerPayload.gender = consumer.gender ? consumer.gender : null;
       consumerPayload.dob = consumer.age ? dob : null;
-      console.log(email);
       await registerConsumerHandler(consumerPayload);
       setConsumer({ ...initialConsumerFields });
       setSnacks('Patient Registered Successfully!', 'success');
@@ -168,12 +155,12 @@ const RegisterConsumer = () => {
             size="small"
             type="text"
             placeholder="Doe"
-            label="Last Name"
+            label="Last Name (optional)"
             error={validations.lastName.value}
             helperText={validations.lastName.message}
           />
         </Stack>
-        <TextField
+        {/* <TextField
           value={consumer.email}
           onChange={(e) => updateConsumerState('email', e.target.value)}
           fullWidth
@@ -183,7 +170,7 @@ const RegisterConsumer = () => {
           label="Email Address"
           error={validations.email.value}
           helperText={validations.email.message}
-        />
+        /> */}
         <TextField
           value={consumer.phone}
           onChange={(e) => updateConsumerState('phone', e.target.value)}
@@ -213,7 +200,7 @@ const RegisterConsumer = () => {
           size="small"
           type="number"
           placeholder="32"
-          label="Age"
+          label="Age  (optional)"
           error={validations.age.value}
           helperText={validations.age.message}
         />
@@ -240,23 +227,34 @@ const RegisterConsumer = () => {
             <TransgenderOutlined />
           </Paper>
         </Stack> */}
-        <FormControl fullWidth size="small">
-          <InputLabel id="demo-simple-select-label">Gender</InputLabel>
-          <Select
-            value={consumer.gender}
-            onChange={(e) => updateConsumerState('gender', e.target.value)}
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Gender"
-          >
-            <MenuItem value={'M'}>Male</MenuItem>
-            <MenuItem value={'F'}>Female</MenuItem>
-            <MenuItem value={'O'}>Other</MenuItem>
-          </Select>
+        <Box>
+          <Typography sx={{ my: 1 }} color="CaptionText">
+            Gender (optional)
+          </Typography>
+          <Stack flexDirection="row" alignItems="center">
+            {[
+              { label: 'Male', value: 'M' },
+              { label: 'Female', value: 'F' },
+              { label: 'Other', value: 'O' }
+            ].map((item) => {
+              return (
+                <Button
+                  size="small"
+                  sx={{ mr: 1 }}
+                  variant={
+                    item.value === consumer.gender ? 'contained' : 'outlined'
+                  }
+                  onClick={() => updateConsumerState('gender', item.value)}
+                >
+                  {item.label}
+                </Button>
+              );
+            })}
+          </Stack>
           <FormHelperText error={validations.gender.value}>
             {validations.gender.message}
           </FormHelperText>
-        </FormControl>
+        </Box>
         <Button size="large" onClick={registerConsumer} variant="contained">
           Register
         </Button>

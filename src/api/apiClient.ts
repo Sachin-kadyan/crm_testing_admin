@@ -112,7 +112,7 @@ class ApiClient {
       snacks: [
         ...useEventStore.getState().snacks,
         {
-          message: data[0].location
+          message: data[0]
             ? data[0].msg + ' at ' + data[0].param
             : data.message,
           type: 'error',
