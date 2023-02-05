@@ -15,7 +15,14 @@ export const createTicket = async (prescription: any) => {
   });
   console.log(data);
 };
-export const sendTextMessage = async () => {};
+export const sendTextMessage = async (message: string, consumerId: string) => {
+  console.log(message, consumerId);
+  const { data } = await apiClient.post('/flow/message', {
+    message,
+    consumerId
+  });
+  return data;
+};
 
 export const getAllNotes = async (ticketId: string) => {
   const { data } = await apiClient.get(`ticket/note/${ticketId}`);

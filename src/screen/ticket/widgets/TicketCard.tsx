@@ -35,7 +35,8 @@ const TicketCard = (props: Props) => {
       my={1}
       sx={{
         '&:hover': {
-          bgcolor: '#E2ECFB'
+          bgcolor: '#E2ECFB',
+          cursor: 'pointer'
         }
       }}
       onClick={() => {

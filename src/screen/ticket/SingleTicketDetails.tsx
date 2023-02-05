@@ -38,7 +38,6 @@ import { getDoctorsHandler } from '../../api/doctor/doctorHandler';
 import { getStagesHandler } from '../../api/stages/stagesHandler';
 import Rx from '../../assets/Rx.svg';
 import Bulb from '../../assets/Vector.svg';
-import MessagingWidget from './widgets/MessagingWidget';
 import NotesWidget from './widgets/NotesWidget';
 import { iDepartment, iDoctor, iScript } from '../../types/store/service';
 import QueryResolutionWidget from './widgets/QueryResolutionWidget';
@@ -46,6 +45,7 @@ import { getSingleScript } from '../../api/script/script';
 import PrescriptionTabsWidget from './widgets/PrescriptionTabsWidget';
 import AddNewTaskWidget from './widgets/AddNewTaskWidget';
 import { getAllReminderHandler } from '../../api/ticket/ticketHandler';
+import MessagingWidget from './widgets/whatsapp/WhatsappWidget';
 
 dayjs.extend(relativeTime);
 
@@ -56,7 +56,7 @@ const SingleTicketDetails = (props: Props) => {
   const { tickets } = useTicketStore();
   const { doctors, departments } = useServiceStore();
   const [currentTicket, setCurrentTicket] = useState<iTicket>();
-  const [value, setValue] = useState('2');
+  const [value, setValue] = useState('1');
   const [script, setScript] = useState<iScript>();
   const [isScript, setIsScript] = useState(false);
 
@@ -382,38 +382,40 @@ const SingleTicketDetails = (props: Props) => {
                 </Stack>
               </Box>
               <Box>
-                {reminders.length > 0
-                  ? reminders.map((reminder, index) => {
-                      return (
-                        dayjs(reminder.date).diff(new Date(), 'days') > 0 && (
-                          <Box
-                            display="flex"
-                            justifyContent="space-between"
-                            alignItems="center"
-                            p={2}
-                            bgcolor={index % 2 === 0 ? '#f5f5f7' : 'white'}
-                          >
-                            <Box>
-                              <Typography>{reminder.title}</Typography>
-                              <Chip
-                                size="small"
-                                variant="outlined"
-                                color="primary"
-                                label={dayjs(reminder.date).format(
-                                  'DD/MMM/YYYY hh:mm A '
-                                )}
-                              />
-                            </Box>
-                            <Box>
-                              <Tooltip title={reminder.description}>
-                                <InfoOutlined />
-                              </Tooltip>
-                            </Box>
+                {reminders.length > 0 ? (
+                  reminders.map((reminder, index) => {
+                    return (
+                      dayjs(reminder.date).diff(new Date(), 'days') > 0 && (
+                        <Box
+                          display="flex"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          p={2}
+                          bgcolor={index % 2 === 0 ? '#f5f5f7' : 'white'}
+                        >
+                          <Box>
+                            <Typography>{reminder.title}</Typography>
+                            <Chip
+                              size="small"
+                              variant="outlined"
+                              color="primary"
+                              label={dayjs(reminder.date).format(
+                                'DD/MMM/YYYY hh:mm A '
+                              )}
+                            />
                           </Box>
-                        )
-                      );
-                    })
-                  : 'No Reminders '}{' '}
+                          <Box>
+                            <Tooltip title={reminder.description}>
+                              <InfoOutlined />
+                            </Tooltip>
+                          </Box>
+                        </Box>
+                      )
+                    );
+                  })
+                ) : (
+                  <Typography p={1}>No Reminders Available</Typography>
+                )}
               </Box>
             </Box>
           </Box>
