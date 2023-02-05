@@ -75,8 +75,9 @@ const CreatePrescription = () => {
   const camera = useRef<Webcam>(null);
   const { id } = useParams();
   const navigate = useNavigate();
-  const [prescription, setPrescription] =
-    useState<iPrescription>(initialPrescription);
+  const [prescription, setPrescription] = useState<iPrescription>(
+    structuredClone(initialPrescription)
+  );
   const [diagnostics, setDiagnostics] = useState<string[]>([]);
   const defaultValidation = { message: '', value: false };
   const [isCaregiver, setIsCaregiver] = useState(false);
@@ -107,6 +108,10 @@ const CreatePrescription = () => {
       return { ...prev };
     });
   };
+
+  useEffect(() => {
+    setPrescription(structuredClone(initialPrescription));
+  }, []);
 
   const validation = () => {
     const department = prescription.department === '';
@@ -167,7 +172,7 @@ const CreatePrescription = () => {
       ticket.diagnostics = diagnostics;
       ticket.followup = ticket.followup ? ticket.followup : null;
       await createTicketHandler(ticket);
-      setPrescription(initialPrescription);
+      setPrescription(structuredClone(initialPrescription));
       setDiagnostics([]);
       navigate('/');
     }
