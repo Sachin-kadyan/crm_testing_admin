@@ -81,8 +81,7 @@ const Login = () => {
             margin="normal"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            type="email"
-            label="Email Address"
+            label="Phone"
           />
           <FormControl color="success" margin="normal" variant="outlined">
             <InputLabel htmlFor="outlined-adornment-password">
