@@ -134,7 +134,8 @@ const Consumer = () => {
                       color="text.secondary"
                       component="div"
                     >
-                      {new Date(history.prescription.followUp).toDateString()}
+                      {history.prescription.followUp &&
+                        new Date(history.prescription.followUp).toDateString()}
                     </Typography>
                     {history.prescription !== null && (
                       <Typography
