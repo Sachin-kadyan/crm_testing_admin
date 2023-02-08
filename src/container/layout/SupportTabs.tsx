@@ -67,12 +67,12 @@ const SupportTabs = (props: Props) => {
             value="search"
             icon={<Search />}
           />
-          <BottomNavigationAction
+          {/* <BottomNavigationAction
             onClick={() => navigate('/query')}
             label="Query"
             value="query"
             icon={<QuestionAnswerOutlined />}
-          />
+          /> */}
         </BottomNavigation>
       </Paper>
     </Box>
