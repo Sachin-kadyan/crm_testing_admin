@@ -82,7 +82,7 @@ const Login = () => {
             margin="normal"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            label="Phone number"
+            label="Phone"
           />
           <FormControl color="success" margin="normal" variant="outlined">
             <InputLabel htmlFor="outlined-adornment-password">

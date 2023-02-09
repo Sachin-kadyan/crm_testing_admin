@@ -72,14 +72,14 @@ const Home = () => {
                 "Register patient on the platform after doctor's visit and upload the prescription.",
               icon: <PersonAdd fontSize="medium" />,
               path: '/register'
-            },
-            {
-              name: 'Query Resolution',
-              description:
-                'Resolve queries of the patient, platform representatives will be chatting on behalf of patients.',
-              icon: <Forum fontSize="medium" />,
-              path: '/query'
             }
+            // {
+            //   name: 'Query Resolution',
+            //   description:
+            //     'Resolve queries of the patient, platform representatives will be chatting on behalf of patients.',
+            //   icon: <Forum fontSize="medium" />,
+            //   path: '/query'
+            // }
           ].map((item) => {
             return (
               <Grid

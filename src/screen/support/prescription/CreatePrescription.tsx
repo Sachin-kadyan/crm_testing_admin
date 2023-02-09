@@ -382,7 +382,7 @@ const CreatePrescription = () => {
               >
                 None
               </Button>
-              {['CT-Scan', 'PET-CT', 'MRI'].map((item) => (
+              {['CT-Scan', 'PET-CT', 'MRI', 'Lab'].map((item) => (
                 <Button
                   size="small"
                   sx={{ m: 0.4 }}
@@ -407,22 +407,24 @@ const CreatePrescription = () => {
           </Box>
 
           <Box my={1.8}>
+            <Typography color="gray" id="demo-simple-select-label">
+              Follow Up Date
+            </Typography>
             <TextField
-              size="small"
               inputProps={{ inputProps: { min: new Date() } }}
               value={prescription.followUp}
               onChange={(e) =>
                 changePrescriptionValue('followUp', e.target.value)
               }
               fullWidth
-              label="Follow Up Date"
+              // label="Follow Up Date"
               type="date"
               variant="standard"
               error={validations.followUp.value}
               helperText={validations.followUp.message}
             />
           </Box>
-          <FormGroup>
+          {/* <FormGroup>
             <FormControlLabel
               control={
                 <Checkbox
@@ -456,7 +458,7 @@ const CreatePrescription = () => {
                 />
               </>
             )}
-          </FormGroup>
+          </FormGroup> */}
           <Box my={1.5}>
             <Grid container>
               <Grid item xs={6}>
