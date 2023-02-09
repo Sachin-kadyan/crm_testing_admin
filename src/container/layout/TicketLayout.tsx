@@ -26,8 +26,6 @@ const Ticket = () => {
 
   const currentRoute = useMatch('/ticket');
 
-  console.log(currentRoute);
-
   const redirectTicket = () => {
     navigate('/ticket');
   };

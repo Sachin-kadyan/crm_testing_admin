@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/Loader';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState({
     secret: '',
     show: false
@@ -28,7 +28,8 @@ const Login = () => {
 
   const handleLogin = () => {
     <Loader isOpen={true} />;
-    loginHandler(email, password.secret);
+    const phoneNumber = `91${phone}`;
+    loginHandler(phoneNumber, password.secret);
     navigate('/');
     <Loader isOpen={false} />;
   };
@@ -79,10 +80,9 @@ const Login = () => {
           <TextField
             color="success"
             margin="normal"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            type="email"
-            label="Email Address"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            label="Phone number"
           />
           <FormControl color="success" margin="normal" variant="outlined">
             <InputLabel htmlFor="outlined-adornment-password">

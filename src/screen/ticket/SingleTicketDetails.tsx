@@ -6,6 +6,7 @@ import {
   InfoOutlined,
   Male,
   MedicalServicesOutlined,
+  PendingActionsOutlined,
   ReceiptLongOutlined,
   Transgender
 } from '@mui/icons-material';
@@ -46,6 +47,7 @@ import PrescriptionTabsWidget from './widgets/PrescriptionTabsWidget';
 import AddNewTaskWidget from './widgets/AddNewTaskWidget';
 import { getAllReminderHandler } from '../../api/ticket/ticketHandler';
 import MessagingWidget from './widgets/whatsapp/WhatsappWidget';
+import ShowPrescription from './widgets/ShowPrescriptionModal';
 
 dayjs.extend(relativeTime);
 
@@ -96,13 +98,6 @@ const SingleTicketDetails = (props: Props) => {
       ?.name;
   };
 
-  // @date : string <TimeStamp>
-  const daysDiffernceFromNow = (date: string) => {
-    const d = dayjs(date);
-    const today = dayjs(new Date());
-    return today.diff(d, 'days');
-  };
-
   return (
     <Stack height={'100vh'} direction="row">
       <Box width="60%">
@@ -142,8 +137,13 @@ const SingleTicketDetails = (props: Props) => {
                     <Female fontSize="inherit" />{' '}
                     <Typography>Female</Typography>{' '}
                   </Box>
+                ) : currentTicket?.consumer[0].gender === 'O' ? (
+                  <Box>
+                    <Transgender />
+                    <Typography>Others</Typography>
+                  </Box>
                 ) : (
-                  <Transgender />
+                  <Typography>Not Specified</Typography>
                 )}
               </Box>
               <Typography variant="body1">
@@ -165,10 +165,7 @@ const SingleTicketDetails = (props: Props) => {
                 <Call />
               </IconButton>
             </a>
-            <Chip
-              label={`${daysDiffernceFromNow(currentTicket?.createdAt!)}
-              days`}
-            />
+            <Chip label={dayjs(currentTicket?.createdAt).fromNow()} />
           </Box>
         </Box>
         <Stack bgcolor="#F1F5F7" height="90vh" direction="column">
@@ -291,14 +288,16 @@ const SingleTicketDetails = (props: Props) => {
                   </Typography>
                 </Stack>
                 <Stack direction="row" spacing={3} my={1}>
-                  <CoronavirusOutlined htmlColor="gray" />
+                  <PendingActionsOutlined htmlColor="gray" />
                   <Typography>
                     {currentTicket?.prescription[0].symptoms}
                   </Typography>
                 </Stack>
                 <Stack direction="row" spacing={3} my={1}>
                   <img src={Rx} alt="prescriptionIcon" />
-                  <Typography color="primary">View Prescription</Typography>
+                  <ShowPrescription
+                    image={currentTicket?.prescription[0].image}
+                  />
                 </Stack>
               </Box>
             </Stack>

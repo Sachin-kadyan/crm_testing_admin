@@ -18,6 +18,7 @@ const AppContainer = () => {
 
       const decoded: any = jwtDecode(token);
       if (decoded.exp * 1000 < Date.now()) {
+        // console.log(decoded.exp * 1000 < Date.now());
         setUser(null);
       } else {
         setUser(parsedUserString);
