@@ -100,6 +100,9 @@ const TicketCard = (props: Props) => {
           />
         )}
 
+        {props.patientData.prescription[0].diagnostics.length > 0 && (
+          <Chip label="Diagnostics" color="primary" size="small" />
+        )}
         <Chip
           size="small"
           disabled={props.patientData.estimate.length === 0 ? true : false}
