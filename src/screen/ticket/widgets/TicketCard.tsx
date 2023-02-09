@@ -92,8 +92,16 @@ const TicketCard = (props: Props) => {
           placeContent: 'start'
         }}
       >
-        <Typography fontWeight={500}>₹5,000</Typography>
+        {props.patientData.prescription[0].admission && (
+          <Chip
+            label={props.patientData.prescription[0].admission}
+            color="primary"
+            size="small"
+          />
+        )}
+
         <Chip
+          size="small"
           disabled={props.patientData.estimate.length === 0 ? true : false}
           label={
             props.patientData.estimate[0]?.paymentType === 0
@@ -109,6 +117,7 @@ const TicketCard = (props: Props) => {
           sx={{
             display: props.patientData.estimate.length === 0 ? 'none' : ''
           }}
+          size="small"
           label={
             220 > 15000 ? 'High' : 220 < 4500 && 450 < 2220 ? 'Medium' : 'Low'
           }

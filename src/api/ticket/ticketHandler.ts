@@ -12,7 +12,8 @@ import {
 export const getTicketHandler = async () => {
   const { setTickets } = useTicketStore.getState();
   const tickets = await getTicket();
-  setTickets(tickets);
+  const sortedTickets = tickets.reverse();
+  setTickets(sortedTickets);
 };
 
 export type iCreateTicket = {

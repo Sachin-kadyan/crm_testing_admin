@@ -7,7 +7,8 @@ const useTicketStore = create<iTicketStore>((set, get) => ({
   notes: [],
   setNotes: (notes) => set({ notes }),
   reminders: [],
-  setReminders: (reminders) => set({ reminders })
+  setReminders: (reminders) => set({ reminders }),
+  
 }));
 
 export default useTicketStore;

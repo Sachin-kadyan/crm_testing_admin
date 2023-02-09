@@ -93,3 +93,8 @@ export interface iReminder {
   ticket: string;
   creator?: string;
 }
+
+export interface iTicketFilter {
+  isAdmission : boolean,
+  
+}

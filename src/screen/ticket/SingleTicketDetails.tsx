@@ -165,7 +165,10 @@ const SingleTicketDetails = (props: Props) => {
                 <Call />
               </IconButton>
             </a>
-            <Chip label={dayjs(currentTicket?.createdAt).fromNow()} />
+            <Chip
+              sx={{ textTransform: 'capitalize' }}
+              label={dayjs(currentTicket?.createdAt).fromNow()}
+            />
           </Box>
         </Box>
         <Stack bgcolor="#F1F5F7" height="90vh" direction="column">
@@ -287,12 +290,24 @@ const SingleTicketDetails = (props: Props) => {
                     )
                   </Typography>
                 </Stack>
-                <Stack direction="row" spacing={3} my={1}>
-                  <PendingActionsOutlined htmlColor="gray" />
-                  <Typography>
-                    {currentTicket?.prescription[0].symptoms}
-                  </Typography>
-                </Stack>
+
+                {currentTicket?.prescription[0].followUp && (
+                  <Stack direction="row" spacing={3} my={1} alignItems="center">
+                    <PendingActionsOutlined htmlColor="gray" />
+                    <Typography>
+                      {dayjs(currentTicket?.prescription[0].followUp).format(
+                        'DD/MMM/YYYY '
+                      )}
+                      <Chip
+                        color="primary"
+                        label="Follow Up"
+                        size="small"
+                        sx={{ fontSize: '0.6rem' }}
+                      />
+                    </Typography>
+                  </Stack>
+                )}
+
                 <Stack direction="row" spacing={3} my={1}>
                   <img src={Rx} alt="prescriptionIcon" />
                   <ShowPrescription
