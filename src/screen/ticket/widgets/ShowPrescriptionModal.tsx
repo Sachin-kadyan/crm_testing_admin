@@ -2,9 +2,10 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
+
 import { Drawer } from '@mui/material';
 import { DownloadOutlined } from '@mui/icons-material';
+import FileSaver from 'file-saver';
 
 interface Props {
   image: string;
@@ -17,7 +18,9 @@ const ShowPrescription = ({ image }: Props) => {
 
   const drawerWidth = 600;
 
-  const downloadPrescription = () => {};
+  const downloadPrescription = () => {
+    FileSaver.saveAs(image, 'prescription_img.jpg');
+  };
 
   return (
     <div>
@@ -48,13 +51,12 @@ const ShowPrescription = ({ image }: Props) => {
         >
           <Typography variant="h6">Prescription Captured</Typography>
           <Button
-            disabled
             onClick={downloadPrescription}
             sx={{ textTransform: 'capitalize' }}
             color="success"
             endIcon={<DownloadOutlined />}
           >
-            Download Prescription{' '}
+            Download Prescription
           </Button>
         </Box>
         <Box>

@@ -61,7 +61,7 @@ const AddReminderWidget = ({ isModalOpen, setIsModalOpen }: Props) => {
       ...reminderData,
       date: dayjs(date + time).unix() * 1000
     });
-  }, [date, time, reminderData]);
+  }, [date, time]);
 
   const addReminder = async () => {
     await createNewReminderHandler(reminderData);

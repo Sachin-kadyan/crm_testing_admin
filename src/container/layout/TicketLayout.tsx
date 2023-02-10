@@ -20,6 +20,7 @@ import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
 import DefaultScreen from '../../components/DefaultScreen';
 import { ArrowBack } from '@mui/icons-material';
 import TicketFilter from '../../screen/ticket/widgets/TicketFilter';
+import DownloadAllTickets from '../../screen/ticket/widgets/DownloadAllTickets';
 
 const Ticket = () => {
   const { tickets } = useTicketStore();
@@ -40,18 +41,27 @@ const Ticket = () => {
       await getDepartmentsHandler();
     })();
   }, []);
+
   return (
     <Box height={'100vh'} display="flex" position="fixed" width="100%">
       <Box width="25%" position="sticky" top={0}>
         <Box p={1} height={'13vh'} borderBottom={0.5} borderColor="#f0f0f0">
-          <Button
-            onClick={() => navigate('/')}
-            color="inherit"
-            startIcon={<ArrowBack />}
-            sx={{ mb: 1 }}
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
           >
-            Go Back To Dashboard
-          </Button>
+            <Button
+              onClick={() => navigate('/')}
+              color="inherit"
+              startIcon={<ArrowBack />}
+              sx={{ mb: 1 }}
+            >
+              Go Back To Dashboard
+            </Button>
+            <DownloadAllTickets />
+          </Stack>
+
           <Stack direction="row" spacing={1}>
             <TextField
               sx={{ bgcolor: '#f5f7f5', p: 1, borderRadius: 1 }}
@@ -73,6 +83,7 @@ const Ticket = () => {
           </Stack>
         </Box>
         <Box
+          position="relative"
           p={1}
           height={'87vh'}
           sx={{
@@ -83,9 +94,9 @@ const Ticket = () => {
           }}
         >
           {tickets
-            ? tickets.map((item: iTicket) => {
-                return <TicketCard patientData={item} />;
-              })
+            ? tickets.map((item: iTicket) => (
+                <TicketCard key={item._id} patientData={item} />
+              ))
             : [0, 1, 2, 3, 4, 5].map((_) => (
                 <Skeleton
                   variant="rectangular"

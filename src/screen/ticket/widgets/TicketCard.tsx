@@ -56,7 +56,8 @@ const TicketCard = (props: Props) => {
             fontWeight={500}
           >
             {props.patientData.consumer[0].firstName}{' '}
-            {props.patientData.consumer[0].lastName}
+            {props.patientData.consumer[0].lastName &&
+              props.patientData.consumer[0].lastName}
           </Typography>
           <Box display="flex" alignItems="center">
             <Typography variant="body2">
