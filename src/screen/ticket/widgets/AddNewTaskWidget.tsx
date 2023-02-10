@@ -49,7 +49,7 @@ const AddNewTaskWidget = (props: Props) => {
             <ListItemIcon>
               <PlaylistAddCheckOutlined />
             </ListItemIcon>
-            <ListItemText primary="Add A TODO" />
+            <ListItemText primary="Add New Task" />
           </ListItemButton>
         </List>
       )}
@@ -66,7 +66,7 @@ const AddNewTaskWidget = (props: Props) => {
           </>
         ) : (
           <>
-            <Add sx={{ mr: 1 }} /> Add New Task
+            <Add sx={{ mr: 1 }} /> View Tasks
           </>
         )}
       </Fab>

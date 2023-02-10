@@ -41,7 +41,7 @@ const AddReminderWidget = ({ isModalOpen, setIsModalOpen }: Props) => {
   });
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const [enableButton, setEnableButton] = useState(false);
+  const [disableButton, setDisableButton] = useState(true);
 
   const checkIsEmpty = () => {
     if (
@@ -50,9 +50,9 @@ const AddReminderWidget = ({ isModalOpen, setIsModalOpen }: Props) => {
       date.length > 0 &&
       time.length > 0
     ) {
-      setEnableButton(false);
+      setDisableButton((_) => false);
     } else {
-      setEnableButton(true);
+      setDisableButton((_) => true);
     }
   };
 
@@ -61,7 +61,7 @@ const AddReminderWidget = ({ isModalOpen, setIsModalOpen }: Props) => {
       ...reminderData,
       date: dayjs(date + time).unix() * 1000
     });
-  }, [date, time]);
+  }, [date, time, reminderData]);
 
   const addReminder = async () => {
     await createNewReminderHandler(reminderData);
@@ -103,7 +103,7 @@ const AddReminderWidget = ({ isModalOpen, setIsModalOpen }: Props) => {
             <TextField
               value={reminderData.title}
               onChange={(e) => {
-                setReminderData({ ...reminderData, title: e.target.value });
+                setReminderData((prev) => ({ ...prev, title: e.target.value }));
                 checkIsEmpty();
               }}
               label="Reminder For"
@@ -114,10 +114,10 @@ const AddReminderWidget = ({ isModalOpen, setIsModalOpen }: Props) => {
             <TextareaAutosize
               value={reminderData.description}
               onChange={(e) => {
-                setReminderData({
-                  ...reminderData,
+                setReminderData((prev) => ({
+                  ...prev,
                   description: e.target.value
-                });
+                }));
                 checkIsEmpty();
               }}
               minRows={3}
@@ -139,7 +139,7 @@ const AddReminderWidget = ({ isModalOpen, setIsModalOpen }: Props) => {
                 value={date}
                 variant="standard"
                 onChange={(e) => {
-                  setDate(e.target.value);
+                  setDate((prev) => e.target.value);
                   checkIsEmpty();
                 }}
                 type="date"
@@ -148,7 +148,7 @@ const AddReminderWidget = ({ isModalOpen, setIsModalOpen }: Props) => {
               <TextField
                 value={time}
                 onChange={(e) => {
-                  setTime(e.target.value);
+                  setTime((prev) => e.target.value);
                   checkIsEmpty();
                 }}
                 variant="standard"
@@ -163,7 +163,7 @@ const AddReminderWidget = ({ isModalOpen, setIsModalOpen }: Props) => {
             />
           </Stack>
           <Button
-            disabled={enableButton}
+            disabled={disableButton}
             onClick={addReminder}
             sx={{ mt: 1 }}
             variant="contained"

@@ -3,6 +3,7 @@ import {
   Button,
   InputAdornment,
   Skeleton,
+  Stack,
   TextField,
   Typography
 } from '@mui/material';
@@ -18,6 +19,7 @@ import { getDepartmentsHandler } from '../../api/department/departmentHandler';
 import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
 import DefaultScreen from '../../components/DefaultScreen';
 import { ArrowBack } from '@mui/icons-material';
+import TicketFilter from '../../screen/ticket/widgets/TicketFilter';
 
 const Ticket = () => {
   const { tickets } = useTicketStore();
@@ -50,22 +52,25 @@ const Ticket = () => {
           >
             Go Back To Dashboard
           </Button>
-          <TextField
-            sx={{ bgcolor: '#f5f7f5', p: 1, borderRadius: 1 }}
-            size="small"
-            fullWidth
-            placeholder="Search Leads"
-            id="outlined-start-adornment"
-            variant="standard"
-            InputProps={{
-              disableUnderline: true,
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              )
-            }}
-          />
+          <Stack direction="row" spacing={1}>
+            <TextField
+              sx={{ bgcolor: '#f5f7f5', p: 1, borderRadius: 1 }}
+              size="small"
+              fullWidth
+              placeholder="Search Leads"
+              id="outlined-start-adornment"
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                )
+              }}
+            />
+            <TicketFilter />
+          </Stack>
         </Box>
         <Box
           p={1}

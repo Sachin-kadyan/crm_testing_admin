@@ -1,3 +1,5 @@
+import { iDepartment, iDoctor } from './service';
+
 export interface iConsumer {
   _id: string;
   firstName: string;
@@ -75,6 +77,8 @@ export interface iTicketStore {
   setNotes: (notes: iNote[]) => void;
   reminders: iReminder[];
   setReminders: (reminders: iReminder[]) => void;
+  filterTickets: iTicketFilter;
+  setFilterTickets: (filterTickets: iTicketFilter) => void;
 }
 
 export interface iNote {
@@ -95,6 +99,8 @@ export interface iReminder {
 }
 
 export interface iTicketFilter {
-  isAdmission : boolean,
-  
+  departments: iDepartment[];
+  doctors: iDoctor[];
+  admissionType: string[];
+  diagnosticType: string[];
 }

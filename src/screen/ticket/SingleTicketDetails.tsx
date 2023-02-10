@@ -332,38 +332,61 @@ const SingleTicketDetails = (props: Props) => {
                   Value and Payment Mode
                 </Typography>
                 <Stack direction="row" spacing={2}>
-                  <ReceiptLongOutlined color="primary" />
-                  <Typography color="primary">View Estimate</Typography>
+                  <Button
+                    disabled={currentTicket?.estimate[0] ? false : true}
+                    startIcon={<ReceiptLongOutlined />}
+                    color="primary"
+                  >
+                    View Estimate
+                  </Button>
                 </Stack>
               </Box>
-              <Box p={1}>
-                <Stack direction="row" spacing={2}>
-                  <Chip
-                    color="error"
-                    label={`₹${currentTicket?.estimate[0]?.total}`}
-                    variant="outlined"
-                    size="medium"
-                    sx={{
-                      fontSize: '1rem'
-                    }}
-                  />
-                  <Chip
-                    color="info"
-                    label={
-                      currentTicket?.estimate[0]?.paymentType === 0
-                        ? 'Cash'
-                        : currentTicket?.estimate[0]?.paymentType === 1
-                        ? 'Insurance'
-                        : 'CGHS/ECHS'
-                    }
-                    variant="filled"
-                    size="medium"
-                    sx={{
-                      fontSize: '1rem'
-                    }}
-                  />
-                </Stack>
-              </Box>
+              {currentTicket?.estimate[0] ? (
+                <Box p={1}>
+                  <Stack direction="row" spacing={2}>
+                    <Chip
+                      color="error"
+                      label={`₹${currentTicket?.estimate[0]?.total}`}
+                      variant="outlined"
+                      size="medium"
+                      sx={{
+                        fontSize: '1rem'
+                      }}
+                    />
+                    {currentTicket?.estimate[0]?.paymentType ? (
+                      <Chip
+                        color={
+                          currentTicket?.estimate[0].paymentType === 0 ||
+                          currentTicket?.estimate[0].paymentType === 1 ||
+                          currentTicket?.estimate[0].paymentType === 2
+                            ? 'info'
+                            : 'default'
+                        }
+                        label={
+                          currentTicket?.estimate[0]?.paymentType === 0
+                            ? 'Cash'
+                            : currentTicket?.estimate[0]?.paymentType === 1
+                            ? 'Insurance'
+                            : currentTicket?.estimate[0]?.paymentType === 2
+                            ? 'CGHS| ECHS'
+                            : 'Payment Type Not Available'
+                        }
+                        variant="filled"
+                        size="medium"
+                        sx={{
+                          fontSize: '1rem'
+                        }}
+                      />
+                    ) : (
+                      <Typography color="GrayText">
+                        Estimate not created Yet
+                      </Typography>
+                    )}
+                  </Stack>
+                </Box>
+              ) : (
+                <Box p={1}>No Estimate Available</Box>
+              )}
             </Stack>
             <Stack borderRadius={2} m={1} bgcolor="white">
               {currentTicket ? (

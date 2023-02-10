@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import { iTicketStore } from '../types/store/ticket';
 
 const useTicketStore = create<iTicketStore>((set, get) => ({
@@ -8,7 +8,13 @@ const useTicketStore = create<iTicketStore>((set, get) => ({
   setNotes: (notes) => set({ notes }),
   reminders: [],
   setReminders: (reminders) => set({ reminders }),
-  
+  filterTickets: {
+    departments: [],
+    doctors: [],
+    admissionType: [],
+    diagnosticType: []
+  },
+  setFilterTickets: (filterTickets) => set({ filterTickets })
 }));
 
 export default useTicketStore;

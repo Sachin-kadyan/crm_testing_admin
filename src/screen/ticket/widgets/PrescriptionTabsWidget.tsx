@@ -47,7 +47,7 @@ const PrescriptionTabsWidget = ({ currentTicket }: Props) => {
         </TabPanel>
         <TabPanel sx={{ p: 0, height: '100%' }} value="2">
           <Stack p={1} direction="column" spacing={2}>
-            {currentTicket.prescription[0].diagnostics ? (
+            {currentTicket.prescription[0].diagnostics.length > 0 ? (
               currentTicket.prescription[0].diagnostics.map(
                 (diagostic: string) => (
                   <Typography textTransform="uppercase" variant="body1">
@@ -58,7 +58,7 @@ const PrescriptionTabsWidget = ({ currentTicket }: Props) => {
             ) : (
               <Typography>No Diagnostics Available </Typography>
             )}
-            {currentTicket.prescription[0].diagnostics && (
+            {currentTicket.prescription[0].diagnostics.length > 0 && (
               <Chip
                 label="Latest Advised"
                 variant="filled"

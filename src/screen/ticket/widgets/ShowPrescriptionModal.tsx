@@ -10,23 +10,14 @@ interface Props {
   image: string;
 }
 
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  p: 4
-};
-
 const ShowPrescription = ({ image }: Props) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const drawerWidth = 600;
+
+  const downloadPrescription = () => {};
 
   return (
     <div>
@@ -57,6 +48,8 @@ const ShowPrescription = ({ image }: Props) => {
         >
           <Typography variant="h6">Prescription Captured</Typography>
           <Button
+            disabled
+            onClick={downloadPrescription}
             sx={{ textTransform: 'capitalize' }}
             color="success"
             endIcon={<DownloadOutlined />}
@@ -72,19 +65,6 @@ const ShowPrescription = ({ image }: Props) => {
           )}
         </Box>
       </Drawer>
-      {/* <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Prescription Captured
-          </Typography>
-        </Box>
-      </Modal> */}
     </div>
   );
 };
