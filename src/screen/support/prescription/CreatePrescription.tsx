@@ -81,6 +81,7 @@ const CreatePrescription = () => {
   const [diagnostics, setDiagnostics] = useState<string[]>([]);
   const defaultValidation = { message: '', value: false };
   const [isCaregiver, setIsCaregiver] = useState(false);
+  const [disableButton, setDisableButton] = useState(false);
 
   const findService = async (query: string) => {
     try {
@@ -162,6 +163,7 @@ const CreatePrescription = () => {
     );
   };
   const handelUploadPrescription = async () => {
+    setDisableButton(true);
     const validationCheck = validation();
     if (validationCheck === true) {
       const ticket: any = structuredClone(prescription);
@@ -174,7 +176,10 @@ const CreatePrescription = () => {
       await createTicketHandler(ticket);
       setPrescription(structuredClone(initialPrescription));
       setDiagnostics([]);
+      setDisableButton(false);
       navigate('/');
+    } else {
+      setDisableButton(false);
     }
   };
 
@@ -524,13 +529,14 @@ const CreatePrescription = () => {
           </Box>
           <Box height="20vh">
             <Button
+              disabled={disableButton}
               onClick={handelUploadPrescription}
               variant="contained"
               fullWidth
               size="large"
               startIcon={<Upload />}
             >
-              Upload Prescription
+              {disableButton ? 'Uploading ...' : 'Upload Prescription'}
             </Button>
           </Box>
         </form>
