@@ -99,8 +99,7 @@ export interface iReminder {
 }
 
 export interface iTicketFilter {
-  departments: iDepartment[];
-  doctors: iDoctor[];
+  departments: string[];
   admissionType: string[];
   diagnosticType: string[];
 }

@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getTicketHandler } from '../../api/ticket/ticketHandler';
 import useTicketStore from '../../store/ticketStore';
 import TicketCard from '../../screen/ticket/widgets/TicketCard';
@@ -23,7 +23,34 @@ import TicketFilter from '../../screen/ticket/widgets/TicketFilter';
 import DownloadAllTickets from '../../screen/ticket/widgets/DownloadAllTickets';
 
 const Ticket = () => {
-  const { tickets } = useTicketStore();
+  const { tickets, filterTickets } = useTicketStore();
+  const [filteredTickets, setFilteredTickets] = useState<iTicket[]>([]);
+
+  const filterLength =
+    filterTickets.departments.length +
+    filterTickets.admissionType.length +
+    filterTickets.diagnosticType.length;
+
+  const handleFilterTickets = () => {
+    if (filterLength > 0) {
+      const filterData = tickets.map((ticket) => {
+        if (
+          ticket.prescription[0].department.includes(
+            filterTickets.departments
+          ) && ticket.prescription[0].admission
+            ? ticket.prescription[0].admission.includes(
+                filterTickets.admissionType
+              )
+            : null &&
+              ticket.prescription[0].diagnostics.includes(
+                filterTickets.diagnosticType
+              )
+        ) {
+          console.log('Hello');
+        }
+      });
+    }
+  };
 
   const navigate = useNavigate();
 
@@ -39,8 +66,11 @@ const Ticket = () => {
       await getTicketHandler();
       await getDoctorsHandler();
       await getDepartmentsHandler();
+      if (filterLength > 0) {
+        handleFilterTickets();
+      }
     })();
-  }, []);
+  }, [filterLength]);
 
   return (
     <Box height={'100vh'} display="flex" position="fixed" width="100%">
@@ -79,7 +109,7 @@ const Ticket = () => {
                 )
               }}
             />
-            <TicketFilter />
+            <TicketFilter filterLength={filterLength} />
           </Stack>
         </Box>
         <Box
@@ -94,17 +124,19 @@ const Ticket = () => {
           }}
         >
           {tickets
-            ? tickets.map((item: iTicket) => (
-                <TicketCard key={item._id} patientData={item} />
-              ))
-            : [0, 1, 2, 3, 4, 5].map((_) => (
-                <Skeleton
-                  variant="rectangular"
-                  sx={{ borderRadius: 2, my: 1 }}
-                  width="100%"
-                  height="15%"
-                />
-              ))}
+            ? tickets.length > 0
+              ? tickets.map((item: iTicket) => (
+                  <TicketCard key={item._id} patientData={item} />
+                ))
+              : [0, 1, 2, 3, 4, 5].map((_) => (
+                  <Skeleton
+                    variant="rectangular"
+                    sx={{ borderRadius: 2, my: 1 }}
+                    width="100%"
+                    height="20%"
+                  />
+                ))
+            : 'Loading'}
         </Box>
       </Box>
       <Box bgcolor="#E2ECFB" width="75%">
