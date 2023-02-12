@@ -23,22 +23,6 @@ const DownloadAllTickets = (props: Props) => {
   const departmentSetter = (id: string) => {
     return departments.find((element) => element._id === id)?.name;
   };
-  //   const [ticketsData, setTicketsData] = useState([
-  //     {
-  //       name: '',
-  //       uhid: '',
-  //       phone: '',
-  //       age: '',
-  //       department: '',
-  //       doctor: '',
-  //       admissionType: '',
-  //       serviceName: '',
-  //       diagnostics: '',
-  //       followUpDate: '',
-  //       prescriptionCreatedAt: '',
-  //       prescriptionLink: ''
-  //     }
-  //   ]);
 
   useEffect(() => {
     (async function () {
@@ -67,11 +51,20 @@ const DownloadAllTickets = (props: Props) => {
         serviceName: ticket.prescription[0].service
           ? ticket.prescription[0].service.name
           : 'No Advised',
-        diagnostics: ticket.prescription[0].diagnostics[0],
+        CTScan: ticket.prescription[0].diagnostics.includes('CT-Scan')
+          ? 'Yes'
+          : 'No',
+        LAB: ticket.prescription[0].diagnostics.includes('Lab') ? 'Yes' : 'No',
+        MRI: ticket.prescription[0].diagnostics.includes('MRI') ? 'Yes' : 'No',
+        PETCT: ticket.prescription[0].diagnostics.includes('PET_CT')
+          ? 'Yes'
+          : 'No',
         followUpDate: ticket.prescription[0].followUp
           ? dayjs(ticket.prescription[0].followUp).format('DD/MMM/YYYY')
           : 'No Follow Up',
-        prescriptionCreatedAt: ticket.prescription[0].createdAt,
+        prescriptionCreatedAt: `${dayjs(
+          ticket.prescription[0].createdAt
+        ).format('DD/MMM/YYYY , HHMM ')} hrs`,
         prescriptionLink: ticket.prescription[0].image
       };
     });

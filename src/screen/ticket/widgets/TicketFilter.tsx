@@ -51,8 +51,7 @@ const TicketFilter = ({ filterLength }: Props) => {
 
   const handleDepartmentsList = (
     e: React.ChangeEvent<HTMLInputElement>,
-    index,
-    checked
+    index
   ) => {
     if (!departmentsList.includes(e.target.value)) {
       console.log(index);
@@ -187,7 +186,7 @@ const TicketFilter = ({ filterLength }: Props) => {
                     <Checkbox
                       checked={departmentsList.includes(department.id)}
                       value={department.id}
-                      onChange={(e) => handleDepartmentsList(e, index, checked)}
+                      onChange={(e) => handleDepartmentsList(e, index)}
                     />
                   }
                   label={department.label}
