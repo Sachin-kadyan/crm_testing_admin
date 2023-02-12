@@ -1,4 +1,4 @@
-import { FilterList } from '@mui/icons-material';
+import { ClearAll, FilterList } from '@mui/icons-material';
 import {
   Badge,
   BadgeProps,
@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { check } from 'prettier';
-import React from 'react';
+import React, { useState } from 'react';
 import { getDepartmentsHandler } from '../../../api/department/departmentHandler';
 import { getDoctorsHandler } from '../../../api/doctor/doctorHandler';
 import useTicketStore from '../../../store/ticketStore';
@@ -44,16 +44,23 @@ const TicketFilter = ({ filterLength }: Props) => {
   const [diagnosticsType, setDiagnosticsType] = React.useState<string[]>(
     () => []
   );
+  const [checked, setChecked] = useState<boolean[]>();
   const [departmentsList, setDepartmentsList] = React.useState<string[]>(
     () => []
   );
 
   const handleDepartmentsList = (
     e: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
+    index,
+    checked
   ) => {
-    if (checked) {
+    if (!departmentsList.includes(e.target.value)) {
+      console.log(index);
       setDepartmentsList((prev) => [...departmentsList, e.target.value]);
+      console.log(departmentsList);
+    } else {
+      console.log(index);
+      setDepartmentsList(departmentsList.filter((_, ind) => ind === index));
     }
   };
 
@@ -106,6 +113,17 @@ const TicketFilter = ({ filterLength }: Props) => {
     setIsFilterOpen(false);
   };
 
+  const handleClearFilter = () => {
+    setFilterTickets({
+      departments: [],
+      admissionType: [],
+      diagnosticType: []
+    });
+    setDepartmentsList((prev) => []);
+    setAdmissionType((prev) => []);
+    setDiagnosticsType((prev) => []);
+  };
+
   return (
     <Box>
       <IconButton onClick={handleFilterOpen}>
@@ -141,26 +159,35 @@ const TicketFilter = ({ filterLength }: Props) => {
               <FilterList />
               <Typography variant="h6">Add Filter </Typography>
             </Stack>
-            <Button
-              onClick={handleApplyFilter}
-              variant="contained"
-              sx={{ borderRadius: '3rem' }}
-            >
-              Apply
-            </Button>
+
+            <Stack direction="row" spacing={1}>
+              <Button
+                onClick={handleApplyFilter}
+                variant="contained"
+                sx={{ borderRadius: '3rem' }}
+              >
+                Apply
+              </Button>
+              {filterLength > 0 && (
+                <Button onClick={handleClearFilter} endIcon={<ClearAll />}>
+                  Clear Filters
+                </Button>
+              )}
+            </Stack>
           </Box>
           <Box p={2}>
             <Typography variant="subtitle1" fontWeight={500}>
               Select Departments
             </Typography>
             <FormGroup>
-              {departments.map((department) => (
+              {departments.map((department, index: number) => (
                 <FormControlLabel
                   key={department.id}
                   control={
                     <Checkbox
+                      checked={departmentsList.includes(department.id)}
                       value={department.id}
-                      onChange={handleDepartmentsList}
+                      onChange={(e) => handleDepartmentsList(e, index, checked)}
                     />
                   }
                   label={department.label}
@@ -177,10 +204,9 @@ const TicketFilter = ({ filterLength }: Props) => {
               value={admissionType}
               onChange={handleAdmissionType}
             >
-              <ToggleButton value="none">None</ToggleButton>
-              <ToggleButton value="surgery">Surgery</ToggleButton>
-              <ToggleButton value="mm">MM</ToggleButton>
-              <ToggleButton value="null">Radiation</ToggleButton>
+              <ToggleButton value="Surgery">Surgery</ToggleButton>
+              <ToggleButton value="MM">MM</ToggleButton>
+              <ToggleButton value="Radiation">Radiation</ToggleButton>
             </ToggleButtonGroup>
           </Box>
           <Box p={2}>
@@ -192,10 +218,10 @@ const TicketFilter = ({ filterLength }: Props) => {
               value={diagnosticsType}
               onChange={handleDiagnosticsType}
             >
-              <ToggleButton value="none">None</ToggleButton>
-              <ToggleButton value="mri">MRI</ToggleButton>
-              <ToggleButton value="pet-ct">PET-CT</ToggleButton>
-              <ToggleButton value="lab">Lab</ToggleButton>
+              <ToggleButton value="MRI">MRI</ToggleButton>
+              <ToggleButton value="PET-CT">PET-CT</ToggleButton>
+              <ToggleButton value="CT-Scan">CT-Scan</ToggleButton>
+              <ToggleButton value="Lab">Lab</ToggleButton>
             </ToggleButtonGroup>
           </Box>
         </Box>

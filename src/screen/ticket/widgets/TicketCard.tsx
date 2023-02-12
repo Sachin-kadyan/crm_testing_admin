@@ -49,7 +49,12 @@ const TicketCard = (props: Props) => {
         justifyContent="space-between"
         alignItems="center"
       >
-        <Box display="flex" justifyContent="space-between" minWidth="80%">
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          minWidth="70%"
+        >
           <Typography
             variant="subtitle1"
             textTransform={'capitalize'}
@@ -74,7 +79,7 @@ const TicketCard = (props: Props) => {
         </Box>
         <Box>
           <Typography variant="body2">
-            #{props.patientData.consumer[0].uid}
+            UHID{props.patientData.consumer[0].uid}
           </Typography>
         </Box>
       </Box>

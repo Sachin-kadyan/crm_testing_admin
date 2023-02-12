@@ -4,8 +4,7 @@ import {
   InputAdornment,
   Skeleton,
   Stack,
-  TextField,
-  Typography
+  TextField
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -16,7 +15,7 @@ import TicketCard from '../../screen/ticket/widgets/TicketCard';
 import { iTicket } from '../../types/store/ticket';
 import { getDoctorsHandler } from '../../api/doctor/doctorHandler';
 import { getDepartmentsHandler } from '../../api/department/departmentHandler';
-import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useMatch, useNavigate } from 'react-router-dom';
 import DefaultScreen from '../../components/DefaultScreen';
 import { ArrowBack } from '@mui/icons-material';
 import TicketFilter from '../../screen/ticket/widgets/TicketFilter';
@@ -31,25 +30,40 @@ const Ticket = () => {
     filterTickets.admissionType.length +
     filterTickets.diagnosticType.length;
 
-  const handleFilterTickets = () => {
-    if (filterLength > 0) {
-      const filterData = tickets.map((ticket) => {
-        if (
-          ticket.prescription[0].department.includes(
-            filterTickets.departments
-          ) && ticket.prescription[0].admission
-            ? ticket.prescription[0].admission.includes(
-                filterTickets.admissionType
-              )
-            : null &&
-              ticket.prescription[0].diagnostics.includes(
-                filterTickets.diagnosticType
-              )
-        ) {
-          console.log('Hello');
-        }
-      });
-    }
+  const filterFn = () => {
+    setFilteredTickets(
+      tickets.filter(
+        (item: iTicket) =>
+          departmentFilterRule(item.prescription[0].departments[0]) &&
+          admissionFilterRule(item.prescription[0].admission) &&
+          diagnosticsFilterRule(item.prescription[0].diagnostics)
+      )
+    );
+  };
+
+  const departmentFilterRule = (department: string) => {
+    return filterTickets.departments.length > 0
+      ? filterTickets.departments.includes(department)
+      : true;
+  };
+
+  const admissionFilterRule = (admission: string) => {
+    return filterTickets.admissionType.length > 0
+      ? filterTickets.admissionType.includes(admission)
+      : true;
+  };
+
+  const diagnosticsFilterRule = (diagnostics: string[]) => {
+    if (filterTickets.diagnosticType.length > 0) {
+      let diagnosticsResult =
+        diagnostics.length > 0
+          ? diagnostics.every((item) =>
+              filterTickets.diagnosticType.includes(item)
+            )
+          : false;
+
+      return diagnosticsResult;
+    } else return true;
   };
 
   const navigate = useNavigate();
@@ -67,10 +81,10 @@ const Ticket = () => {
       await getDoctorsHandler();
       await getDepartmentsHandler();
       if (filterLength > 0) {
-        handleFilterTickets();
+        filterFn();
       }
     })();
-  }, [filterLength]);
+  }, [filterLength, filterTickets]);
 
   return (
     <Box height={'100vh'} display="flex" position="fixed" width="100%">
@@ -123,20 +137,25 @@ const Ticket = () => {
             }
           }}
         >
-          {tickets
-            ? tickets.length > 0
-              ? tickets.map((item: iTicket) => (
+          {filterLength > 0
+            ? filteredTickets.length > 0
+              ? filteredTickets.map((item: iTicket) => (
                   <TicketCard key={item._id} patientData={item} />
                 ))
-              : [0, 1, 2, 3, 4, 5].map((_) => (
-                  <Skeleton
-                    variant="rectangular"
-                    sx={{ borderRadius: 2, my: 1 }}
-                    width="100%"
-                    height="20%"
-                  />
-                ))
-            : 'Loading'}
+              : 'No Match Found'
+            : tickets.length > 0
+            ? tickets.map((item: iTicket) => (
+                <TicketCard key={item._id} patientData={item} />
+              ))
+            : [0, 1, 2, 3, 4, 5].map((_, index) => (
+                <Skeleton
+                  key={index}
+                  variant="rectangular"
+                  sx={{ borderRadius: 2, my: 1 }}
+                  width="100%"
+                  height="20%"
+                />
+              ))}
         </Box>
       </Box>
       <Box bgcolor="#E2ECFB" width="75%">

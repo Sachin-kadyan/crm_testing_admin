@@ -33,9 +33,9 @@ const PrescriptionTabsWidget = ({ currentTicket }: Props) => {
                 {currentTicket.prescription[0].service.name}
               </Typography>
             ) : (
-              <Typography> No Admission Advised</Typography>
+              <Typography> No Service Advised</Typography>
             )}
-            {currentTicket.prescription[0].service && (
+            {currentTicket.prescription[0].admission && (
               <Chip
                 label={currentTicket.prescription[0].admission}
                 variant="outlined"
