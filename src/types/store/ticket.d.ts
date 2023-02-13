@@ -102,4 +102,6 @@ export interface iTicketFilter {
   departments: string[];
   admissionType: string[];
   diagnosticType: string[];
+  startDate: number;
+  endDate: number;
 }

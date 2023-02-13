@@ -4,7 +4,7 @@ import { iTicket } from '../../../types/store/ticket';
 import useServiceStore from '../../../store/serviceStore';
 import FemaleIcon from '@mui/icons-material/Female';
 import TransgenderIcon from '@mui/icons-material/Transgender';
-
+import dayjs from 'dayjs';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ageSetter } from '../../../utils/ageReturn';
 
@@ -140,7 +140,8 @@ const TicketCard = (props: Props) => {
         />
       </Box>
       <Typography variant="caption" color="blue">
-        4 Task Pending
+        Created At:
+        {dayjs(props.patientData.createdAt).format('DD/MMM/YYYY , HHMM')}hrs
       </Typography>
     </Box>
   );

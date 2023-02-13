@@ -12,7 +12,9 @@ const useTicketStore = create<iTicketStore>((set, get) => ({
     departments: [],
     doctors: [],
     admissionType: [],
-    diagnosticType: []
+    diagnosticType: [],
+    startDate: 0,
+    endDate: 0
   },
   setFilterTickets: (filterTickets) => set({ filterTickets })
 }));

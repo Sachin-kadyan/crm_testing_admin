@@ -20,15 +20,28 @@ import DefaultScreen from '../../components/DefaultScreen';
 import { ArrowBack } from '@mui/icons-material';
 import TicketFilter from '../../screen/ticket/widgets/TicketFilter';
 import DownloadAllTickets from '../../screen/ticket/widgets/DownloadAllTickets';
+import dayjs from 'dayjs';
 
 const Ticket = () => {
   const { tickets, filterTickets } = useTicketStore();
-  const [filteredTickets, setFilteredTickets] = useState<iTicket[]>([]);
+  const [filteredTickets, setFilteredTickets] = useState<iTicket[]>();
 
-  const filterLength =
-    filterTickets.departments.length +
-    filterTickets.admissionType.length +
-    filterTickets.diagnosticType.length;
+  const checkFilterLength = () => {
+    let filterLength = 0;
+    if (filterTickets.startDate > 0 && filterTickets.endDate > 0) {
+      filterLength =
+        filterTickets.departments.length +
+        filterTickets.admissionType.length +
+        filterTickets.diagnosticType.length +
+        1;
+    } else {
+      filterLength =
+        filterTickets.departments.length +
+        filterTickets.admissionType.length +
+        filterTickets.diagnosticType.length;
+    }
+    return filterLength;
+  };
 
   const filterFn = () => {
     setFilteredTickets(
@@ -36,7 +49,8 @@ const Ticket = () => {
         (item: iTicket) =>
           departmentFilterRule(item.prescription[0].departments[0]) &&
           admissionFilterRule(item.prescription[0].admission) &&
-          diagnosticsFilterRule(item.prescription[0].diagnostics)
+          diagnosticsFilterRule(item.prescription[0].diagnostics) &&
+          dateRule(item.createdAt)
       )
     );
   };
@@ -66,6 +80,22 @@ const Ticket = () => {
     } else return true;
   };
 
+  const dateRule = (createdAt: string) => {
+    const createdDate = dayjs(createdAt).unix();
+    if (filterTickets.startDate > 0 && filterTickets.endDate > 0) {
+      // console.log(filterTickets.startDate, 'StartDate');
+      // console.log(filterTickets.endDate, 'EndDate');
+      // console.log(createdDate, 'CreatedDate');
+
+      const isTicketofDate =
+        createdDate >= filterTickets.startDate &&
+        createdDate <= filterTickets.endDate
+          ? true
+          : false;
+      return isTicketofDate;
+    } else return true;
+  };
+
   const navigate = useNavigate();
 
   const currentRoute = useMatch('/ticket');
@@ -80,11 +110,11 @@ const Ticket = () => {
       await getTicketHandler();
       await getDoctorsHandler();
       await getDepartmentsHandler();
-      if (filterLength > 0) {
+      if (checkFilterLength() > 0) {
         filterFn();
       }
     })();
-  }, [filterLength, filterTickets]);
+  }, [filterTickets]);
 
   return (
     <Box height={'100vh'} display="flex" position="fixed" width="100%">
@@ -123,7 +153,7 @@ const Ticket = () => {
                 )
               }}
             />
-            <TicketFilter filterLength={filterLength} />
+            <TicketFilter filterLength={checkFilterLength()} />
           </Stack>
         </Box>
         <Box
@@ -137,12 +167,14 @@ const Ticket = () => {
             }
           }}
         >
-          {filterLength > 0
-            ? filteredTickets.length > 0
-              ? filteredTickets.map((item: iTicket) => (
-                  <TicketCard key={item._id} patientData={item} />
-                ))
-              : 'No Match Found'
+          {checkFilterLength() > 0
+            ? filteredTickets
+              ? filteredTickets.length > 0
+                ? filteredTickets.map((item: iTicket) => (
+                    <TicketCard key={item._id} patientData={item} />
+                  ))
+                : 'No Match Found'
+              : 'Loading ...'
             : tickets.length > 0
             ? tickets.map((item: iTicket) => (
                 <TicketCard key={item._id} patientData={item} />

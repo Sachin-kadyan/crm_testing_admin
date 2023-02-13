@@ -10,11 +10,13 @@ import {
   IconButton,
   Stack,
   styled,
+  TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography
 } from '@mui/material';
 import { Box } from '@mui/system';
+import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { getDepartmentsHandler } from '../../../api/department/departmentHandler';
 import { getDoctorsHandler } from '../../../api/doctor/doctorHandler';
@@ -36,6 +38,8 @@ const TicketFilter = ({ filterLength }: Props) => {
     }
   }));
 
+  console.log('Rerendered');
+
   const { setFilterTickets } = useTicketStore();
 
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
@@ -43,10 +47,11 @@ const TicketFilter = ({ filterLength }: Props) => {
   const [diagnosticsType, setDiagnosticsType] = React.useState<string[]>(
     () => []
   );
-  const [checked, setChecked] = useState<boolean[]>();
   const [departmentsList, setDepartmentsList] = React.useState<string[]>(
     () => []
   );
+  const [startDate, setStartDate] = React.useState<string>();
+  const [endDate, setEndDate] = React.useState<string>();
 
   const handleDepartmentsList = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -108,7 +113,9 @@ const TicketFilter = ({ filterLength }: Props) => {
     setFilterTickets({
       departments: departmentsList,
       admissionType: admissionType,
-      diagnosticType: diagnosticsType
+      diagnosticType: diagnosticsType,
+      startDate: dayjs(startDate).unix(),
+      endDate: dayjs(endDate).unix()
     });
     setIsFilterOpen(false);
   };
@@ -117,11 +124,15 @@ const TicketFilter = ({ filterLength }: Props) => {
     setFilterTickets({
       departments: [],
       admissionType: [],
-      diagnosticType: []
+      diagnosticType: [],
+      startDate: 0,
+      endDate: 0
     });
     setDepartmentsList((prev) => []);
     setAdmissionType((prev) => []);
     setDiagnosticsType((prev) => []);
+    setStartDate((prev) => '');
+    setEndDate((prev) => '');
   };
 
   return (
@@ -225,7 +236,31 @@ const TicketFilter = ({ filterLength }: Props) => {
             </ToggleButtonGroup>
           </Box>
 
-          <Box p={2}></Box>
+          <Box p={2}>
+            <Typography variant="subtitle1" fontWeight={500}>
+              Select Date Range
+            </Typography>
+            <Stack direction="row" spacing={2}>
+              <Box>
+                <Typography variant="caption">Start Date</Typography>
+                <TextField
+                  fullWidth
+                  onChange={(e) => setStartDate(e.target.value)}
+                  value={startDate}
+                  type="date"
+                />
+              </Box>
+              <Box>
+                <Typography variant="caption">End Date</Typography>
+                <TextField
+                  fullWidth
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  type="date"
+                />
+              </Box>
+            </Stack>
+          </Box>
         </Box>
       </Drawer>
     </Box>
