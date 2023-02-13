@@ -15,7 +15,6 @@ import {
   Typography
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { check } from 'prettier';
 import React, { useState } from 'react';
 import { getDepartmentsHandler } from '../../../api/department/departmentHandler';
 import { getDoctorsHandler } from '../../../api/doctor/doctorHandler';
@@ -59,7 +58,9 @@ const TicketFilter = ({ filterLength }: Props) => {
       console.log(departmentsList);
     } else {
       console.log(index);
-      setDepartmentsList(departmentsList.filter((_, ind) => ind === index));
+      setDepartmentsList(
+        departmentsList.filter((item) => item !== e.target.value)
+      );
     }
   };
 
@@ -223,6 +224,8 @@ const TicketFilter = ({ filterLength }: Props) => {
               <ToggleButton value="Lab">Lab</ToggleButton>
             </ToggleButtonGroup>
           </Box>
+
+          <Box p={2}></Box>
         </Box>
       </Drawer>
     </Box>
