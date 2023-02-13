@@ -83,10 +83,6 @@ const Ticket = () => {
   const dateRule = (createdAt: string) => {
     const createdDate = dayjs(createdAt).unix();
     if (filterTickets.startDate > 0 && filterTickets.endDate > 0) {
-      // console.log(filterTickets.startDate, 'StartDate');
-      // console.log(filterTickets.endDate, 'EndDate');
-      // console.log(createdDate, 'CreatedDate');
-
       const isTicketofDate =
         createdDate >= filterTickets.startDate &&
         createdDate <= filterTickets.endDate

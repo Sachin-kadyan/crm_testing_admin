@@ -1,4 +1,4 @@
-import { ClearAll, FilterList } from '@mui/icons-material';
+import { ClearAll, Difference, FilterList } from '@mui/icons-material';
 import {
   Badge,
   BadgeProps,
@@ -38,8 +38,6 @@ const TicketFilter = ({ filterLength }: Props) => {
     }
   }));
 
-  console.log('Rerendered');
-
   const { setFilterTickets } = useTicketStore();
 
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
@@ -58,11 +56,8 @@ const TicketFilter = ({ filterLength }: Props) => {
     index
   ) => {
     if (!departmentsList.includes(e.target.value)) {
-      console.log(index);
       setDepartmentsList((prev) => [...departmentsList, e.target.value]);
-      console.log(departmentsList);
     } else {
-      console.log(index);
       setDepartmentsList(
         departmentsList.filter((item) => item !== e.target.value)
       );
@@ -110,12 +105,17 @@ const TicketFilter = ({ filterLength }: Props) => {
   });
 
   const handleApplyFilter = () => {
+    console.log(startDate, 'Start');
+    console.log(endDate, 'End');
+
+    console.log(dayjs(endDate).diff(dayjs(startDate), 'days'), Difference);
+
     setFilterTickets({
       departments: departmentsList,
       admissionType: admissionType,
       diagnosticType: diagnosticsType,
-      startDate: dayjs(startDate).unix(),
-      endDate: dayjs(endDate).unix()
+      startDate: startDate ? dayjs(startDate).unix() : NaN,
+      endDate: endDate ? dayjs(endDate).unix() : NaN
     });
     setIsFilterOpen(false);
   };
