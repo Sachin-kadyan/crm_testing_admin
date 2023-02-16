@@ -114,8 +114,8 @@ const TicketFilter = ({ filterLength }: Props) => {
       departments: departmentsList,
       admissionType: admissionType,
       diagnosticType: diagnosticsType,
-      startDate: startDate ? dayjs(startDate).unix() : NaN,
-      endDate: endDate ? dayjs(endDate).unix() : NaN
+      startDate: startDate ? dayjs(startDate).unix() * 1000 : NaN,
+      endDate: endDate ? dayjs(endDate).unix() * 1000 + 2000000 : NaN
     });
     setIsFilterOpen(false);
   };

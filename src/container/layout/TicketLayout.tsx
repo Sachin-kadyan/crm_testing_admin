@@ -26,6 +26,8 @@ const Ticket = () => {
   const { tickets, filterTickets } = useTicketStore();
   const [filteredTickets, setFilteredTickets] = useState<iTicket[]>();
 
+  console.log(filterTickets);
+
   const checkFilterLength = () => {
     let filterLength = 0;
     if (filterTickets.startDate > 0 && filterTickets.endDate > 0) {
@@ -81,11 +83,11 @@ const Ticket = () => {
   };
 
   const dateRule = (createdAt: string) => {
-    const createdDate = dayjs(createdAt).unix();
+    const createdDate = dayjs(createdAt).unix() * 1000;
     if (filterTickets.startDate > 0 && filterTickets.endDate > 0) {
       const isTicketofDate =
         createdDate >= filterTickets.startDate &&
-        createdDate <= filterTickets.endDate
+        createdDate < filterTickets.endDate
           ? true
           : false;
       return isTicketofDate;

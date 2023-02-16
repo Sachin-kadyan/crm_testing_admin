@@ -68,6 +68,7 @@ export interface iTicket {
   assigned: string;
   stage: string;
   createdAt: string;
+  creator: iCreator[];
 }
 
 export interface iTicketStore {
@@ -104,4 +105,12 @@ export interface iTicketFilter {
   diagnosticType: string[];
   startDate: number;
   endDate: number;
+}
+
+export interface iCreator {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: number;
 }

@@ -1,7 +1,7 @@
 import { DownloadForOfflineOutlined } from '@mui/icons-material';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import dayjs from 'dayjs';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { getDepartmentsHandler } from '../../../api/department/departmentHandler';
 import { getDoctorsHandler } from '../../../api/doctor/doctorHandler';
 import { getTicketHandler } from '../../../api/ticket/ticketHandler';
@@ -10,6 +10,7 @@ import useTicketStore from '../../../store/ticketStore';
 import Papa from 'papaparse';
 import FileSaver from 'file-saver';
 import { ageSetter } from '../../../utils/ageReturn';
+import { iTicket } from '../../../types/store/consumer';
 
 type Props = {};
 
@@ -34,7 +35,7 @@ const DownloadAllTickets = (props: Props) => {
 
   const { tickets } = useTicketStore();
   const downloadData = async () => {
-    const data = tickets.map((ticket, index) => {
+    const data = tickets.map((ticket: any, index) => {
       return {
         serialNo: index + 1,
         firstName: ticket.consumer[0].firstName,
@@ -62,6 +63,8 @@ const DownloadAllTickets = (props: Props) => {
         followUpDate: ticket.prescription[0].followUp
           ? dayjs(ticket.prescription[0].followUp).format('DD/MMM/YYYY')
           : 'No Follow Up',
+        capturedBy:
+          ticket.creator[0].firstName + ' ' + ticket.creator[0].lastName,
         prescriptionCreatedAt: `${dayjs(
           ticket.prescription[0].createdAt
         ).format('DD/MMM/YYYY , HHMM ')} hrs`,
