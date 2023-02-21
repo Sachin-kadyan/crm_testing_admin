@@ -161,7 +161,7 @@ const Ticket = () => {
           sx={{
             overflowY: 'scroll',
             '&::-webkit-scrollbar ': {
-              display: 'none'
+              // display: 'none'
             }
           }}
         >

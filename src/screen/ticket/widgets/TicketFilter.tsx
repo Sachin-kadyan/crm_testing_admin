@@ -94,7 +94,7 @@ const TicketFilter = ({ filterLength }: Props) => {
       label: 'GI surgery',
       id: '63de1ab09c1af160749af88d'
     },
-    { label: 'Neurology', id: '63ce59314dca242deb6a4d48' }
+    { label: 'Neurology', id: '63de1a5d9c1af160749af884' }
   ];
 
   React.useEffect(() => {

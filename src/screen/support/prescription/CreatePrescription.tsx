@@ -260,7 +260,7 @@ const CreatePrescription = () => {
               Admission Type
             </Typography>
             <Stack flexWrap={'wrap'} flexDirection="row">
-              {['none', 'Surgery', 'Radiation', 'MM'].map((item) => (
+              {['none', 'Surgery', 'Radiation', 'MM', 'DC'].map((item) => (
                 <Button
                   size="small"
                   sx={{ m: 0.4 }}
