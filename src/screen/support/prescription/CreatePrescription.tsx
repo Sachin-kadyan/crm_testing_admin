@@ -563,7 +563,7 @@ const CreatePrescription = () => {
             screenshotFormat="image/jpeg"
             ref={camera}
             videoConstraints={{
-              facingMode: 'user'
+              facingMode: { exact: 'environment' }
             }}
           />
         ) : (
