@@ -8,43 +8,52 @@ import {
   Typography,
   Avatar
 } from '@mui/material';
-import { useState } from 'react';
+import axios from 'axios';
+import { AnyAaaaRecord } from 'dns';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SERVER_URL } from '../../../api/apiClient';
+import { getConsumerByUhid } from '../../../api/consumer/consumer';
 import { registerConsumerHandler } from '../../../api/consumer/consumerHandler';
 import useEventStore from '../../../store/eventStore';
-const initialConsumerFields = {
-  firstName: '',
-  lastName: '',
-  email: null,
-  phone: '',
-  uid: '',
-  age: '',
-  gender: ''
-};
-const defaultValidations = { message: '', value: false };
-
-const initialValidationsFields = {
-  firstName: defaultValidations,
-  lastName: defaultValidations,
-  email: defaultValidations,
-  phone: defaultValidations,
-  uid: defaultValidations,
-  age: defaultValidations,
-  gender: defaultValidations
-};
+import { database } from '../../../utils/firebase';
 
 const RegisterConsumer = () => {
+  const initialConsumerFields = {
+    firstName: '',
+    lastName: '',
+    email: null,
+    phone: '',
+    uid: '',
+    age: '',
+    gender: ''
+  };
+
+  const defaultValidations = { message: '', value: false };
+
+  const initialValidationsFields = {
+    firstName: defaultValidations,
+    lastName: defaultValidations,
+    email: defaultValidations,
+    phone: defaultValidations,
+    uid: defaultValidations,
+    age: defaultValidations,
+    gender: defaultValidations
+  };
   const [consumer, setConsumer] = useState(initialConsumerFields);
+  const [consumerId, setConsumerId] = useState('');
   const [validations, setValidations] = useState(initialValidationsFields);
+  const [existingData, setExistingData] = useState(false);
   const { setSnacks } = useEventStore();
   const navigate = useNavigate();
 
   const validationsChecker = () => {
     const firstName = consumer.firstName === initialConsumerFields.firstName;
     // const lastName = consumer.lastName === initialConsumerFields.lastName;
-
     const phone = consumer.phone.length !== 10;
+
     const uid = consumer.uid === initialConsumerFields.uid;
+
     // const age = consumer.age === initialConsumerFields.age;
     // const gender = consumer.gender === initialConsumerFields.gender;
     setValidations((prev) => {
@@ -82,34 +91,106 @@ const RegisterConsumer = () => {
     );
   };
 
-  const registerConsumer = async () => {
-    const check = validationsChecker();
-    if (check === true) {
-      const dob = new Date();
-      dob.setFullYear(dob.getFullYear() - +consumer.age);
-      // const email = consumer.email
-      //   ? consumer.email.match(
-      //       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      //     ) === null
-      //   : true;
-      const consumerPayload: any = consumer;
-      // consumerPayload.email = email ? null : consumer.email;
-      consumerPayload.lastName = consumer.lastName ? consumer.lastName : null;
-      consumerPayload.gender = consumer.gender ? consumer.gender : null;
-      consumerPayload.dob = consumer.age ? dob : null;
-      await registerConsumerHandler(consumerPayload);
-      setConsumer({ ...initialConsumerFields });
-      setSnacks('Patient Registered Successfully!', 'success');
-      navigate('/');
-    }
-  };
-
   const updateConsumerState = (field: string, value: any) => {
     setConsumer((prev: any) => {
       prev[field] = value;
       return { ...prev };
     });
   };
+
+  // const updateConsumerId = (field: string, value: any) => {
+  //   setConsumerId((prev: any) => {
+  //     prev[field] = value;
+  //     return { ...prev, consumer };
+  //   });
+  // };
+
+  const registerConsumer = async () => {
+    const check = validationsChecker();
+    if (check === true) {
+      const dob = new Date();
+      dob.setFullYear(dob.getFullYear() - +consumer.age);
+
+      // const email = consumer.email
+      //   ? consumer.email.match(
+      //       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      //     ) === null
+      //   : true;
+      const consumerPayload: any = consumer;
+
+      // consumerPayload.email = email ? null : consumer.email;
+
+      consumerPayload.lastName = consumer.lastName ? consumer.lastName : null;
+
+      consumerPayload.gender = consumer.gender ? consumer.gender : null;
+
+      consumerPayload.dob = consumer.age ? dob : null;
+      console.log(consumer);
+      const data = await registerConsumerHandler(consumerPayload);
+      if (data) {
+        console.log(data);
+        setConsumerId(data._id);
+        setExistingData(true);
+      } else {
+        setConsumerId('');
+      }
+      setConsumer({ ...initialConsumerFields });
+
+      setSnacks('Patient Registered Successfully!', 'success');
+
+      navigate(`/consumer/${data._id}`);
+    }
+    // if (check === true) {
+    //   const dob = new Date();
+    //   dob.setFullYear(dob.getFullYear() - +consumer.age);
+    //   // const email = consumer.email
+    //   //   ? consumer.email.match(
+    //   //       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    //   //     ) === null
+    //   //   : true;
+    //   const consumerPayload: any = consumer;
+    //   // consumerPayload.email = email ? null : consumer.email;
+    //   consumerPayload.lastName = consumer.lastName ? consumer.lastName : null;
+    //   consumerPayload.gender = consumer.gender ? consumer.gender : null;
+    //   consumerPayload.dob = consumer.age ? dob : null;
+    //   await registerConsumerHandler(consumerPayload);
+    //   setConsumer({ ...initialConsumerFields });
+    //   setSnacks('Patient Registered Successfully!', 'success');
+    //   navigate('/');
+    // }
+  };
+
+  const nextConsumer = () => {
+    navigate(`/consumer/${consumerId}`);
+  };
+  console.log({ consumerId });
+
+  const fetchConsumerDataByUhid = async () => {
+    try {
+      const response = await axios.get(
+        'http://localhost:3000/prod/api/v1/consumer/findConsumer?',
+        { params: { search: consumer.uid } }
+      );
+      if (response.data) {
+        updateConsumerState('firstName', response.data.firstName);
+        updateConsumerState('lastName', response.data.lastName);
+        updateConsumerState('phone', response.data.phone);
+        updateConsumerState('age', response.data.age);
+        updateConsumerState('gender', response.data.gender);
+        setConsumerId(response.data._id);
+        setExistingData(true);
+      } else {
+        // setConsumer(initialConsumerFields);
+        setExistingData(false);
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  // useEffect(() => {
+  //   fetchConsumerDataByUhid();
+  // }, [consumer.uid]);
 
   return (
     <Box>
@@ -135,6 +216,19 @@ const RegisterConsumer = () => {
           </Typography>
         </Stack>
       </Stack>
+      <TextField
+        value={consumer.uid}
+        onChange={(e) => updateConsumerState('uid', e.target.value)}
+        fullWidth
+        size="small"
+        type="text"
+        placeholder="33XXX"
+        label="UHID"
+        onBlur={fetchConsumerDataByUhid}
+        error={validations.uid.value}
+        helperText={validations.uid.message}
+      />
+      {/* <TextField>{uhidData}</TextField> */}
       <Stack p={1} spacing={2} height="80vh">
         <Stack direction="row" spacing={2}>
           <TextField
@@ -182,7 +276,7 @@ const RegisterConsumer = () => {
           error={validations.phone.value}
           helperText={validations.phone.message}
         />
-        <TextField
+        {/* <TextField
           value={consumer.uid}
           onChange={(e) => updateConsumerState('uid', e.target.value)}
           fullWidth
@@ -192,7 +286,7 @@ const RegisterConsumer = () => {
           label="UHID"
           error={validations.uid.value}
           helperText={validations.uid.message}
-        />
+        /> */}
         <TextField
           value={consumer.age}
           onChange={(e) => updateConsumerState('age', e.target.value)}
@@ -255,9 +349,15 @@ const RegisterConsumer = () => {
             {validations.gender.message}
           </FormHelperText>
         </Box>
-        <Button size="large" onClick={registerConsumer} variant="contained">
-          Register
-        </Button>
+        {existingData ? (
+          <Button size="large" onClick={nextConsumer} variant="contained">
+            Next
+          </Button>
+        ) : (
+          <Button size="large" onClick={registerConsumer} variant="contained">
+            Register
+          </Button>
+        )}
       </Stack>
     </Box>
   );

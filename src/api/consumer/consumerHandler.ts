@@ -18,8 +18,10 @@ export const getConsumerTicketsHandler = async (consumerId: string) => {
   setConsumerHistory(tickets);
 };
 
-export type iConsumerRequest = Omit<iConsumer, '_id'>;
+// export type iConsumerRequest = Omit<iConsumer, '_id'>;
+export type iConsumerRequest = iConsumer;
 
 export const registerConsumerHandler = async (consumer: iConsumerRequest) => {
+  console.log(consumer);
   return await registerConsumer(consumer);
 };

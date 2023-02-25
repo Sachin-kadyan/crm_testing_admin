@@ -387,27 +387,29 @@ const CreatePrescription = () => {
               >
                 None
               </Button>
-              {['CT-Scan', 'PET-CT', 'MRI', 'Lab'].map((item) => (
-                <Button
-                  size="small"
-                  sx={{ m: 0.4 }}
-                  key={item}
-                  onClick={() => {
-                    const diag = new Set(diagnostics);
-                    if (diag.has(item)) {
-                      diag.delete(item);
-                    } else {
-                      diag.add(item);
+              {['CT-Scan', 'PET-CT', 'MRI', 'Lab', 'X-RAY', 'USG'].map(
+                (item) => (
+                  <Button
+                    size="small"
+                    sx={{ m: 0.4 }}
+                    key={item}
+                    onClick={() => {
+                      const diag = new Set(diagnostics);
+                      if (diag.has(item)) {
+                        diag.delete(item);
+                      } else {
+                        diag.add(item);
+                      }
+                      setDiagnostics(Array.from(diag));
+                    }}
+                    variant={
+                      new Set(diagnostics).has(item) ? 'contained' : 'outlined'
                     }
-                    setDiagnostics(Array.from(diag));
-                  }}
-                  variant={
-                    new Set(diagnostics).has(item) ? 'contained' : 'outlined'
-                  }
-                >
-                  {item}
-                </Button>
-              ))}
+                  >
+                    {item}
+                  </Button>
+                )
+              )}
             </Stack>
           </Box>
 
@@ -561,7 +563,7 @@ const CreatePrescription = () => {
             screenshotFormat="image/jpeg"
             ref={camera}
             videoConstraints={{
-              facingMode: { exact: 'environment' }
+              facingMode: 'user'
             }}
           />
         ) : (

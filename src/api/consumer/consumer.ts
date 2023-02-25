@@ -15,3 +15,8 @@ export const registerConsumer = async (consumer: iConsumerRequest) => {
   const { data } = await apiClient.post('/consumer/register', consumer);
   return data;
 };
+
+export const getConsumerByUhid=async (search:string)=>{
+  const {data} = await apiClient.get(`/consumer/findConsumer?search=${search}`);
+  return data
+}

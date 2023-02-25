@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useRef } from 'react';
 import { getTicketHandler } from '../../api/ticket/ticketHandler';
 import useTicketStore from '../../store/ticketStore';
 import TicketCard from '../../screen/ticket/widgets/TicketCard';
@@ -23,10 +23,12 @@ import DownloadAllTickets from '../../screen/ticket/widgets/DownloadAllTickets';
 import dayjs from 'dayjs';
 
 const Ticket = () => {
+  
   const { tickets, filterTickets } = useTicketStore();
   const [filteredTickets, setFilteredTickets] = useState<iTicket[]>();
+ 
 
-  console.log(filterTickets);
+
 
   const checkFilterLength = () => {
     let filterLength = 0;
@@ -138,10 +140,12 @@ const Ticket = () => {
             <TextField
               sx={{ bgcolor: '#f5f7f5', p: 1, borderRadius: 1 }}
               size="small"
+             
               fullWidth
               placeholder="Search Leads"
               id="outlined-start-adornment"
               variant="standard"
+             
               InputProps={{
                 disableUnderline: true,
                 startAdornment: (

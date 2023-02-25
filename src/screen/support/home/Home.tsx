@@ -16,6 +16,7 @@ import register from '../../../assets/images/addPatient.png';
 const Home = () => {
   const navigate = useNavigate();
   const { user } = useUserStore();
+
   const inputStyles = {
     backgroundColor: 'white',
     width: '100%',
