@@ -357,7 +357,7 @@ const RegisterConsumer = () => {
           </Button>
         ) : (
           <Button size="large" onClick={registerConsumer} variant="contained">
-            Register
+            Next
           </Button>
         )}
       </Stack>
