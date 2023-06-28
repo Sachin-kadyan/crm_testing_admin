@@ -69,6 +69,10 @@ export interface iTicket {
   stage: string;
   createdAt: string;
   creator: iCreator[];
+  subStageCode: {
+    active: boolean;
+    code: number;
+  }
 }
 
 export interface iTicketStore {
