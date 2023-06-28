@@ -15,6 +15,19 @@ export const createTicket = async (prescription: any) => {
   });
   console.log(data);
 };
+
+export const updateTicketData = async (payload: {
+  stageCode?: number;
+  subStageCode?: {
+    active: boolean;
+    code: number;
+  };
+  ticket: string | undefined;
+}) => {
+  const { data } = await apiClient.put('/ticket/ticketUpdate', payload);
+  console.log(data);
+};
+
 export const sendTextMessage = async (message: string, consumerId: string) => {
   console.log(message, consumerId);
   const { data } = await apiClient.post('/flow/message', {

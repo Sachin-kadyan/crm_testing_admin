@@ -36,7 +36,7 @@ import { ageSetter } from '../../utils/ageReturn';
 import Estimate from './widgets/Estimate';
 import useServiceStore from '../../store/serviceStore';
 import { getDoctorsHandler } from '../../api/doctor/doctorHandler';
-import { getStagesHandler } from '../../api/stages/stagesHandler';
+import { getStagesHandler, getSubStagesHandler } from '../../api/stages/stagesHandler';
 import Rx from '../../assets/Rx.svg';
 import Bulb from '../../assets/Vector.svg';
 import NotesWidget from './widgets/NotesWidget';
@@ -61,6 +61,7 @@ const SingleTicketDetails = (props: Props) => {
   const [value, setValue] = useState('1');
   const [script, setScript] = useState<iScript>();
   const [isScript, setIsScript] = useState(false);
+  const [ticketUpdateFlag, setTicketUpdateFlag] = useState({})
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -76,6 +77,7 @@ const SingleTicketDetails = (props: Props) => {
       getTicketInfo(ticketID);
       await getDoctorsHandler();
       await getStagesHandler();
+      await getSubStagesHandler();
       await getAllReminderHandler(ticketID!);
       if (currentTicket) {
         const script = await getSingleScript(
@@ -85,7 +87,7 @@ const SingleTicketDetails = (props: Props) => {
         setScript(script);
       }
     })();
-  }, [ticketID, currentTicket]);
+  }, [ticketID, currentTicket, ticketUpdateFlag]);
 
   const { reminders } = useTicketStore();
 
@@ -172,12 +174,12 @@ const SingleTicketDetails = (props: Props) => {
           </Box>
         </Box>
         <Stack bgcolor="#F1F5F7" height="90vh" direction="column">
-          <Box p={1} height="15%">
+          <Box p={1} height="30%">
             <Box bgcolor={'white'} p={2} borderRadius={2}>
-              <StageCard stage={currentTicket && currentTicket?.stage} />
+              <StageCard currentTicket={currentTicket} setTicketUpdateFlag={setTicketUpdateFlag} />
             </Box>
           </Box>
-          <Box p={1} height="82.5%" position="relative" bgcolor="#F1F5F7">
+          <Box p={1} height="78%" position="relative" bgcolor="#F1F5F7">
             <TabContext value={value}>
               <Box
                 sx={{ borderBottom: 1, borderColor: 'divider' }}
