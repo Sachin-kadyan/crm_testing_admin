@@ -24,7 +24,7 @@ import dayjs from 'dayjs';
 import CustomPagination from './CustomPagination';
 
 const Ticket = () => {
-  const { tickets, filterTickets, setSearchByName } = useTicketStore();
+  const { tickets, filterTickets, setSearchByName, searchByName } = useTicketStore();
   const [filteredTickets, setFilteredTickets] = useState<iTicket[]>();
   const [searchName, setSearchName] = useState<string>('undefined');
   const [pageCount, setPageCount] = useState<number>(1);
@@ -45,7 +45,7 @@ const Ticket = () => {
     setPageCount(Math.ceil(tickets.length/10))
     setPage(1)
     // console.log("ticket count",tickets )
-  },[tickets,filteredTickets])
+  },[tickets, searchByName])
 
   const fetchTicketsOnEmpthySearch = async () => {
     setSearchName('undefined');
@@ -71,6 +71,8 @@ const Ticket = () => {
       if (e.key === 'Enter') {
         await getTicketHandler(searchName);
         setSearchByName(searchName);
+        setPage(1)
+        setPageNumber(0)
       } else {
         fetchTicketsOnEmpthySearch();
       }
