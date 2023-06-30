@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-import { useEffect, useState,useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getTicketHandler } from '../../api/ticket/ticketHandler';
 import useTicketStore from '../../store/ticketStore';
 import TicketCard from '../../screen/ticket/widgets/TicketCard';
@@ -21,14 +21,61 @@ import { ArrowBack } from '@mui/icons-material';
 import TicketFilter from '../../screen/ticket/widgets/TicketFilter';
 import DownloadAllTickets from '../../screen/ticket/widgets/DownloadAllTickets';
 import dayjs from 'dayjs';
+import CustomPagination from './CustomPagination';
 
 const Ticket = () => {
-  
-  const { tickets, filterTickets } = useTicketStore();
+  const { tickets, filterTickets, setSearchByName } = useTicketStore();
   const [filteredTickets, setFilteredTickets] = useState<iTicket[]>();
- 
+  const [searchName, setSearchName] = useState<string>('undefined');
+  const [pageCount, setPageCount] = useState<number>(1);
+  const [pageNumber, setPageNumber] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
+
+  const handlePagination = (
+    event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
+    console.log('val', page);
+    setPageNumber(page-1)
+    setPage(page)
+  };
 
 
+  useEffect(()=>{
+    setPageCount(Math.ceil(tickets.length/10))
+    setPage(1)
+    // console.log("ticket count",tickets )
+  },[tickets,filteredTickets])
+
+  const fetchTicketsOnEmpthySearch = async () => {
+    setSearchName('undefined');
+    setSearchByName('undefined');
+    await getTicketHandler('undefined');
+    setPage(1)
+  };
+
+  const handleSeachName = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    const value = e.target.value;
+    if (value) {
+      setSearchName(value);
+    }
+    if (value === '') {
+      fetchTicketsOnEmpthySearch();
+    }
+  };
+
+  const handleKeyPress = async (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (searchName && searchName !== 'undefined') {
+      if (e.key === 'Enter') {
+        await getTicketHandler(searchName);
+        setSearchByName(searchName);
+      } else {
+        fetchTicketsOnEmpthySearch();
+      }
+    }
+  };
 
   const checkFilterLength = () => {
     let filterLength = 0;
@@ -48,15 +95,15 @@ const Ticket = () => {
   };
 
   const filterFn = () => {
-    setFilteredTickets(
-      tickets.filter(
-        (item: iTicket) =>
-          departmentFilterRule(item.prescription[0].departments[0]) &&
-          admissionFilterRule(item.prescription[0].admission) &&
-          diagnosticsFilterRule(item.prescription[0].diagnostics) &&
-          dateRule(item.createdAt)
-      )
-    );
+    const filteredData = tickets.filter(
+      (item: iTicket) =>
+        departmentFilterRule(item.prescription[0].departments[0]) &&
+        admissionFilterRule(item.prescription[0].admission) &&
+        diagnosticsFilterRule(item.prescription[0].diagnostics) &&
+        dateRule(item.createdAt)
+    )
+    setPageCount(Math.ceil(filteredData.length/10))
+    setFilteredTickets(filteredData);
   };
 
   const departmentFilterRule = (department: string) => {
@@ -106,12 +153,15 @@ const Ticket = () => {
   window.onload = redirectTicket;
 
   useEffect(() => {
+    // setPageCount(Math.ceil(tickets.length/10));
     (async function () {
-      await getTicketHandler();
+      await getTicketHandler(searchName);
       await getDoctorsHandler();
       await getDepartmentsHandler();
-      if (checkFilterLength() > 0) {
+      const ticketFilteredLength = checkFilterLength()
+      if (ticketFilteredLength > 0) {
         filterFn();
+        setPageCount(Math.ceil(ticketFilteredLength/10))
       }
     })();
   }, [filterTickets]);
@@ -140,12 +190,10 @@ const Ticket = () => {
             <TextField
               sx={{ bgcolor: '#f5f7f5', p: 1, borderRadius: 1 }}
               size="small"
-             
               fullWidth
               placeholder="Search Leads"
               id="outlined-start-adornment"
               variant="standard"
-             
               InputProps={{
                 disableUnderline: true,
                 startAdornment: (
@@ -154,6 +202,8 @@ const Ticket = () => {
                   </InputAdornment>
                 )
               }}
+              onChange={handleSeachName}
+              onKeyDown={handleKeyPress}
             />
             <TicketFilter filterLength={checkFilterLength()} />
           </Stack>
@@ -172,13 +222,13 @@ const Ticket = () => {
           {checkFilterLength() > 0
             ? filteredTickets
               ? filteredTickets.length > 0
-                ? filteredTickets.map((item: iTicket) => (
+                ? filteredTickets.slice(10*pageNumber,10+(10*pageNumber)).map((item: iTicket) => (
                     <TicketCard key={item._id} patientData={item} />
                   ))
                 : 'No Match Found'
               : 'Loading ...'
             : tickets.length > 0
-            ? tickets.map((item: iTicket) => (
+            ? tickets.slice(10*pageNumber,10+(10*pageNumber)).map((item: iTicket) => (
                 <TicketCard key={item._id} patientData={item} />
               ))
             : [0, 1, 2, 3, 4, 5].map((_, index) => (
@@ -190,6 +240,13 @@ const Ticket = () => {
                   height="20%"
                 />
               ))}
+          <div>
+            <CustomPagination
+              handlePagination={handlePagination}
+              pageCount={pageCount}
+              page={page}
+            />
+          </div>
         </Box>
       </Box>
       <Box bgcolor="#E2ECFB" width="75%">
