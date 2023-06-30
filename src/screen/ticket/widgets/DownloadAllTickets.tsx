@@ -24,16 +24,17 @@ const DownloadAllTickets = (props: Props) => {
   const departmentSetter = (id: string) => {
     return departments.find((element) => element._id === id)?.name;
   };
+  const { tickets, searchByName } = useTicketStore();
 
   useEffect(() => {
     (async function () {
-      await getTicketHandler();
+      await getTicketHandler(searchByName);
       await getDoctorsHandler();
       await getDepartmentsHandler();
     })();
-  }, []);
+  }, [searchByName]);
 
-  const { tickets } = useTicketStore();
+
   const downloadData = async () => {
     const data = tickets.map((ticket: any, index) => {
       return {

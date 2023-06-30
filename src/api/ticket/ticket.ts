@@ -1,8 +1,8 @@
 import { iNote, iReminder } from '../../types/store/ticket';
 import { apiClient } from '../apiClient';
 
-export const getTicket = async () => {
-  const { data } = await apiClient.get('/ticket');
+export const getTicket = async (name : string) => {
+  const { data } = await apiClient.get(`/ticket/?name=${name}`);
   return data;
 };
 

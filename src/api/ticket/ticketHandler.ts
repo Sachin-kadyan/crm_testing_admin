@@ -9,9 +9,9 @@ import {
   createNewReminder
 } from './ticket';
 
-export const getTicketHandler = async () => {
+export const getTicketHandler = async (name: string) => {
   const { setTickets } = useTicketStore.getState();
-  const tickets = await getTicket();
+  const tickets = await getTicket(name);
   const sortedTickets = tickets.reverse();
   setTickets(sortedTickets);
 };

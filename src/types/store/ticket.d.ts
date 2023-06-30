@@ -78,6 +78,8 @@ export interface iTicket {
 export interface iTicketStore {
   tickets: iTicket[];
   setTickets: (tickets: iTicket[]) => void;
+  searchByName: string;
+  setSearchByName: (name: string) => void;
   notes: iNote[];
   setNotes: (notes: iNote[]) => void;
   reminders: iReminder[];

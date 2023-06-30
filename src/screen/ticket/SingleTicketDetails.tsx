@@ -81,7 +81,7 @@ const SingleTicketDetails = (props: Props) => {
       await getAllReminderHandler(ticketID!);
       if (currentTicket) {
         const script = await getSingleScript(
-          currentTicket?.prescription[0].service._id,
+          currentTicket?.prescription[0]?.service?._id,
           currentTicket?.stage
         );
         setScript(script);
