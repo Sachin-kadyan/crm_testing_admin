@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   InputAdornment,
@@ -22,58 +23,89 @@ import TicketFilter from '../../screen/ticket/widgets/TicketFilter';
 import DownloadAllTickets from '../../screen/ticket/widgets/DownloadAllTickets';
 import dayjs from 'dayjs';
 import CustomPagination from './CustomPagination';
+import { UNDEFINED } from '../../constantUtils/constant';
 
 const Ticket = () => {
-  const { tickets, filterTickets, setSearchByName } = useTicketStore();
+  const {
+    tickets,
+    filterTickets,
+    setSearchByName,
+    searchByName,
+    ticketCount,
+    setTickets,
+    ticketCache,
+    emptyDataText
+  } = useTicketStore();
   const [filteredTickets, setFilteredTickets] = useState<iTicket[]>();
-  const [searchName, setSearchName] = useState<string>('undefined');
+  const [searchName, setSearchName] = useState<string>(UNDEFINED);
+  const [searchError, setSearchError] = useState<string>(
+    'Type to search & Enter'
+  );
   const [pageCount, setPageCount] = useState<number>(1);
-  const [pageNumber, setPageNumber] = useState<number>(0);
+  // const [pageNumber, setPageNumber] = useState<number>(1);
   const [page, setPage] = useState<number>(1);
 
-  const handlePagination = (
+  const handlePagination = async (
     event: React.ChangeEvent<unknown>,
-    page: number
+    pageNo: number
   ) => {
-    console.log('val', page);
-    setPageNumber(page-1)
-    setPage(page)
+    console.log('val', pageNo);
+    if (pageNo !== page) {
+      setTickets([]);
+      if (
+        ticketCache[pageNo] &&
+        ticketCache[pageNo]?.length > 0 &&
+        searchName === UNDEFINED
+      ) {
+        setTickets(ticketCache[pageNo]);
+      } else {
+        await getTicketHandler(searchName, pageNo);
+      }
+      setPage(pageNo);
+    }
   };
 
-
-  useEffect(()=>{
-    setPageCount(Math.ceil(tickets.length/10))
-    setPage(1)
+  useEffect(() => {
+    setPageCount(Math.ceil(ticketCount / 10));
     // console.log("ticket count",tickets )
-  },[tickets,filteredTickets])
+  }, [tickets, searchByName]);
 
   const fetchTicketsOnEmpthySearch = async () => {
-    setSearchName('undefined');
-    setSearchByName('undefined');
-    await getTicketHandler('undefined');
-    setPage(1)
+    setSearchName(UNDEFINED);
+    setSearchByName(UNDEFINED);
+    await getTicketHandler(UNDEFINED);
+    setPage(1);
   };
 
-  const handleSeachName = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    const value = e.target.value;
+  // const handleSeachName = (
+  //   e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  // ) => {
+  //   const value = e.target.value;
+  //   if (value) {
+  //     inputSearch.current = value
+  //   }
+  //   if (value === '') {
+  //     fetchTicketsOnEmpthySearch();
+  //   }
+  // };
+
+  const handleKeyPress = async (e: any) => {
+    const value = e.target?.value;
     if (value) {
       setSearchName(value);
     }
-    if (value === '') {
-      fetchTicketsOnEmpthySearch();
-    }
-  };
-
-  const handleKeyPress = async (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (searchName && searchName !== 'undefined') {
-      if (e.key === 'Enter') {
-        await getTicketHandler(searchName);
-        setSearchByName(searchName);
-      } else {
+    if (e.key === 'Enter') {
+      setTickets([]);
+      console.log('search name', value);
+      if (value === '') {
         fetchTicketsOnEmpthySearch();
+        setSearchError('Type to search & Enter');
+        return;
       }
+      await getTicketHandler(value);
+      setSearchByName(value);
+      setSearchError(`remove "${value.toUpperCase()}" to reset & Enter`);
+      setPage(1);
     }
   };
 
@@ -101,8 +133,8 @@ const Ticket = () => {
         admissionFilterRule(item.prescription[0].admission) &&
         diagnosticsFilterRule(item.prescription[0].diagnostics) &&
         dateRule(item.createdAt)
-    )
-    setPageCount(Math.ceil(filteredData.length/10))
+    );
+    setPageCount(Math.ceil(ticketCount / 10));
     setFilteredTickets(filteredData);
   };
 
@@ -153,15 +185,15 @@ const Ticket = () => {
   window.onload = redirectTicket;
 
   useEffect(() => {
-    // setPageCount(Math.ceil(tickets.length/10));
+
     (async function () {
-      await getTicketHandler(searchName);
+      await getTicketHandler(UNDEFINED);
       await getDoctorsHandler();
       await getDepartmentsHandler();
-      const ticketFilteredLength = checkFilterLength()
+      const ticketFilteredLength = checkFilterLength();
       if (ticketFilteredLength > 0) {
         filterFn();
-        setPageCount(Math.ceil(ticketFilteredLength/10))
+        setPageCount(Math.ceil(ticketCount / 10));
       }
     })();
   }, [filterTickets]);
@@ -169,7 +201,7 @@ const Ticket = () => {
   return (
     <Box height={'100vh'} display="flex" position="fixed" width="100%">
       <Box width="25%" position="sticky" top={0}>
-        <Box p={1} height={'13vh'} borderBottom={0.5} borderColor="#f0f0f0">
+        <Box p={1} height={'16vh'} borderBottom={0.5} borderColor="#f0f0f0">
           <Stack
             direction="row"
             justifyContent="space-between"
@@ -194,15 +226,16 @@ const Ticket = () => {
               placeholder="Search Leads"
               id="outlined-start-adornment"
               variant="standard"
+              helperText={searchError}
               InputProps={{
-                disableUnderline: true,
+                // disableUnderline: true,
                 startAdornment: (
                   <InputAdornment position="start">
                     <SearchIcon />
                   </InputAdornment>
                 )
               }}
-              onChange={handleSeachName}
+              // onChange={handleSeachName}
               onKeyDown={handleKeyPress}
             />
             <TicketFilter filterLength={checkFilterLength()} />
@@ -211,7 +244,7 @@ const Ticket = () => {
         <Box
           position="relative"
           p={1}
-          height={'87vh'}
+          height={'86vh'}
           sx={{
             overflowY: 'scroll',
             '&::-webkit-scrollbar ': {
@@ -219,27 +252,46 @@ const Ticket = () => {
             }
           }}
         >
-          {checkFilterLength() > 0
-            ? filteredTickets
-              ? filteredTickets.length > 0
-                ? filteredTickets.slice(10*pageNumber,10+(10*pageNumber)).map((item: iTicket) => (
-                    <TicketCard key={item._id} patientData={item} />
-                  ))
-                : 'No Match Found'
-              : 'Loading ...'
-            : tickets.length > 0
-            ? tickets.slice(10*pageNumber,10+(10*pageNumber)).map((item: iTicket) => (
-                <TicketCard key={item._id} patientData={item} />
-              ))
-            : [0, 1, 2, 3, 4, 5].map((_, index) => (
-                <Skeleton
-                  key={index}
-                  variant="rectangular"
-                  sx={{ borderRadius: 2, my: 1 }}
-                  width="100%"
-                  height="20%"
-                />
-              ))}
+          {checkFilterLength() > 0 ? (
+            filteredTickets ? (
+              filteredTickets.length > 0 ? (
+                filteredTickets.map((item: iTicket) => (
+                  <TicketCard key={item._id} patientData={item} />
+                ))
+              ) : (
+                'No Match Found'
+              )
+            ) : (
+              'Loading ...'
+            )
+          ) : tickets.length > 0 ? (
+            tickets.map((item: iTicket) => (
+              <TicketCard key={item._id} patientData={item} />
+            ))
+          ) : emptyDataText !== '' ? (
+            <Alert
+              sx={{
+                marginTop: '40px',
+                height: '25vh',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+              severity="error"
+            >
+              NO DATA FOUND
+            </Alert>
+          ) : (
+            [0, 1, 2, 3, 4, 5].map((_, index) => (
+              <Skeleton
+                key={index}
+                variant="rectangular"
+                sx={{ borderRadius: 2, my: 1 }}
+                width="100%"
+                height="20%"
+              />
+            ))
+          )}
           <div>
             <CustomPagination
               handlePagination={handlePagination}

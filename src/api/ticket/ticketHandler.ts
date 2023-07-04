@@ -8,11 +8,38 @@ import {
   getAllReminders,
   createNewReminder
 } from './ticket';
+import { UNDEFINED } from '../../constantUtils/constant';
 
-export const getTicketHandler = async (name: string) => {
-  const { setTickets } = useTicketStore.getState();
-  const tickets = await getTicket(name);
-  const sortedTickets = tickets.reverse();
+export const getTicketHandler = async (
+  name: string,
+  pageNumber: number = 1,
+  downloadAll: string = 'false'
+) => {
+  const {
+    setTickets,
+    setTicketCount,
+    setTicketCache,
+    ticketCache,
+    setEmptyDataText,
+    setDownloadTickets
+  } = useTicketStore.getState();
+  const data = await getTicket(name, pageNumber, downloadAll);
+  const sortedTickets = data.tickets.reverse();
+  const count = data.count;
+
+  if (sortedTickets.length < 1) {
+    setEmptyDataText('No Data Found');
+  } else {
+    setEmptyDataText('');
+  }
+  if (name === UNDEFINED && downloadAll === 'false') {
+    setTicketCache({ ...ticketCache, [pageNumber]: sortedTickets });
+  }
+  if (downloadAll === 'true') {
+    setDownloadTickets(sortedTickets);
+    return sortedTickets;
+  }
+  setTicketCount(count);
   setTickets(sortedTickets);
 };
 

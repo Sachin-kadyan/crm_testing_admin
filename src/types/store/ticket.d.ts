@@ -78,8 +78,16 @@ export interface iTicket {
 export interface iTicketStore {
   tickets: iTicket[];
   setTickets: (tickets: iTicket[]) => void;
+  ticketCount: number;
+  setTicketCount: (count: number) => void;
   searchByName: string;
   setSearchByName: (name: string) => void;
+  ticketCache: any;
+  setTicketCache : (ticketCache : any) => void;
+  emptyDataText: string;
+  setEmptyDataText: (emptyDataText: string) => void;
+  downloadTickets: iTicket[];
+  setDownloadTickets: (downloadTickets: iTicket[]) => void;
   notes: iNote[];
   setNotes: (notes: iNote[]) => void;
   reminders: iReminder[];
