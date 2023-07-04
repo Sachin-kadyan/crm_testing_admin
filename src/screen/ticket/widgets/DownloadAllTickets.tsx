@@ -1,7 +1,7 @@
 import { DownloadForOfflineOutlined } from '@mui/icons-material';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import dayjs from 'dayjs';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getDepartmentsHandler } from '../../../api/department/departmentHandler';
 import { getDoctorsHandler } from '../../../api/doctor/doctorHandler';
 import { getTicketHandler } from '../../../api/ticket/ticketHandler';
@@ -10,12 +10,13 @@ import useTicketStore from '../../../store/ticketStore';
 import Papa from 'papaparse';
 import FileSaver from 'file-saver';
 import { ageSetter } from '../../../utils/ageReturn';
-import { iTicket } from '../../../types/store/consumer';
+import { UNDEFINED } from '../../../constantUtils/constant';
 
 type Props = {};
 
 const DownloadAllTickets = (props: Props) => {
   const { doctors, departments } = useServiceStore();
+  const [disable,setDisable] = useState(false);
 
   const doctorSetter = (id: string) => {
     return doctors.find((element) => element._id === id)?.name;
@@ -24,19 +25,14 @@ const DownloadAllTickets = (props: Props) => {
   const departmentSetter = (id: string) => {
     return departments.find((element) => element._id === id)?.name;
   };
-  const { tickets, searchByName } = useTicketStore();
-
-  useEffect(() => {
-    (async function () {
-      await getTicketHandler(searchByName);
-      await getDoctorsHandler();
-      await getDepartmentsHandler();
-    })();
-  }, [searchByName]);
-
 
   const downloadData = async () => {
-    const data = tickets.map((ticket: any, index) => {
+    setDisable(true);
+    const sortedTickets = await getTicketHandler(UNDEFINED, 1, 'true');
+    await getDoctorsHandler();
+    await getDepartmentsHandler();
+
+    const data = sortedTickets?.map((ticket: any, index) => {
       return {
         serialNo: index + 1,
         firstName: ticket.consumer[0].firstName,
@@ -78,12 +74,13 @@ const DownloadAllTickets = (props: Props) => {
       csvBlob,
       `${dayjs(new Date()).format('DD:MM:YY')}Data.csv`
     );
+    setDisable(false);
   };
 
   return (
     <Box>
       <Tooltip title="Download All Data">
-        <IconButton onClick={downloadData}>
+        <IconButton disabled={disable} onClick={downloadData}>
           <DownloadForOfflineOutlined />
         </IconButton>
       </Tooltip>
