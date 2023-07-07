@@ -17,14 +17,26 @@ export const createTicket = async (prescription: any) => {
 };
 
 export const updateTicketData = async (payload: {
-  stageCode?: number;
-  subStageCode?: {
+  stageCode: number;
+  subStageCode: {
+    active: boolean;
+    code: number;
+  };
+  modifiedDate?: Date;
+  ticket: string | undefined;
+}) => {
+  const { data } = await apiClient.put('/ticket/ticketUpdate', payload);
+  console.log(data);
+};
+
+export const updateTicketSubStage = async (payload: {
+  subStageCode: {
     active: boolean;
     code: number;
   };
   ticket: string | undefined;
 }) => {
-  const { data } = await apiClient.put('/ticket/ticketUpdate', payload);
+  const { data } = await apiClient.put('/ticket/subStageUpdate', payload);
   console.log(data);
 };
 
