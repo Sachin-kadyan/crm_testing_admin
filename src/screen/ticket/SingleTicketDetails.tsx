@@ -67,6 +67,9 @@ const SingleTicketDetails = (props: Props) => {
   const [isScript, setIsScript] = useState(false);
   const [ticketUpdateFlag, setTicketUpdateFlag] = useState({});
 
+
+// remove hanlePhoneCall in FE. post changes of phone call in backend is pending...
+
   const handlePhoneCall = (e: React.SyntheticEvent) => {
     const currentSubStageCode = currentTicket?.subStageCode?.code;
     if (currentSubStageCode && currentSubStageCode > 1 && currentSubStageCode < 4) {
