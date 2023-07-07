@@ -24,7 +24,7 @@ export const getTicketHandler = async (
     setDownloadTickets
   } = useTicketStore.getState();
   const data = await getTicket(name, pageNumber, downloadAll);
-  const sortedTickets = data.tickets.reverse();
+  const sortedTickets = data.tickets
   const count = data.count;
 
   if (sortedTickets.length < 1) {
