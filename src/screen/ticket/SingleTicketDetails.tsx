@@ -36,7 +36,10 @@ import { ageSetter } from '../../utils/ageReturn';
 import Estimate from './widgets/Estimate';
 import useServiceStore from '../../store/serviceStore';
 import { getDoctorsHandler } from '../../api/doctor/doctorHandler';
-import { getStagesHandler, getSubStagesHandler } from '../../api/stages/stagesHandler';
+import {
+  getStagesHandler,
+  getSubStagesHandler
+} from '../../api/stages/stagesHandler';
 import Rx from '../../assets/Rx.svg';
 import Bulb from '../../assets/Vector.svg';
 import NotesWidget from './widgets/NotesWidget';
@@ -48,6 +51,7 @@ import AddNewTaskWidget from './widgets/AddNewTaskWidget';
 import { getAllReminderHandler } from '../../api/ticket/ticketHandler';
 import MessagingWidget from './widgets/whatsapp/WhatsappWidget';
 import ShowPrescription from './widgets/ShowPrescriptionModal';
+import { updateTicketSubStage } from '../../api/ticket/ticket';
 
 dayjs.extend(relativeTime);
 
@@ -61,7 +65,22 @@ const SingleTicketDetails = (props: Props) => {
   const [value, setValue] = useState('1');
   const [script, setScript] = useState<iScript>();
   const [isScript, setIsScript] = useState(false);
-  const [ticketUpdateFlag, setTicketUpdateFlag] = useState({})
+  const [ticketUpdateFlag, setTicketUpdateFlag] = useState({});
+
+  const handlePhoneCall = (e: React.SyntheticEvent) => {
+    const currentSubStageCode = currentTicket?.subStageCode?.code;
+    if (currentSubStageCode && currentSubStageCode > 1 && currentSubStageCode < 4) {
+      const payload = {
+        subStageCode: {
+          active: true,
+          code: 3
+        },
+        ticket: currentTicket?._id
+      };
+
+      updateTicketSubStage(payload);
+    }
+  };
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -163,7 +182,10 @@ const SingleTicketDetails = (props: Props) => {
             alignItems="center"
           >
             <a href={`tel:${currentTicket?.consumer[0].phone}`}>
-              <IconButton sx={{ bgcolor: 'green', color: 'white' }}>
+              <IconButton
+                sx={{ bgcolor: 'green', color: 'white' }}
+                onClick={handlePhoneCall}
+              >
                 <Call />
               </IconButton>
             </a>
@@ -176,7 +198,10 @@ const SingleTicketDetails = (props: Props) => {
         <Stack bgcolor="#F1F5F7" height="90vh" direction="column">
           <Box p={1} height="30%">
             <Box bgcolor={'white'} p={2} borderRadius={2}>
-              <StageCard currentTicket={currentTicket} setTicketUpdateFlag={setTicketUpdateFlag} />
+              <StageCard
+                currentTicket={currentTicket}
+                setTicketUpdateFlag={setTicketUpdateFlag}
+              />
             </Box>
           </Box>
           <Box p={1} height="78%" position="relative" bgcolor="#F1F5F7">
