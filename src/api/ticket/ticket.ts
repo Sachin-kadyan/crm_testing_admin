@@ -1,8 +1,10 @@
 import { iNote, iReminder } from '../../types/store/ticket';
 import { apiClient } from '../apiClient';
 
-export const getTicket = async (name : string, pageNumber: number=1, downloadAll: string) => {
-  const { data } = await apiClient.get(`/ticket/?page=${pageNumber}&name=${name}&downloadAll=${downloadAll}`);
+export const getTicket = async (name : string, pageNumber: number=1, downloadAll: string, selectedFilters: any ) => {
+
+  const params = new URLSearchParams(selectedFilters).toString();
+  const { data } = await apiClient.get(`/ticket/?page=${pageNumber}&name=${name}&downloadAll=${downloadAll}&${params}`);
   return data;
 };
 

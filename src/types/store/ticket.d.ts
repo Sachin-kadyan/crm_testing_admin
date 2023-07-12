@@ -73,6 +73,7 @@ export interface iTicket {
     active: boolean;
     code: number;
   }
+  modifiedDate: Date | string | null
 }
 
 export interface iTicketStore {
@@ -114,11 +115,12 @@ export interface iReminder {
 }
 
 export interface iTicketFilter {
-  departments: string[];
-  admissionType: string[];
-  diagnosticType: string[];
-  startDate: number;
-  endDate: number;
+  stageList: any[];
+  representative: string | null;
+  admissionType?: string[];
+  diagnosticType?: string[];
+  startDate?: number;
+  endDate?: number;
 }
 
 export interface iCreator {

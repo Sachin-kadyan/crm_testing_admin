@@ -19,11 +19,16 @@ import { getDepartmentsHandler } from '../../api/department/departmentHandler';
 import { Outlet, useMatch, useNavigate } from 'react-router-dom';
 import DefaultScreen from '../../components/DefaultScreen';
 import { ArrowBack } from '@mui/icons-material';
-import TicketFilter from '../../screen/ticket/widgets/TicketFilter';
+import TicketFilter, { ticketFilterCount } from '../../screen/ticket/widgets/TicketFilter';
 import DownloadAllTickets from '../../screen/ticket/widgets/DownloadAllTickets';
 import dayjs from 'dayjs';
 import CustomPagination from './CustomPagination';
 import { UNDEFINED } from '../../constantUtils/constant';
+import {
+  getStagesHandler,
+  getSubStagesHandler
+} from '../../api/stages/stagesHandler';
+import useServiceStore from '../../store/serviceStore';
 
 const Ticket = () => {
   const {
@@ -36,14 +41,16 @@ const Ticket = () => {
     ticketCache,
     emptyDataText
   } = useTicketStore();
-  const [filteredTickets, setFilteredTickets] = useState<iTicket[]>();
+  // const [filteredTickets, setFilteredTickets] = useState<iTicket[]>();
   const [searchName, setSearchName] = useState<string>(UNDEFINED);
   const [searchError, setSearchError] = useState<string>(
     'Type to search & Enter'
   );
   const [pageCount, setPageCount] = useState<number>(1);
+  // const [filterCount, setFilterCount] = useState(0);
   // const [pageNumber, setPageNumber] = useState<number>(1);
   const [page, setPage] = useState<number>(1);
+
 
   const handlePagination = async (
     event: React.ChangeEvent<unknown>,
@@ -55,11 +62,11 @@ const Ticket = () => {
       if (
         ticketCache[pageNo] &&
         ticketCache[pageNo]?.length > 0 &&
-        searchName === UNDEFINED
+        searchName === UNDEFINED && ticketFilterCount(filterTickets) < 1
       ) {
         setTickets(ticketCache[pageNo]);
       } else {
-        await getTicketHandler(searchName, pageNo);
+        await getTicketHandler(searchName, pageNo,"false",filterTickets);
       }
       setPage(pageNo);
     }
@@ -73,7 +80,7 @@ const Ticket = () => {
   const fetchTicketsOnEmpthySearch = async () => {
     setSearchName(UNDEFINED);
     setSearchByName(UNDEFINED);
-    await getTicketHandler(UNDEFINED);
+    await getTicketHandler(UNDEFINED,1,"false",filterTickets);
     setPage(1);
   };
 
@@ -102,78 +109,78 @@ const Ticket = () => {
         setSearchError('Type to search & Enter');
         return;
       }
-      await getTicketHandler(value);
+      await getTicketHandler(value,1,"false",filterTickets);
       setSearchByName(value);
       setSearchError(`remove "${value.toUpperCase()}" to reset & Enter`);
       setPage(1);
     }
   };
 
-  const checkFilterLength = () => {
-    let filterLength = 0;
-    if (filterTickets.startDate > 0 && filterTickets.endDate > 0) {
-      filterLength =
-        filterTickets.departments.length +
-        filterTickets.admissionType.length +
-        filterTickets.diagnosticType.length +
-        1;
-    } else {
-      filterLength =
-        filterTickets.departments.length +
-        filterTickets.admissionType.length +
-        filterTickets.diagnosticType.length;
-    }
-    return filterLength;
-  };
+  // const checkFilterLength = () => {
+  //   let filterLength = 0;
+  //   if (filterTickets.startDate > 0 && filterTickets.endDate > 0) {
+  //     filterLength =
+  //       filterTickets.stageList.length +
+  //       filterTickets.admissionType.length +
+  //       filterTickets.diagnosticType.length +
+  //       1;
+  //   } else {
+  //     filterLength =
+  //       filterTickets.stageList.length +
+  //       filterTickets.admissionType.length +
+  //       filterTickets.diagnosticType.length;
+  //   }
+  //   return filterLength;
+  // };
 
-  const filterFn = () => {
-    const filteredData = tickets.filter(
-      (item: iTicket) =>
-        departmentFilterRule(item.prescription[0].departments[0]) &&
-        admissionFilterRule(item.prescription[0].admission) &&
-        diagnosticsFilterRule(item.prescription[0].diagnostics) &&
-        dateRule(item.createdAt)
-    );
-    setPageCount(Math.ceil(ticketCount / 10));
-    setFilteredTickets(filteredData);
-  };
+  // const filterFn = () => {
+  //   const filteredData = tickets.filter(
+  //     (item: iTicket) =>
+  //       departmentFilterRule(item.prescription[0].departments[0]) &&
+  //       admissionFilterRule(item.prescription[0].admission) &&
+  //       diagnosticsFilterRule(item.prescription[0].diagnostics) &&
+  //       dateRule(item.createdAt)
+  //   );
+  //   setPageCount(Math.ceil(ticketCount / 10));
+  //   setFilteredTickets(filteredData);
+  // };
 
-  const departmentFilterRule = (department: string) => {
-    return filterTickets.departments.length > 0
-      ? filterTickets.departments.includes(department)
-      : true;
-  };
+  // const departmentFilterRule = (department: string) => {
+  //   return filterTickets.departments.length > 0
+  //     ? filterTickets.departments.includes(department)
+  //     : true;
+  // };
 
-  const admissionFilterRule = (admission: string) => {
-    return filterTickets.admissionType.length > 0
-      ? filterTickets.admissionType.includes(admission)
-      : true;
-  };
+  // const admissionFilterRule = (admission: string) => {
+  //   return filterTickets.admissionType.length > 0
+  //     ? filterTickets.admissionType.includes(admission)
+  //     : true;
+  // };
 
-  const diagnosticsFilterRule = (diagnostics: string[]) => {
-    if (filterTickets.diagnosticType.length > 0) {
-      let diagnosticsResult =
-        diagnostics.length > 0
-          ? diagnostics.every((item) =>
-              filterTickets.diagnosticType.includes(item)
-            )
-          : false;
+  // const diagnosticsFilterRule = (diagnostics: string[]) => {
+  //   if (filterTickets.diagnosticType.length > 0) {
+  //     let diagnosticsResult =
+  //       diagnostics.length > 0
+  //         ? diagnostics.every((item) =>
+  //             filterTickets.diagnosticType.includes(item)
+  //           )
+  //         : false;
 
-      return diagnosticsResult;
-    } else return true;
-  };
+  //     return diagnosticsResult;
+  //   } else return true;
+  // };
 
-  const dateRule = (createdAt: string) => {
-    const createdDate = dayjs(createdAt).unix() * 1000;
-    if (filterTickets.startDate > 0 && filterTickets.endDate > 0) {
-      const isTicketofDate =
-        createdDate >= filterTickets.startDate &&
-        createdDate < filterTickets.endDate
-          ? true
-          : false;
-      return isTicketofDate;
-    } else return true;
-  };
+  // const dateRule = (createdAt: string) => {
+  //   const createdDate = dayjs(createdAt).unix() * 1000;
+  //   if (filterTickets.startDate > 0 && filterTickets.endDate > 0) {
+  //     const isTicketofDate =
+  //       createdDate >= filterTickets.startDate &&
+  //       createdDate < filterTickets.endDate
+  //         ? true
+  //         : false;
+  //     return isTicketofDate;
+  //   } else return true;
+  // };
 
   const navigate = useNavigate();
 
@@ -185,18 +192,19 @@ const Ticket = () => {
   window.onload = redirectTicket;
 
   useEffect(() => {
-
     (async function () {
-      await getTicketHandler(UNDEFINED);
+      await getTicketHandler(UNDEFINED, 1, "false",filterTickets);
+      await getStagesHandler();
+      await getSubStagesHandler();
       await getDoctorsHandler();
       await getDepartmentsHandler();
-      const ticketFilteredLength = checkFilterLength();
-      if (ticketFilteredLength > 0) {
-        filterFn();
-        setPageCount(Math.ceil(ticketCount / 10));
-      }
+      //   const ticketFilteredLength = checkFilterLength();
+      //   if (ticketFilteredLength > 0) {
+      //     filterFn();
+      //     setPageCount(Math.ceil(ticketCount / 10));
+      //   }
     })();
-  }, [filterTickets]);
+  }, []);
 
   return (
     <Box height={'100vh'} display="flex" position="fixed" width="100%">
@@ -238,7 +246,7 @@ const Ticket = () => {
               // onChange={handleSeachName}
               onKeyDown={handleKeyPress}
             />
-            <TicketFilter filterLength={checkFilterLength()} />
+            <TicketFilter/>
           </Stack>
         </Box>
         <Box
@@ -252,19 +260,7 @@ const Ticket = () => {
             }
           }}
         >
-          {checkFilterLength() > 0 ? (
-            filteredTickets ? (
-              filteredTickets.length > 0 ? (
-                filteredTickets.map((item: iTicket) => (
-                  <TicketCard key={item._id} patientData={item} />
-                ))
-              ) : (
-                'No Match Found'
-              )
-            ) : (
-              'Loading ...'
-            )
-          ) : tickets.length > 0 ? (
+          {tickets.length > 0 ? (
             tickets.map((item: iTicket) => (
               <TicketCard key={item._id} patientData={item} />
             ))

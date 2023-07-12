@@ -97,9 +97,6 @@ const SingleTicketDetails = (props: Props) => {
   useEffect(() => {
     (async function () {
       getTicketInfo(ticketID);
-      await getDoctorsHandler();
-      await getStagesHandler();
-      await getSubStagesHandler();
       await getAllReminderHandler(ticketID!);
       if (currentTicket) {
         const script = await getSingleScript(
@@ -200,7 +197,7 @@ const SingleTicketDetails = (props: Props) => {
         </Box>
         <Stack bgcolor="#F1F5F7" height="90vh" direction="column">
           <Box p={1} height="30%">
-            <Box bgcolor={'white'} p={2} borderRadius={2}>
+            <Box bgcolor={'white'} p={1.5} borderRadius={2}>
               <StageCard
                 currentTicket={currentTicket}
                 setTicketUpdateFlag={setTicketUpdateFlag}

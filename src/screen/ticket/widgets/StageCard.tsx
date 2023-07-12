@@ -1,4 +1,14 @@
-import { Box, MenuItem, Select, Step, StepLabel, Stepper } from '@mui/material';
+import {
+  Box,
+  FormControl,
+  LinearProgress,
+  MenuItem,
+  Select,
+  Step,
+  StepLabel,
+  Stepper,
+  Typography
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import useServiceStore from '../../../store/serviceStore';
 import { iStage, iSubStage } from '../../../types/store/service';
@@ -10,6 +20,14 @@ type Props = {
   setTicketUpdateFlag: any;
 };
 
+function getTotalDaysFromDate(date: Date) {
+  if(!date) return 0
+  const today = new Date();
+  const timeDiff = Math.abs(today.getTime() - date.getTime());
+  const totalDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  return totalDays;
+}
+
 const StageCard = (props: Props) => {
   const { stages, subStages } = useServiceStore();
   const [validStageList, setValidStageList] = useState<iStage[] | []>([]);
@@ -18,9 +36,10 @@ const StageCard = (props: Props) => {
   );
   const { currentTicket, setTicketUpdateFlag } = props;
 
-  const [currentStageIndex, setCurrentStageIndex] = useState<number>(0);
+  const [lastModifiedDate, setLastModifiedDate] = useState<number>(0);
   const [currentStage, setCurrentStage] = useState<any>({});
   const [changeStageName, setChangeStageName] = useState<string>('');
+  const [progressCount, setProgressCount] = useState<number>(0);
   const [nextStage, setNextStage] = useState<string>('');
   // const getCurrentStage = () => {
   //   const index = stages.findIndex(
@@ -46,7 +65,10 @@ const StageCard = (props: Props) => {
       const stageName = stageDetail?.name || '';
       setChangeStageName(stageName);
       setCurrentStage(stageDetail);
+      setProgressCount(stageDetail?.code * 20 || 0);
       setNextStage('');
+      console.log("currentTicket?.modifiedDate",currentTicket)
+      setLastModifiedDate(currentTicket?.modifiedDate ? getTotalDaysFromDate(new Date (currentTicket?.modifiedDate)) : 0);
       if (
         currentTicket?.subStageCode?.code === stageDetail?.child?.length &&
         stageDetail?.code <= 5
@@ -75,27 +97,67 @@ const StageCard = (props: Props) => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Box>
-        <Select
-          size="small"
-          name="stages"
-          onChange={handleStages}
-          value={changeStageName || ''}
-          sx={{ height: '35px' }}
+      <Typography fontSize={'13px'} variant="body2" color="black">
+        {`Last update ${lastModifiedDate} days ago`}
+      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ width: '100%', mr: 1 }}>
+          <LinearProgress
+            variant="determinate"
+            value={progressCount}
+            sx={{
+              height: '10px',
+              '& .MuiLinearProgress-bar': {
+                backgroundColor: '#3949AC'
+              }
+            }}
+          />
+        </Box>
+        <Box sx={{ minWidth: 35 }}>
+          <Typography variant="body2" color="black">
+            {progressCount}%
+          </Typography>
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          marginBottom: '7px',
+          marginTop: '3px'
+        }}
+      >
+        <Typography
+          marginRight={'12px'}
+          variant="body2"
+          color="black"
+          fontSize={15}
+          fontWeight={500}
         >
-          {validStageList?.map(({ name, parent, code }: iStage, index) => {
-            return (
-              parent === null && (
-                <MenuItem
-                  value={name}
-                  disabled={![changeStageName, nextStage].includes(name)}
-                >
-                  {name}
-                </MenuItem>
-              )
-            );
-          })}
-        </Select>
+          Current Stage -:{' '}
+        </Typography>
+        <FormControl variant="standard">
+          <Select
+            size="small"
+            name="stages"
+            onChange={handleStages}
+            value={changeStageName || ''}
+            sx={{ height: '16px', outline: 'none' }}
+          >
+            {validStageList?.map(({ name, parent, code }: iStage, index) => {
+              return (
+                parent === null && (
+                  <MenuItem
+                    value={name}
+                    disabled={![changeStageName, nextStage].includes(name)}
+                  >
+                    {name}
+                  </MenuItem>
+                )
+              );
+            })}
+          </Select>
+        </FormControl>
       </Box>
       <Stepper
         activeStep={currentTicket?.subStageCode?.code || 0}

@@ -19,12 +19,8 @@ const useTicketStore = create<iTicketStore>((set, get) => ({
   reminders: [],
   setReminders: (reminders) => set({ reminders }),
   filterTickets: {
-    departments: [],
-    doctors: [],
-    admissionType: [],
-    diagnosticType: [],
-    startDate: NaN,
-    endDate: NaN
+    stageList: [],
+    representative: null
   },
   setFilterTickets: (filterTickets) => set({ filterTickets })
 }));

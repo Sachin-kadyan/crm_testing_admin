@@ -16,6 +16,7 @@ type Props = {};
 
 const DownloadAllTickets = (props: Props) => {
   const { doctors, departments } = useServiceStore();
+  const {filterTickets} = useTicketStore();
   const [disable,setDisable] = useState(false);
 
   const doctorSetter = (id: string) => {
@@ -28,7 +29,7 @@ const DownloadAllTickets = (props: Props) => {
 
   const downloadData = async () => {
     setDisable(true);
-    const sortedTickets = await getTicketHandler(UNDEFINED, 1, 'true');
+    const sortedTickets = await getTicketHandler(UNDEFINED, 1, 'true',filterTickets );
     await getDoctorsHandler();
     await getDepartmentsHandler();
 
