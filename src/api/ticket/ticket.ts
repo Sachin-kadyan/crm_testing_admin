@@ -40,6 +40,7 @@ export const updateTicketSubStage = async (payload: {
 }) => {
   const { data } = await apiClient.put('/ticket/subStageUpdate', payload);
   console.log(data);
+  return Promise.resolve(data)
 };
 
 export const sendTextMessage = async (message: string, consumerId: string) => {

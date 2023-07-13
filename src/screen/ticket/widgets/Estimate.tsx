@@ -41,8 +41,10 @@ import {
   serviceAdded
 } from '../../../types/store/service';
 import { iEstimate } from '../../../types/store/ticket';
+import { getTicketHandler } from '../../../api/ticket/ticketHandler';
+import { UNDEFINED } from '../../../constantUtils/constant';
 
-type Props = {};
+type Props = {setTicketUpdateFlag: any };
 
 const drawerWidth = 1200;
 
@@ -98,6 +100,7 @@ const Estimate = (props: Props) => {
   const [services, setServices] = useState<iService[]>();
   const [searchServiceValue, setSearchServiceValue] = useState('');
   const { wards, doctors } = useServiceStore();
+  const { filterTickets } = useTicketStore();
 
   const [alert, setAlert] = useState<AlertType>({
     investigation: '',
@@ -214,8 +217,17 @@ const Estimate = (props: Props) => {
     );
   };
 
-  const handleCreateEstimate = () => {
-    createEstimateHandler(estimateFileds);
+  const handleCreateEstimate = async() => {
+    const result = await createEstimateHandler(estimateFileds);
+
+    setTimeout(() => {
+
+      (async function () {
+       await getTicketHandler(UNDEFINED, 1, "false",filterTickets);
+       props.setTicketUpdateFlag(result)
+       setIsEstimateOpen(false);
+      })();
+   }, 800);
   };
 
   return (
@@ -780,7 +792,7 @@ const Estimate = (props: Props) => {
                   onClick={handleCreateEstimate}
                   endIcon={<SendOutlined />}
                 >
-                  Send Estimate
+                  Send Estimatey
                 </Button>
               </Box>
 

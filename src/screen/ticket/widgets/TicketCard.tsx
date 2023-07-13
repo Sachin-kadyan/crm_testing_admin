@@ -28,7 +28,8 @@ const TicketCard = (props: Props) => {
   const { ticketID } = useParams();
 
   return (
-    <Box
+    <div>
+ { props.patientData._id && ( <Box
       p={2}
       bgcolor={ticketID === props.patientData._id ? '#E2ECFB' : '#f1f5f7'}
       borderRadius={2}
@@ -143,7 +144,8 @@ const TicketCard = (props: Props) => {
         Created At:
         {dayjs(props.patientData.createdAt).format('DD/MMM/YYYY , HHMM')}hrs
       </Typography>
-    </Box>
+    </Box>)}
+    </div>
   );
 };
 

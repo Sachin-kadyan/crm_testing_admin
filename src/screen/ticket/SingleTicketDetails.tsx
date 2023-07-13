@@ -48,10 +48,11 @@ import QueryResolutionWidget from './widgets/QueryResolutionWidget';
 import { getSingleScript } from '../../api/script/script';
 import PrescriptionTabsWidget from './widgets/PrescriptionTabsWidget';
 import AddNewTaskWidget from './widgets/AddNewTaskWidget';
-import { getAllReminderHandler } from '../../api/ticket/ticketHandler';
+import { getAllReminderHandler, getTicketHandler } from '../../api/ticket/ticketHandler';
 import MessagingWidget from './widgets/whatsapp/WhatsappWidget';
 import ShowPrescription from './widgets/ShowPrescriptionModal';
 import { updateTicketSubStage } from '../../api/ticket/ticket';
+import { UNDEFINED } from '../../constantUtils/constant';
 
 dayjs.extend(relativeTime);
 
@@ -59,8 +60,8 @@ type Props = {};
 
 const SingleTicketDetails = (props: Props) => {
   const { ticketID } = useParams();
-  const { tickets } = useTicketStore();
-  const { doctors, departments } = useServiceStore();
+  const { tickets, filterTickets } = useTicketStore();
+  const { doctors, departments, stages } = useServiceStore();
   const [currentTicket, setCurrentTicket] = useState<iTicket>();
   const [value, setValue] = useState('1');
   const [script, setScript] = useState<iScript>();
@@ -70,9 +71,13 @@ const SingleTicketDetails = (props: Props) => {
 
 // remove hanlePhoneCall in FE. post changes of phone call in backend is pending...
 
-  const handlePhoneCall = (e: React.SyntheticEvent) => {
+  const handlePhoneCall = async (e: React.SyntheticEvent) => {
     const currentSubStageCode = currentTicket?.subStageCode?.code;
-    if (currentSubStageCode && currentSubStageCode > 1 && currentSubStageCode < 4) {
+    const stageDetail: any = stages?.find(
+      ({ _id }) => currentTicket?.stage === _id
+    );
+    const noOfChilds = stageDetail?.child?.length || 3;
+    if (currentSubStageCode && currentSubStageCode > (noOfChilds-3) && currentSubStageCode < noOfChilds) {
       const payload = {
         subStageCode: {
           active: true,
@@ -81,7 +86,15 @@ const SingleTicketDetails = (props: Props) => {
         ticket: currentTicket?._id
       };
 
-      updateTicketSubStage(payload);
+     const result = await updateTicketSubStage(payload);
+      setTimeout(() => {
+
+        (async function () {
+         await getTicketHandler(UNDEFINED, 1, "false",filterTickets);
+         setTicketUpdateFlag(result)
+        })();
+ 
+     }, 1000);
     }
   };
 
@@ -106,7 +119,7 @@ const SingleTicketDetails = (props: Props) => {
         setScript(script);
       }
     })();
-  }, [ticketID, currentTicket, ticketUpdateFlag]);
+  }, [ticketID, tickets ,currentTicket, ticketUpdateFlag]);
 
   const { reminders } = useTicketStore();
 
@@ -223,7 +236,7 @@ const SingleTicketDetails = (props: Props) => {
                 <MessagingWidget />
               </TabPanel>
               <TabPanel sx={{ p: 0, height: '100%' }} value="2">
-                <NotesWidget />
+                <NotesWidget  setTicketUpdateFlag={setTicketUpdateFlag}/>
               </TabPanel>
               <TabPanel sx={{ p: 0, height: '100%' }} value="3">
                 <QueryResolutionWidget />
@@ -243,7 +256,7 @@ const SingleTicketDetails = (props: Props) => {
           display="flex"
           alignItems="center"
         >
-          <Estimate />
+          <Estimate setTicketUpdateFlag={setTicketUpdateFlag} />
         </Box>
 
         {isScript ? (

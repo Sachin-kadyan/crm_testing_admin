@@ -14,17 +14,20 @@ import useServiceStore from '../../../store/serviceStore';
 import { iStage, iSubStage } from '../../../types/store/service';
 import { iTicket } from '../../../types/store/ticket';
 import { updateTicketData } from '../../../api/ticket/ticket';
+import { getTicketHandler } from '../../../api/ticket/ticketHandler';
+import { UNDEFINED } from '../../../constantUtils/constant';
+import useTicketStore from '../../../store/ticketStore';
 
 type Props = {
-  currentTicket: iTicket | undefined;
+  currentTicket: iTicket | any;
   setTicketUpdateFlag: any;
 };
 
 function getTotalDaysFromDate(date: Date) {
-  if(!date) return 0
+  if (!date) return -1;
   const today = new Date();
   const timeDiff = Math.abs(today.getTime() - date.getTime());
-  const totalDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  const totalDays = Math.round(timeDiff / (1000 * 3600 * 24));
   return totalDays;
 }
 
@@ -41,6 +44,7 @@ const StageCard = (props: Props) => {
   const [changeStageName, setChangeStageName] = useState<string>('');
   const [progressCount, setProgressCount] = useState<number>(0);
   const [nextStage, setNextStage] = useState<string>('');
+  const { filterTickets } = useTicketStore();
   // const getCurrentStage = () => {
   //   const index = stages.findIndex(
   //     (stage) => stage._id === currentTicket?.stage
@@ -67,10 +71,13 @@ const StageCard = (props: Props) => {
       setCurrentStage(stageDetail);
       setProgressCount(stageDetail?.code * 20 || 0);
       setNextStage('');
-      console.log("currentTicket?.modifiedDate",currentTicket)
-      setLastModifiedDate(currentTicket?.modifiedDate ? getTotalDaysFromDate(new Date (currentTicket?.modifiedDate)) : 0);
+      setLastModifiedDate(
+        currentTicket?.modifiedDate
+          ? getTotalDaysFromDate(new Date(currentTicket?.modifiedDate))
+          : -1
+      );
       if (
-        currentTicket?.subStageCode?.code === stageDetail?.child?.length &&
+        currentTicket?.subStageCode?.code > 3 &&
         stageDetail?.code <= 5
       ) {
         const nextStageIndex = stageDetail?.code;
@@ -79,7 +86,7 @@ const StageCard = (props: Props) => {
     }
   }, [currentTicket, stages, subStages, changeStageName]);
 
-  const handleStages = (e: any) => {
+  const handleStages = async (e: any) => {
     console.log('selected', e.target.value);
     setChangeStageName(e.target.value);
     const payload = {
@@ -91,15 +98,18 @@ const StageCard = (props: Props) => {
       ticket: currentTicket?._id
     };
     updateTicketData(payload);
-
-    setTimeout(() => setTicketUpdateFlag(payload), 800);
+    window.location.reload();
+    // await getTicketHandler(UNDEFINED, 1, "false",filterTickets);
+    // setTicketUpdateFlag(payload)
   };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Typography fontSize={'13px'} variant="body2" color="black">
-        {`Last update ${lastModifiedDate} days ago`}
-      </Typography>
+      {lastModifiedDate > -1 && (
+        <Typography fontSize={'13px'} variant="body2" color="black">
+          {`Last update ${lastModifiedDate} days ago`}
+        </Typography>
+      )}
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Box sx={{ width: '100%', mr: 1 }}>
           <LinearProgress
@@ -160,7 +170,7 @@ const StageCard = (props: Props) => {
         </FormControl>
       </Box>
       <Stepper
-        activeStep={currentTicket?.subStageCode?.code || 0}
+        activeStep={currentStage?.child?.length > 3 ? (currentTicket?.subStageCode?.code) : (currentTicket?.subStageCode?.code -1 ) || 0}
         alternativeLabel
         sx={{ height: '50px', marginTop: '10px' }}
       >

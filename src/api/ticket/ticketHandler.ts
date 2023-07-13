@@ -102,6 +102,7 @@ export const createNotesHandler = async (note: iNote) => {
   const { notes, setNotes } = useTicketStore.getState();
   const noteAdded = await createNewNote(note);
   setNotes([...notes, noteAdded]);
+  return Promise.resolve(noteAdded);
 };
 
 export const getAllReminderHandler = async (ticketId: string) => {
