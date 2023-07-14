@@ -81,6 +81,7 @@ const Estimate = (props: Props) => {
     prescription: ticket?.prescription[0]._id!,
     ticket: ticketID!
   });
+  console.log("====================ticket id", ticketID);
 
   type AlertType = {
     services: string;
@@ -100,7 +101,7 @@ const Estimate = (props: Props) => {
   const [services, setServices] = useState<iService[]>();
   const [searchServiceValue, setSearchServiceValue] = useState('');
   const { wards, doctors } = useServiceStore();
-  const { filterTickets } = useTicketStore();
+  const { filterTickets, searchByName } = useTicketStore();
 
   const [alert, setAlert] = useState<AlertType>({
     investigation: '',
@@ -218,12 +219,12 @@ const Estimate = (props: Props) => {
   };
 
   const handleCreateEstimate = async() => {
-    const result = await createEstimateHandler(estimateFileds);
+    const result = await createEstimateHandler({...estimateFileds, ticket: ticketID});
 
     setTimeout(() => {
 
       (async function () {
-       await getTicketHandler(UNDEFINED, 1, "false",filterTickets);
+       await getTicketHandler(searchByName, 1, "false",filterTickets);
        props.setTicketUpdateFlag(result)
        setIsEstimateOpen(false);
       })();

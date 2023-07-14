@@ -96,7 +96,7 @@ const Ticket = () => {
   //   }
   // };
 
-  const handleKeyPress = async (e: any) => {
+  const handleSearchKeyPress = async (e: any) => {
     const value = e.target?.value;
     if (value) {
       setSearchName(value);
@@ -244,7 +244,7 @@ const Ticket = () => {
                 )
               }}
               // onChange={handleSeachName}
-              onKeyDown={handleKeyPress}
+              onKeyDown={handleSearchKeyPress}
             />
             <TicketFilter/>
           </Stack>

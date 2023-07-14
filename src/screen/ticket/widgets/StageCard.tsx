@@ -44,7 +44,7 @@ const StageCard = (props: Props) => {
   const [changeStageName, setChangeStageName] = useState<string>('');
   const [progressCount, setProgressCount] = useState<number>(0);
   const [nextStage, setNextStage] = useState<string>('');
-  const { filterTickets } = useTicketStore();
+  const { filterTickets, searchByName } = useTicketStore();
   // const getCurrentStage = () => {
   //   const index = stages.findIndex(
   //     (stage) => stage._id === currentTicket?.stage
@@ -76,10 +76,7 @@ const StageCard = (props: Props) => {
           ? getTotalDaysFromDate(new Date(currentTicket?.modifiedDate))
           : -1
       );
-      if (
-        currentTicket?.subStageCode?.code > 3 &&
-        stageDetail?.code <= 5
-      ) {
+      if (currentTicket?.subStageCode?.code > 3 && stageDetail?.code <= 5) {
         const nextStageIndex = stageDetail?.code;
         setNextStage(stages[nextStageIndex]?.name || '');
       }
@@ -98,9 +95,18 @@ const StageCard = (props: Props) => {
       ticket: currentTicket?._id
     };
     updateTicketData(payload);
-    window.location.reload();
-    // await getTicketHandler(UNDEFINED, 1, "false",filterTickets);
-    // setTicketUpdateFlag(payload)
+    // window.location.reload();
+    setTimeout(() => {
+      (async function () {
+        const result = await getTicketHandler(
+          searchByName,
+          1,
+          'false',
+          filterTickets
+        );
+        setTicketUpdateFlag(result);
+      })();
+    }, 800);
   };
 
   return (
@@ -170,7 +176,11 @@ const StageCard = (props: Props) => {
         </FormControl>
       </Box>
       <Stepper
-        activeStep={currentStage?.child?.length > 3 ? (currentTicket?.subStageCode?.code) : (currentTicket?.subStageCode?.code -1 ) || 0}
+        activeStep={
+          currentStage?.child?.length > 3
+            ? currentTicket?.subStageCode?.code
+            : currentTicket?.subStageCode?.code - 1 || 0
+        }
         alternativeLabel
         sx={{ height: '50px', marginTop: '10px' }}
       >

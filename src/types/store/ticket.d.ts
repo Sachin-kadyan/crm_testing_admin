@@ -38,7 +38,7 @@ export interface iEstimate {
   bloodAmount: number;
   additionalAmount: number;
   prescription: string;
-  ticket: string;
+  ticket: string | undefined;
   creator?: string;
   total?: number;
   createdAt?: Date;
