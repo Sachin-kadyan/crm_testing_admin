@@ -1,5 +1,5 @@
 import useTicketStore from '../../store/ticketStore';
-import { iNote, iReminder } from '../../types/store/ticket';
+import { iNote, iReminder, iTicketFilter } from '../../types/store/ticket';
 import {
   createNewNote,
   getAllNotes,
@@ -13,7 +13,8 @@ import { UNDEFINED } from '../../constantUtils/constant';
 export const getTicketHandler = async (
   name: string,
   pageNumber: number = 1,
-  downloadAll: string = 'false'
+  downloadAll: 'true' | 'false' = 'false',
+  selectedFilters: iTicketFilter,
 ) => {
   const {
     setTickets,
@@ -23,7 +24,7 @@ export const getTicketHandler = async (
     setEmptyDataText,
     setDownloadTickets
   } = useTicketStore.getState();
-  const data = await getTicket(name, pageNumber, downloadAll);
+  const data = await getTicket(name, pageNumber, downloadAll, selectedFilters);
   const sortedTickets = data.tickets
   const count = data.count;
 
@@ -101,6 +102,7 @@ export const createNotesHandler = async (note: iNote) => {
   const { notes, setNotes } = useTicketStore.getState();
   const noteAdded = await createNewNote(note);
   setNotes([...notes, noteAdded]);
+  return Promise.resolve(noteAdded);
 };
 
 export const getAllReminderHandler = async (ticketId: string) => {
